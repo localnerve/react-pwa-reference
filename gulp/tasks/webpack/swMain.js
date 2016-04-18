@@ -27,6 +27,15 @@ function swMainConfig (settings, type) {
       path: settings.dist.scripts,
       publicPath: settings.web.scripts
     },
+    module: {
+      loaders: [
+        {
+          test: /\.json$/,
+          exclude: /node_modules/,
+          loader: 'json'
+        }
+      ]
+    },
     target: 'webworker',
     plugins: [
       new webpack.optimize.DedupePlugin(),
