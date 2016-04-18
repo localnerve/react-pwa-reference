@@ -33,6 +33,10 @@ function swMainConfig (settings, type) {
           test: /\.json$/,
           exclude: /node_modules/,
           loader: 'json'
+        },
+        {
+          exclude: /(node_modules|assets)/,
+          loader: 'babel-loader'
         }
       ]
     },

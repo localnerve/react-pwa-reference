@@ -28,6 +28,15 @@ function swRegConfig (settings, type) {
       path: settings.dist.scripts,
       publicPath: settings.web.scripts
     },
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /node_modules/,
+          loader: 'babel-loader'
+        }
+      ]
+    },
     plugins: [
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin()
