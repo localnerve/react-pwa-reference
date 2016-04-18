@@ -1,5 +1,11 @@
 # react-pwa-boilerplate
 
-> A project boilerplate for a flux, react, progressive web application
+> A project boilerplate for reactiflux progressive web applications.
 
-Stack details, build, and prerequisites TBD
+## WIP
+
+> Do not use yet.
+
+## Prerequisites
+1. At least Node 4 LTS, recommend [nvm](https://github.com/creationix/nvm)
+2. `npm install`

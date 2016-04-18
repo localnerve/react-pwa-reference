@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+/**
+ * Blocks while consuming the outgoing mail queue.
+ * Use CTL-C to end.
+ *
+ * Uses environment variables listed in configs/contact/index.js
+ */
+require('../../../../services/mail').worker();

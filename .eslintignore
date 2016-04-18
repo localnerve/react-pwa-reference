@@ -1,0 +1,6 @@
+dist
+node_modules
+reports
+tmp
+tests/fixtures
+assets/scripts/sw/precache.js

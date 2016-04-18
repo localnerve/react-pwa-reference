@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "name": "LocalNerve Example App",
+  "launch_path": "/",
+  "description": "An isomorphic, data driven flux/react/service-worker example",
+  "icons": {
+    "128": "/public/images/icon-128x128.png",
+    "16": "/public/images/favicon-16x16.png",
+    "32": "/public/images/favicon-32x32.png",
+    "48": "/public/images/android-chrome-48x48.png"
+  },
+  "developer": {
+    "name": "localnerve",
+    "url": "https://github.com/localnerve"
+  },
+  "installs_allowed_from": [
+    "*"
+  ],
+  "default_locale": "en",
+  "permissions": {
+  },
+  "locales": {
+    "en": {
+      "name": "LocalNerve Example App",
+      "description": "An isomorphic, data driven flux/react/service-worker example."
+    }
+  }
+}

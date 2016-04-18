@@ -1,0 +1,67 @@
+//
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// Components styles
+//
+.app-frame {
+  @include grid-frame(vertical);
+  // If viewport height less than 728 AND landscape, float the footer
+  // under the content. Otherwise height is 100vh, and footer sticks to viewport
+  // bottom.
+  @media only screen and (orientation: landscape) and (max-height: 727px) {
+    height: auto;
+  }
+}
+.app-block {
+  @include vertical-block(left);
+}
+
+.app-bg {
+  position: absolute;
+  // assigned in js
+  // top: 0;
+  right:0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  // assigned in js
+  // height: 100%;
+
+  background-color: transparent;
+  background-repeat: no-repeat;
+
+  // assigned in js
+  // opacity
+
+  transition: opacity 0.4s ease;
+}
+
+.page {
+  @include vertical-block(spaced);
+}
+
+.swipe-container {
+  // Allow vertical content scrolling for longer content/constrained height
+  overflow-y: auto !important;
+}
+
+a, a:visited {
+  color: $app-primary-light-color;
+  text-decoration: none;
+  outline: 0;
+}
+a:hover {
+  color: darken($app-primary-light-color, 10%);
+}
+
+%header-footer-bg {
+  background: $app-primary-bgcolor;
+}
+/*
+@import "header/styles";
+@import "pages/styles";
+@import "footer/styles";
+@import "react-modal";
+@import "notification";
+*/

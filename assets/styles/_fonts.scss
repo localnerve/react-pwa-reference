@@ -1,0 +1,21 @@
+//
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// font styles
+// -------------------------
+
+@font-face {
+    font-family: "Source Sans Pro";
+    src: local("Source Sans Pro"), local("SourceSansPro-Regular"),
+         url("//fonts.gstatic.com/s/sourcesanspro/v9/ODelI1aHBYDBqgeIAH2zlNV_2ngZ8dMf8fLgjYEouxg.woff2") format("woff2"),
+         url("//fonts.gstatic.com/s/sourcesanspro/v9/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff") format("woff"),
+         url("//fonts.gstatic.com/s/sourcesanspro/v9/ODelI1aHBYDBqgeIAH2zlEY6Fu39Tt9XkmtSosaMoEA.ttf") format("truetype");
+    /* unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000; */
+    font-weight: 400;
+    font-style: normal;
+}
+
+.fonts-loaded body {
+  font-family: "Source Sans Pro", sans-serif;
+}

@@ -31,3 +31,15 @@ node_modules
 
 # Optional REPL history
 .node_repl_history
+
+# macosx ignores
+.DS_Store
+
+# Project Boilerplate ignores
+tmp
+dist
+reports
+/configs/settings/assets.json
+/assets/scripts/sw/precache.js
+/assets/scripts/sw/data.json
+/webpack-stats*

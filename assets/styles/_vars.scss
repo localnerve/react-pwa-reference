@@ -1,0 +1,18 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// application global vars
+
+// colors
+$app-alert-bgcolor: #E53935;
+$app-primary-bgcolor: #43A047;
+$app-accent-light-bgcolor: #FFAB00;
+$app-accent-dark-bgcolor: #1B5E20;
+$app-accent-dark-shadow: rgba($app-accent-dark-bgcolor, 0.7);
+$app-primary-light-color: rgba(255, 255, 255, 0.87);
+$app-primary-dark-color: rgba(0, 0, 0, 0.87);
+
+$app-max-zindex: 2;
+
+// media query to detect height contstrained phones
+$height-constrained-phone: "only screen and (orientation: portrait) and (max-height: 480px)";

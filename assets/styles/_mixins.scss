@@ -1,0 +1,18 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// app global mixins
+//
+@mixin close-button() {
+  .close {
+    @extend %close-button;
+    &::after {
+      content: '✖'
+    }
+  }
+}
+
+@mixin vertical-block($align: center, $size: expand) {
+  @include grid-block($size, vertical, false, $align);
+  @content;
+}
