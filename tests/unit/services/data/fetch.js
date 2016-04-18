@@ -10,7 +10,7 @@ var mocks = require('../../../mocks');
 
 var config = require('../../../../configs').create().data;
 
-describe('data/fetch', function () {
+describe.skip('data/fetch', function () {
   var fetch, cache, request,
     expectedError = new Error('Expected error');
 
