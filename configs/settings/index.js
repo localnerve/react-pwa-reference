@@ -6,6 +6,15 @@
  *   NODE_ENV
  *   ASSET_HOST
  *   APP_HOSTNAME
+ *
+ * Environmentally aware project dir, file, and settings.
+ * Dir and file paths are completed to a given baseDir.
+ *
+ * Creates a settings configuration with three major areas:
+ *   config.src - The source dirs and files.
+ *   config.dist - The build output destination dirs and files. These become
+ *     server-side public assets (js, html, css, images, json, xml, etc...).
+ *   config.web - files, dirs, and settings from the web client perspective.
  */
 'use strict';
 
@@ -48,7 +57,8 @@ var outputFiles = {
   css: {
     inline: path.join(commonDirs.styles, 'index.css'),
     other: [
-      path.join(commonDirs.styles, 'settings.css')
+      // add other external stylesheets to async load at startup
+      // path.join(commonDirs.styles, 'settings.css')
     ]
   }
 };
