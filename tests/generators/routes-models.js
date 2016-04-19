@@ -5,7 +5,6 @@
  * Fetch main resource and write routes and models fixture files.
  * Run as npm script
  */
-/*eslint no-console:0 */
 'use strict';
 
 var debug = require('debug')('FixtureGenerator:Routes-Models');
@@ -13,10 +12,6 @@ var fs = require('fs');
 var fetch = require('../../services/data/fetch');
 var cache = require('../../services/data/cache');
 var config = require('../../configs').create();
-
-console.log('@@@ env');
-console.log(process.env.NODE_ENV);
-console.log('@@@');
 
 var replacement = 'DATA';
 
