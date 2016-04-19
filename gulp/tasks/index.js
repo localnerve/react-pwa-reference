@@ -33,58 +33,14 @@ function setupEnvironment (prod) {
 }
 
 /**
- * Standalone task to dump nconf to console
- */
-export function dumpconfig () {
-  return function taskDumpConfig (done) {
-    console.log(util.inspect(configCreate(), { depth: null }));
-    done();
-  }
-}
-
-/**
- * Standalone development ccss task
- */
-export function ccss () {
-  let task;
-
-  return gulp.series(
-    function setup (done) {
-      setupEnvironment(false);
-      task = ccssTaskFactory(
-        configCreate().settings,
-        false
-      );
-      done();
-    },
-    function ccssTask (done) {
-      return task(done);
-    }
-  );
-}
-
-/**
- * Standalone fixture generation task
- */
-export function fixtures (prod) {
-  return gulp.series(
-    function setup (done) {
-      setupEnvironment(prod);
-      done();
-    },
-    fixturesTaskFactory()
-  );
-}
-
-/**
- * The build orchestration.
- * Same used for all build targets: dev, debug, perf, and prod.
+ * Factory for the build task composition.
+ * Same series used for all build targets: dev, debug, perf, and prod.
  *
  * @param {Boolean} interactive - true to start server, false otherwise.
  * @param {String} target - One of ['dev', 'debug', 'perf', 'prod'].
- * @returns {Function} The build task sequence.
+ * @returns {Function} The build task composition.
  */
-function buildTaskSequence (interactive, target) {
+function buildTaskCompFactory (interactive, target) {
   const prod = (target === 'perf' || target === 'prod');
 
   const tasks = {};
@@ -143,22 +99,74 @@ function buildTaskSequence (interactive, target) {
   );
 }
 
-export const dev = buildTaskSequence.bind(this, true, 'dev');
-export const debug = buildTaskSequence.bind(this, true, 'debug');
-export const perf = buildTaskSequence.bind(this, true, 'perf');
-export const prod = buildTaskSequence.bind(this, true, 'prod');
-export const build = buildTaskSequence.bind(this, false, 'prod');
-export const fixturesDev = fixtures.bind(this, false);
-export const fixturesProd = fixtures.bind(this, true);
+/**
+ * Factory for standalone test fixture generation task composition.
+ * Generates test fixtures from the backend data service.
+ *
+ * @param {Boolean} prod - True for production, false otherwise.
+ * @returns The fixtures task composition.
+ */
+function fixturesTaskCompFactory (prod) {
+  return gulp.series(
+    function setup (done) {
+      setupEnvironment(prod);
+      done();
+    },
+    fixturesTaskFactory()
+  );
+}
+
+/**
+ * Factory for standalone task to dump nconf to console.
+ *
+ * @returns The dumpconfig task.
+ */
+function dumpConfigTaskFactory () {
+  return function dumpconfig (done) {
+    console.log(util.inspect(configCreate(), { depth: null }));
+    done();
+  }
+}
+
+/**
+ * Factory for standalone css development task composition.
+ *
+ * @returns The development css task composition.
+ */
+function ccssTaskCompFactory () {
+  const tasks = {};
+
+  return gulp.series(
+    function setup (done) {
+      setupEnvironment(false);
+      tasks.ccss = ccssTaskFactory(configCreate().settings, false);
+      done();
+    },
+    function ccssTask (done) {
+      return tasks.ccss(done);
+    }
+  );
+}
+
+// Public aliases for targeted task composition factories
+export const ccss = ccssTaskCompFactory;
+export const dumpconfig = dumpConfigTaskFactory;
+export const dev = buildTaskCompFactory.bind(this, true, 'dev');
+export const debug = buildTaskCompFactory.bind(this, true, 'debug');
+export const perf = buildTaskCompFactory.bind(this, true, 'perf');
+export const prod = buildTaskCompFactory.bind(this, true, 'prod');
+export const build = buildTaskCompFactory.bind(this, false, 'prod');
+export const fixturesDev = fixturesTaskCompFactory.bind(this, false);
+export const fixturesProd = fixturesTaskCompFactory.bind(this, true);
 
 export default {
+  build,
   ccss,
   debug,
   dev,
   dumpconfig,
   perf,
   prod,
-  build,
   fixturesDev,
   fixturesProd,
   'default': build

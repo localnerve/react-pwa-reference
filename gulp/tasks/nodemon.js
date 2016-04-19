@@ -5,7 +5,11 @@
 import gulpNodemon from 'gulp-nodemon';
 
 /**
- * nodemon task factory
+ * Factory for the nodemon task.
+ *
+ * @param {Object} settings - The project settings.
+ * @param {Boolean} debug - True to launch node for the debugger, false othrw.
+ * @returns {Function} The nodemon task.
  */
 export default function nodemonTaskFactory (settings, debug) {
   const options = {

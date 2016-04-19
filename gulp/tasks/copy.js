@@ -4,6 +4,12 @@
  */
 import gulp from 'gulp';
 
+/**
+ * Factory for the copy task.
+ *
+ * @param {Object} settings - The project settings.
+ * @returns {Function} the copy task.
+ */
 export default function copyTaskFactory (settings) {
   return function copy () {
     return gulp.src([
@@ -12,7 +18,7 @@ export default function copyTaskFactory (settings) {
 
       // styles are processed by ccss
       '!**/styles/**',
-      // svg is processed by svg
+      // svg is processed by svg task
       '!images/*.svg',
       // scripts are processed by webpack
       '!scripts/**'

@@ -4,11 +4,20 @@
  */
 import del from 'del';
 
+/**
+ * Factory for the clean task.
+ * Cleanup build output and other miscellaneous generated src files.
+ *
+ * @param {Object} settings - The project settings.
+ * @returns {Function} The clean task.
+ */
 export default function cleanTaskFactory (settings) {
   return function clean () {
     return del([
       settings.dist.baseDir,
-      settings.src.assetsJson
+      settings.src.assetsJson,
+      settings.src.serviceWorker.precache,
+      settings.src.serviceWorker.data
     ]);
   };
 }
