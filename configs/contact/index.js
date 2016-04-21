@@ -29,14 +29,6 @@ var mailHeaders = {
   }
 };
 
-/***
- * Environment specific mail queue url default values.
- */
-var mailQueue = {
-  development: 'amqp://localhost',
-  production: process.env.CLOUDAMQP_URL
-};
-
 /**
  * Get the MAIL_SERVICE configuration value.
  * Defaults to 'Mandrill'.
@@ -70,7 +62,8 @@ function MAIL_PASSWORD () {
  * @returns {String} The MAIL_TO configuration value.
  */
 function mailTo (env) {
-  return process.env.MAIL_TO || mailHeaders[env].mailTo;
+  return process.env.MAIL_TO || mailHeaders[env].mailTo ||
+    mailHeaders.development.mailTo;
 }
 
 /**
@@ -79,7 +72,8 @@ function mailTo (env) {
  * @returns {String} The MAIL_FROM configuration value.
  */
 function mailFrom (env) {
-  return process.env.MAIL_FROM || mailHeaders[env].mailFrom;
+  return process.env.MAIL_FROM || mailHeaders[env].mailFrom ||
+    mailHeaders.development.mailFrom;
 }
 
 /**
@@ -97,7 +91,8 @@ function QUEUE_NAME () {
  * @returns {String} The QUEUE_URL configuration value.
  */
 function QUEUE_URL (env) {
-  return process.env.QUEUE_URL || mailQueue[env];
+  return process.env.QUEUE_URL ||
+    (env === 'production' ? process.env.CLOUDAMQP_URL : 'amqp://localhost');
 }
 
 /**

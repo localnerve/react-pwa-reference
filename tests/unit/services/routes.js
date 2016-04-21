@@ -14,6 +14,8 @@ describe('routes service', function () {
   var routes;
 
   before(function () {
+    this.timeout(5000);
+
     mocks.serviceData.begin();
     routes = require('../../../services/routes');
   });

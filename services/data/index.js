@@ -39,8 +39,11 @@ export function fetch (params, callback) {
   fetchLib.fetchOne(params, callback);
 }
 
+export const initialize = fetchLib.fetchMain;
+export const update = fetchLib.fetchAll;
+
 export default {
   fetch,
-  initialize: fetchLib.fetchMain,
-  update: fetchLib.fetchAll
+  initialize,
+  update
 };

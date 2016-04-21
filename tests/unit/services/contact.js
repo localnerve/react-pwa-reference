@@ -12,6 +12,8 @@ describe('contact service', function() {
   var contact;
 
   before(function() {
+    this.timeout(5000);
+
     mocks.serviceMail.begin();
     contact = require('../../../services/contact');
   });

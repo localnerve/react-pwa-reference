@@ -2,5 +2,6 @@ dist
 node_modules
 reports
 tmp
+output
 tests/fixtures
 assets/scripts/sw/precache.js

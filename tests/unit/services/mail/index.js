@@ -12,6 +12,8 @@ describe('mail/index', function () {
   var mail;
 
   before(function () {
+    this.timeout(5000);
+
     mocks.mail.begin();
     mail = require('../../../../services/mail/index');
   });

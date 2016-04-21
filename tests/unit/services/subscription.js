@@ -12,6 +12,8 @@ describe('subscription service', function () {
   var subscription;
 
   before(function () {
+    this.timeout(5000);
+
     mocks.serviceSubscription.begin();
     subscription = require('../../../services/subscription');
   });

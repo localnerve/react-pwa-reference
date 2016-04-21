@@ -17,6 +17,8 @@ describe('mail/queue', function () {
     };
 
   before(function () {
+    this.timeout(5000);
+
     mocks.queue.begin();
     queue = require('../../../../services/mail/queue');
     amqplib = require('amqplib');

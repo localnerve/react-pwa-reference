@@ -392,6 +392,7 @@ describe('configs', function () {
 
         afterEach(function () {
           delete process.env.QUEUE_URL;
+          delete process.env.CLOUDAMQP_URL;
         });
 
         it('should exist and have a default', function () {
@@ -401,17 +402,18 @@ describe('configs', function () {
         });
 
         it('should give different defaults based on NODE_ENV', function () {
+          process.env.CLOUDAMQP_URL = queueUrl;
+
           config = configLib.create({ NODE_ENV: 'development' });
           var defaultDev = config.contact.queue.url();
 
           config = configLib.create({ NODE_ENV: 'production' });
           var defaultProd = config.contact.queue.url();
 
-          // set it back to normal here
-          config = configLib.create({ NODE_ENV: 'development' });
-
           expect(defaultDev).to.be.a('string').that.is.not.empty;
-          expect(defaultProd).to.be.undefined;
+          expect(defaultProd).to.be.a('string').that.is.not.empty;
+
+          expect(defaultProd).to.not.equal(defaultDev);
         });
 
         it('should return QUEUE_URL if defined', function () {

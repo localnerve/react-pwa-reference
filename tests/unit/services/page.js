@@ -12,6 +12,8 @@ describe('page service', function () {
   var page;
 
   before(function () {
+    this.timeout(5000);
+
     mocks.serviceData.begin();
     page = require('../../../services/page');
   });

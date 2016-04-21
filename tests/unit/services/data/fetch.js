@@ -10,11 +10,13 @@ var mocks = require('../../../mocks');
 
 var config = require('../../../../configs').create().data;
 
-describe.skip('data/fetch', function () {
+describe('data/fetch', function () {
   var fetch, cache, request,
     expectedError = new Error('Expected error');
 
   before(function () {
+    this.timeout(5000);
+
     mocks.superAgent.begin();
     fetch = require('../../../../services/data/fetch');
     cache = require('./cache');

@@ -39,6 +39,9 @@ node_modules
 tmp
 dist
 reports
+.nyc_output/
+/tests/output*
+output/
 /configs/settings/assets.json
 /assets/scripts/sw/precache.js
 /assets/scripts/sw/data.json

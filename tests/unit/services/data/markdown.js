@@ -12,6 +12,8 @@ describe('markdown', function () {
   var markdown;
 
   before(function () {
+    this.timeout(5000);
+
     mocks.remarkable.begin();
     markdown = require('../../../../services/data/markdown').markdown;
   });

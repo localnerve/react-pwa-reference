@@ -17,6 +17,8 @@ describe('subs/index', function () {
     subs;
 
   before(function () {
+    this.timeout(5000);
+
     mocks.subs.begin();
     subs = require('../../../../services/subs');
   });

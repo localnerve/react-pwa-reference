@@ -8,10 +8,12 @@
 var expect = require('chai').expect;
 var mocks = require('../../../mocks');
 
-describe.skip('data/index', function () {
+describe('data/index', function () {
   var data, cache, fetchLib;
 
   before(function () {
+    this.timeout(5000);
+
     mocks.fetch.begin();
     data = require('../../../../services/data');
     cache = require('./cache');
