@@ -8,46 +8,6 @@ import swPrecache from 'sw-precache';
 import cannibalizr from 'cannibalizr';
 
 /**
- * Runs the sw-precache task to generate precached sw assets.
- *
- * @param {Object} settings - The project settings.
- * @param {Boolean} prod - True if production, false otherwise.
- * @param {Boolean} debug - True to include debugging information, false othrw.
- * @param {Object} pkg - The package json.
- * @param {Function} done - The done callback.
- */
-function runSwPrecache (settings, prod, debug, pkg, done) {
-  const options = {
-    logger: console.log,
-    debug: debug,
-    verbose: true,
-    cacheId: pkg.name,
-    handleFetch: prod,
-    directoryIndex: false,
-    stripPrefix: settings.dist.baseDir,
-    replacePrefix: settings.web.baseDir,
-    staticFileGlobs: [
-      `${settings.dist.fonts}/**.*`,
-      // in this project, photos are only served via image service
-      `${settings.dist.images}/**.!(jpg|jpeg)`,
-      // precache all scripts except those that are inlined
-      `${settings.dist.scripts}/!(header|inline).*`,
-      // precache all styles except those that are inlined
-      `${settings.dist.styles}/!(index|inline).*`
-    ]
-  };
-
-  if (prod) {
-    options.staticFileGlobs.push(
-      // this means webpack main bundle has already built (or has to be).
-      settings.web.assets.mainScript()
-    )
-  }
-
-  swPrecache.write(settings.src.serviceWorker.precache, options, done);
-}
-
-/**
  * Factory for the serviceWorker task.
  * Prepares for service worker bundling by generating code.
  *
@@ -69,6 +29,7 @@ export default function serviceWorkerTaskFactory (settings, prod, debug) {
 
       const pkg = JSON.parse(data);
 
+      // Ugh. Use source code as a data source for service worker.
       cannibalizr({
         output: {
           file: settings.src.serviceWorker.data,
@@ -91,7 +52,26 @@ export default function serviceWorkerTaskFactory (settings, prod, debug) {
         logger: console.log
       });
 
-      runSwPrecache(settings, prod, debug, pkg, done);
+      // Write the sw-precache script.
+      swPrecache.write(settings.src.serviceWorker.precache, {
+        logger: console.log,
+        debug: debug,
+        verbose: true,
+        cacheId: pkg.name,
+        handleFetch: prod,
+        directoryIndex: false,
+        stripPrefix: settings.dist.baseDir,
+        replacePrefix: settings.web.baseDir,
+        staticFileGlobs: [
+          `${settings.dist.fonts}/**.*`,
+          // in this project, photos are only served via image service
+          `${settings.dist.images}/**.!(jpg|jpeg)`,
+          // precache all scripts except those that are inlined
+          `${settings.dist.scripts}/!(header|inline).*`,
+          // precache all styles except those that are inlined
+          `${settings.dist.styles}/!(index|inline).*`
+        ]
+      }, done);
     });
   };
 }
