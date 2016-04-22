@@ -57,15 +57,15 @@ app.use(errorHandler.maintenance());
 // Handle special requests
 app.use(rewrite(rewriteRules));
 // Service worker rewrites delayed so assets.json not required on app start.
-app.use(function (req, res, next) {
-  var reSourceMap, swRule = new RegExp(
+app.use((req, res, next) => {
+  const swRule = new RegExp(
     '^(/' + settings.web.assets.swMainScript(true) + ')$', 'i'
   );
 
   if (swRule.test(req.url)) {
     req.url = req.url.replace(swRule, settings.web.assets.swMainScript());
   } else {
-    reSourceMap = new RegExp(
+    let reSourceMap = new RegExp(
       '^(/' + settings.web.assets.swMainScriptMap(true) + ')$', 'i'
     );
     if (reSourceMap.test(req.url)) {

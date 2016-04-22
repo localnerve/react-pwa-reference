@@ -117,7 +117,7 @@ export default function bootstrap (app) {
             cloudName: config.images.service.cloudName()
           },
           currentBackground: routes[config.data.defaults.pageName].background,
-          backgrounds: Object.keys(routes).map(function (route) {
+          backgrounds: Object.keys(routes).map((route) => {
             return routes[route].background;
           })
         },

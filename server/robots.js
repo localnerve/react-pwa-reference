@@ -43,14 +43,13 @@ export default function robots (req, res, next) {
       encoding: 'utf8'
     })
   ])
-  .then(function (results) {
+  .then((results) => {
     const robotsTemplate = results[1],
       routes = results[0].content;
-    let robotsContent;
 
     debug('Got template', robotsTemplate);
 
-    robotsContent = robotsTemplate
+    const robotsContent = robotsTemplate
       .replace(/(SITEMAPURL)/i, () => {
         var ssl = settings.web.sslRemote || settings.web.ssl;
 
