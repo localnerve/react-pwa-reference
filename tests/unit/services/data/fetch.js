@@ -19,7 +19,7 @@ describe('data/fetch', function () {
 
     mocks.superAgent.begin();
     fetch = require('../../../../services/data/fetch');
-    cache = require('./cache');
+    cache = require('./cache-interface');
     request = require('superagent');
   });
 

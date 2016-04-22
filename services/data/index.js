@@ -3,7 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import debugLib from 'debug';
-import cache from './cache';
+import cache from './cache-interface';
 import fetchLib from './fetch';
 
 const debug = debugLib('services:data:index');

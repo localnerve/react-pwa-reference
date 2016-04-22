@@ -81,7 +81,7 @@ module.exports = {};
     pattern: 'superagent',
     module: superAgent
   }, {
-    pattern: './cache',
+    pattern: './cache-interface',
     module: cache
   }]
 },
@@ -91,7 +91,7 @@ module.exports = {};
     pattern: './fetch',
     module: fetch
   }, {
-    pattern: './cache',
+    pattern: './cache-interface',
     module: cache
   }]
 },

@@ -6,9 +6,7 @@
   "ignore": [
     "node_modules/*",
     "dist/*",
-    "tests/**/*.*",
-    "configs/**/*.*",
-    "assets/scripts/sw/**/*.*",
+    "output/*",
     "gulp/tasks/webpack/**/*.*",
     "actions/interface.js",
     "actions/routes.js",

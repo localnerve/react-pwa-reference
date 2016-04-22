@@ -10,7 +10,7 @@
 var debug = require('debug')('FixtureGenerator:Routes-Models');
 var fs = require('fs');
 var fetch = require('../../services/data/fetch');
-var cache = require('../../services/data/cache');
+var cache = require('../../services/data/cache-interface');
 var config = require('../../configs').create();
 
 var replacement = 'DATA';

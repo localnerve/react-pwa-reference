@@ -5,7 +5,7 @@
 /* global Promise */
 import request from 'superagent';
 import debugLib from 'debug';
-import cache from './cache';
+import cache from './cache-interface';
 import configs from '../../configs';
 
 const debug = debugLib('services:data:fetch');

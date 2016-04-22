@@ -6,7 +6,7 @@ import debugLib from 'debug';
 import utils from './utils';
 import markdown from './markdown';
 
-const debug = debugLib('services:data:cache');
+const debug = debugLib('services:data:cache-interface');
 
 // FIXME:
 // Cache storage should not be in this process

@@ -2,26 +2,49 @@
   "name": "react-pwa-boilerplate",
   "version": "0.1.0",
   "description": "A universal, reactiflux project boilerplate for a progressive web application",
+  "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/localnerve/react-pwa-boilerplate/issues"
+  },
+  "homepage": "https://github.com/localnerve/react-pwa-boilerplate#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/localnerve/react-pwa-boilerplate.git"
+  },
+  "keywords": [
+    "pwa",
+    "es6",
+    "es2015",
+    "react",
+    "fluxible",
+    "service-worker",
+    "node-sass",
+    "webpack",
+    "node"
+  ],
   "main": "./start.js",
   "scripts": {
-    "build": "eslint . && gulp build",
+    "_test": "mocha output/tests/unit --recursive --reporter spec",
+    "build": "npm run lint && gulp build",
+    "build:json": "mkdir -p output/configs/ && cp -a configs/local.env.json output/configs/",
+    "build:js": "rm -rf output/ && npm run build:json && babel ./ --ignore='node_modules/*,reports/*,gulp*,dist/*' -d output",
     "ccss": "gulp ccss",
-    "cover": "env BABEL_ENV=cover nyc --reporter=lcov npm run _testbabel",
-    "dev": "eslint . && gulp dev",
-    "debug": "eslint . && gulp debug",
-    "dumpconfig": "gulp dumpconfig",
+    "config:dump": "gulp dumpconfig",
+    "debug": "npm run lint && gulp debug",
+    "dev": "npm run lint && gulp dev",
     "fixtures:dev": "gulp fixturesDev",
     "fixtures:prod": "gulp fixturesProd",
-    "functest": "node tests/functional/run-parallel '--reporter spec tests/functional/main.js'",
     "lint": "eslint .",
-    "perf": "eslint . && gulp perf",
-    "prod": "eslint . && gulp prod",
+    "perf": "npm run lint && gulp perf",
+    "prod": "npm run lint && gulp prod",
     "start": "node -e 'process.env.NODE_ENV = process.env.NODE_ENV || \"production\"; ./start.js;'",
-    "build:test": "rm -rf output/ && mkdir -p output/configs/ && cp configs/local.env.json output/configs/ && babel ./ --ignore='node_modules/*,/\\..+/,reports/*,gulp*,dist/*,output/*' -s inline -d output",
-    "_test": "mocha output/tests/unit --recursive --reporter spec",
-    "_testbabel": "mocha tests/unit --recursive --compilers js:babel-register --reporter spec",
-    "test": "npm run build:test && npm run _test",
-    "testdebug": "npm run build:test && npm run _test -- --debug-brk"
+    "test": "npm run build:js && npm run _test",
+    "test:babel": "env mocha tests/unit --recursive --reporter spec --compilers js:babel-register",
+    "test:babel-cover": "env BABEL_ENV=cover nyc --reporter=lcov npm run _test -- --compilers js:babel-register",
+    "test:cover": "env BABEL_ENV=cover NYC_CWD=`pwd`/output nyc --reporter=lcov npm run test",
+    "test:debug": "npm run build:js -- -s inline && npm run _test -- --debug-brk",
+    "test:func": "node tests/functional/run-parallel '--reporter spec tests/functional/main.js'"
   },
   "pre-commit": [
     "lint",
@@ -51,7 +74,7 @@
     "del": "^2.2.0",
     "eslint": "^2.7.0",
     "fg-loadcss": "^1.2.0",
-    "fontfaceobserver": "^1.5.4",
+    "fontfaceobserver": "1.5.4",
     "foundation-apps": "localnerve/foundation-apps",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-cssmin": "^0.1.7",
@@ -108,29 +131,12 @@
     "treo": "^0.5.1",
     "web-push": "0.0.11"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/localnerve/react-pwa-boilerplate.git"
-  },
-  "keywords": [
-    "pwa",
-    "es6",
-    "es2015",
-    "react",
-    "fluxible",
-    "service-worker",
-    "node-sass",
-    "webpack",
-    "node"
-  ],
-  "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
-  "license": "BSD-3-Clause",
-  "bugs": {
-    "url": "https://github.com/localnerve/react-pwa-boilerplate/issues"
-  },
-  "homepage": "https://github.com/localnerve/react-pwa-boilerplate#readme",
   "devEngines": {
-    "node": "4.x",
-    "npm": "2.x"
+    "node": "4.x || 5.x",
+    "npm": "2.x || 3.x"
+  },
+  "engines": {
+    "node": "4.x || 5.x",
+    "npm": "2.x || 3.x"
   }
 }

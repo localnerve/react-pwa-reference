@@ -7,10 +7,10 @@
 
 var expect = require('chai').expect;
 
-var cache = require('../../../../services/data/cache');
+var cache = require('../../../../services/data/cache-interface');
 var cacheResources = require('../../../fixtures/cache-resources');
 
-describe('data/cache', function () {
+describe('data/cache-interface', function () {
   var models = cacheResources.models;
 
   describe('put', function () {

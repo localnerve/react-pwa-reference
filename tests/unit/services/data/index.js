@@ -16,7 +16,7 @@ describe('data/index', function () {
 
     mocks.fetch.begin();
     data = require('../../../../services/data');
-    cache = require('./cache');
+    cache = require('./cache-interface');
     fetchLib = require('./fetch');
   });
 
