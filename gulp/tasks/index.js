@@ -14,6 +14,7 @@ import nodemonTaskFactory from './nodemon';
 import webpackTaskFactory from './webpack';
 import fixturesTaskFactory from './fixtures';
 import serviceWorkerTaskFactory from './service-worker';
+import perfbudgetTaskFactory from './perfbudget';
 
 /**
  * Setup the build process environment.
@@ -61,7 +62,7 @@ function buildTaskCompFactory (interactive, target) {
         webpackTaskFactory(settings, 'sw', target);
 
       if (interactive) {
-        tasks.nodemon = nodemonTaskFactory(settings, target === 'debug');
+        tasks.nodemon = nodemonTaskFactory(settings, target);
       }
 
       done();
@@ -119,10 +120,12 @@ function fixturesTaskCompFactory (prod) {
 /**
  * Factory for standalone task to dump nconf to console.
  *
+ * @param {Boolean} prod - True if production, false otherwise.
  * @returns The dumpconfig task.
  */
-function dumpConfigTaskFactory () {
+function dumpConfigTaskFactory (prod) {
   return function dumpconfig (done) {
+    setupEnvironment(prod);
     console.log(util.inspect(configCreate(), { depth: null }));
     done();
   }
@@ -148,26 +151,74 @@ function ccssTaskCompFactory () {
   );
 }
 
+/**
+ * Factory for standalone bundle creation task composition.
+ */
+function bundleCompFactory (group, target) {
+  const prod = target === 'prod' || target === 'perf';
+  const tasks = {};
+
+  return gulp.series(
+    function setup (done) {
+      setupEnvironment(prod);
+      const settings = configCreate().settings;
+
+      tasks.bundles = webpackTaskFactory(settings, group, target);
+      if (group.includes('sw')) {
+        tasks.generate = serviceWorkerTaskFactory(
+          settings, prod, target !== 'prod'
+        );
+      }
+      done();
+    },
+    function prepBundles (done) {
+      if (tasks.generate) {
+        return tasks.generate(done);
+      }
+      done();
+    },
+    function bundles (done) {
+      return tasks.bundles(done);
+    }
+  );
+}
+
 // Public aliases for targeted task composition factories
-export const ccss = ccssTaskCompFactory;
-export const dumpconfig = dumpConfigTaskFactory;
-export const dev = buildTaskCompFactory.bind(this, true, 'dev');
-export const debug = buildTaskCompFactory.bind(this, true, 'debug');
-export const perf = buildTaskCompFactory.bind(this, true, 'perf');
-export const prod = buildTaskCompFactory.bind(this, true, 'prod');
-export const build = buildTaskCompFactory.bind(this, false, 'prod');
-export const fixturesDev = fixturesTaskCompFactory.bind(this, false);
-export const fixturesProd = fixturesTaskCompFactory.bind(this, true);
+const ccss = ccssTaskCompFactory;
+const perfbudget = perfbudgetTaskFactory;
+const dumpconfigDev = dumpConfigTaskFactory.bind(this, false);
+const dumpconfigProd = dumpConfigTaskFactory.bind(this, true);
+const dev = buildTaskCompFactory.bind(this, true, 'dev');
+const debug = buildTaskCompFactory.bind(this, true, 'debug');
+const perf = buildTaskCompFactory.bind(this, true, 'perf');
+const prod = buildTaskCompFactory.bind(this, true, 'prod');
+const build = buildTaskCompFactory.bind(this, false, 'prod');
+const fixturesDev = fixturesTaskCompFactory.bind(this, false);
+const fixturesProd = fixturesTaskCompFactory.bind(this, true);
+const bundlesMain_dev = bundleCompFactory.bind(this, 'main', 'dev');
+const bundlesMain_perf = bundleCompFactory.bind(this, 'main', 'perf');
+const bundlesMain_prod = bundleCompFactory.bind(this, 'main', 'prod');
+const bundlesSw_dev = bundleCompFactory.bind(this, 'sw', 'dev');
+const bundlesSw_perf = bundleCompFactory.bind(this, 'sw', 'perf');
+const bundlesSw_prod = bundleCompFactory.bind(this, 'sw', 'prod');
 
 export default {
   build,
   ccss,
   debug,
   dev,
-  dumpconfig,
+  dumpconfigDev,
+  dumpconfigProd,
   perf,
+  perfbudget,
   prod,
   fixturesDev,
   fixturesProd,
+  bundlesMain_dev,
+  bundlesMain_perf,
+  bundlesMain_prod,
+  bundlesSw_dev,
+  bundlesSw_perf,
+  bundlesSw_prod,
   'default': build
 };
