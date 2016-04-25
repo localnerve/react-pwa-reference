@@ -1,7 +1,7 @@
 dist
-node_modules
+/node_modules
 reports
 tmp
 output
-tests/fixtures
-assets/scripts/sw/precache.js
+src/tests/fixtures
+src/application/assets/scripts/sw/precache.js

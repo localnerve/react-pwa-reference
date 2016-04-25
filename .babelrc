@@ -4,20 +4,20 @@
     "react"
   ],
   "ignore": [
-    "node_modules/*",
+    "react-pwa-boilerplate/node_modules/**",
+    "reports/*",
     "dist/*",
-    "output/*",
-    "gulp/tasks/webpack/**/*.*",
-    "actions/interface.js",
-    "actions/routes.js",
-    "actions/page.js"
+    "src/build/webpack/**/*.*",
+    "src/application/actions/interface.js",
+    "src/application/actions/routes.js",
+    "src/application/actions/page.js"
   ],
   "env": {
     "cover": {
       "plugins": [
         [
           "__coverage__", {
-            "ignore": "tests/"
+            "ignore": "src/tests/"
           }
         ]
       ]
