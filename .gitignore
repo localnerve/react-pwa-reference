@@ -26,6 +26,7 @@ dist/
 reports/
 .nyc_output/
 output/
+/src/node_modules/application
 /src/node_modules/configs/settings/assets.json
 /src/application/assets/scripts/sw/precache.js
 /src/application/assets/scripts/sw/data.json
