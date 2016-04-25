@@ -6,7 +6,7 @@
 
 var webpack = require('webpack');
 
-var configFactoriesGroups = {
+var configFactoryGroups = {
   main: [
     require('./inline'),
     require('./main'),
@@ -20,14 +20,14 @@ var configFactoriesGroups = {
 /**
  * Creates a task for webpack bundling/compiling groups of output targets.
  *
- * @param {Object} settings - The project settings.
  * @param {String} group - The grouping of compilations, ['main', 'sw'].
+ * @param {Object} settings - The project settings.
  * @param {String} target - ['dev', 'perf', 'prod'].
  * @returns nothing, calls done when complete.
  */
-function webpackTaskFactory (settings, group, target) {
+function webpackTaskFactory (group, settings, target) {
   return function taskWebpack (done) {
-    const configFactories = configFactoriesGroups[group];
+    const configFactories = configFactoryGroups[group];
 
     webpack(configFactories.map(function (configFactory) {
       return configFactory(settings, target);

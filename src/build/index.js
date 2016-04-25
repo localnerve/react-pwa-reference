@@ -56,11 +56,11 @@ function buildTaskCompFactory (interactive, target) {
       tasks.copy = copyTaskFactory(settings);
       tasks.imagemin = imageminTaskFactory(settings);
       tasks.ccss = ccssTaskFactory(settings, prod);
-      tasks.mainBundles = webpackTaskFactory(settings, 'main', target);
+      tasks.mainBundles = webpackTaskFactory('main', settings, target);
       tasks.serviceWorkerGenerate =
         serviceWorkerTaskFactory(settings, prod, target !== 'prod');
       tasks.serviceWorkerBundles =
-        webpackTaskFactory(settings, 'sw', target);
+        webpackTaskFactory('sw', settings, target);
 
       if (interactive) {
         tasks.nodemon = nodemonTaskFactory(settings, target);
@@ -188,7 +188,7 @@ function bundleCompFactory (group, target) {
       setupEnvironment(prod);
       const settings = configCreate().settings;
 
-      tasks.bundles = webpackTaskFactory(settings, group, target);
+      tasks.bundles = webpackTaskFactory(group, settings, target);
       if (group.includes('sw')) {
         tasks.generate = serviceWorkerTaskFactory(
           settings, prod, target !== 'prod'
