@@ -8,8 +8,8 @@
 var assert = require('chai').assert;
 var expect = require('chai').expect;
 var messages = require('utils/messages');
-var testDom = require('../../utils/testdom');
-var mockWorker = require('../../mocks/worker');
+var testDom = require('test/utils/testdom');
+var mockWorker = require('test/mocks/worker');
 
 describe('messages', function () {
   var method = 'workerSendMessage', badSuccess = 'should not have succeeded';

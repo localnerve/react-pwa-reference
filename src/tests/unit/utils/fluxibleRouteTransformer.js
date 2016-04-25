@@ -6,9 +6,9 @@
 'use strict';
 
 var expect = require('chai').expect;
-var routesResponseFixture = require('../../fixtures/routes-response');
-var fluxibleRoutesFixture = require('../../fixtures/fluxible-routes');
-var helperTests = require('../../utils/tests');
+var routesResponseFixture = require('test/fixtures/routes-response');
+var fluxibleRoutesFixture = require('test/fixtures/fluxible-routes');
+var helperTests = require('test/utils/tests');
 
 var transformer = require('utils').createFluxibleRouteTransformer({
   actions: require('application/actions/interface')
@@ -51,8 +51,8 @@ describe('transformers', function () {
     // clone routesResponse so we don't disrupt routes-response in require cache.
     jsonRoutes = JSON.parse(JSON.stringify(routesResponseFixture));
     // Fluxible routes are not serializable, that's the whole point.
-    delete require.cache[require.resolve('../../fixtures/fluxible-routes')];
-    fluxibleRoutesFixture = require('../../fixtures/fluxible-routes');
+    delete require.cache[require.resolve('test/fixtures/fluxible-routes')];
+    fluxibleRoutesFixture = require('test/fixtures/fluxible-routes');
     fluxibleRoutes = fluxibleRoutesFixture;
   }
 

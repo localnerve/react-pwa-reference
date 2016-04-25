@@ -12,7 +12,7 @@ var MockService = require('fluxible-plugin-fetchr/utils/MockServiceManager');
 var ApplicationStore = require('application/stores/ApplicationStore').ApplicationStore;
 var ContentStore = require('application/stores/ContentStore').ContentStore;
 var pageAction = require('application/actions/page');
-var serviceData = require('../../mocks/service-data');
+var serviceData = require('test/mocks/service-data');
 
 describe('page action', function () {
   var calledService = 0;

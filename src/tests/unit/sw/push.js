@@ -6,9 +6,9 @@
 'use strict';
 
 var expect = require('chai').expect;
-var mocks = require('../../mocks');
-var Self = require('../../mocks/self');
-var Response = require('../../mocks/response');
+var mocks = require('test/mocks');
+var Self = require('test/mocks/self');
+var Response = require('test/mocks/response');
 
 describe('sw/push', function () {
   var calledPostMessage,
@@ -23,7 +23,7 @@ describe('sw/push', function () {
 
     selfMock = new Self();
     toolbox = require('sw-toolbox');
-    globalFetch = require('../../mocks/sw-fetch');
+    globalFetch = require('test/mocks/sw-fetch');
 
     selfMock.setup({
       pushManager: {

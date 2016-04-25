@@ -16,8 +16,8 @@ var transformer = require('utils').createFluxibleRouteTransformer({
   actions: require('application/actions/interface')
 });
 
-var routesResponse = require('../../fixtures/routes-response');
-var testUtils = require('../../utils/tests');
+var routesResponse = require('test/fixtures/routes-response');
+var testUtils = require('test/utils/tests');
 
 describe('routes action', function () {
   var context;

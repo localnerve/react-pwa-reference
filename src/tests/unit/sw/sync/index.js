@@ -6,8 +6,8 @@
 'use strict';
 
 var expect = require('chai').expect;
-var mocks = require('../../../mocks');
-var Self = require('../../../mocks/self');
+var mocks = require('test/mocks');
+var Self = require('test/mocks/self');
 var syncable = require('utils/syncable');
 var apiHelpers = require('application/assets/scripts/sw/utils/api');
 
@@ -25,7 +25,7 @@ describe('sw/sync/index', function () {
     self.setup();
 
     // setup for fetchMock is local to suites below
-    fetchMock = fetchMock = require('../../../mocks/sw-fetch');
+    fetchMock = require('test/mocks/sw-fetch');
 
     index = require('application/assets/scripts/sw/sync');
     treoMock = require('treo');
@@ -34,8 +34,8 @@ describe('sw/sync/index', function () {
     toolboxMock.mockSetup();
     treoMock.setValue([]);
 
-    global.Request = require('../../../mocks/request');
-    global.Blob = require('../../../mocks/blob');
+    global.Request = require('test/mocks/request');
+    global.Blob = require('test/mocks/blob');
   });
 
   after('sw/sync/index teardown', function () {
@@ -110,7 +110,7 @@ describe('sw/sync/index', function () {
     var self = new Self(), reporterCalled;
 
     before('deferRequest setup', function () {
-      global.Response = require('../../../mocks/response');
+      global.Response = require('test/mocks/response');
       self.setup();
     });
 
@@ -193,7 +193,7 @@ describe('sw/sync/index', function () {
     var mockApis = {}, calledDel, calledPut;
 
     before('serviceAllRequests setup', function () {
-      global.Response = require('../../../mocks/response');
+      global.Response = require('test/mocks/response');
       global.fetch = fetchMock.fetch;
     });
 
@@ -326,7 +326,7 @@ describe('sw/sync/index', function () {
     var calledDel, testTag;
 
     before('sync event', function () {
-      global.Response = require('../../../mocks/response');
+      global.Response = require('test/mocks/response');
       global.fetch = fetchMock.fetch;
     });
 

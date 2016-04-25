@@ -6,7 +6,7 @@
 'use strict';
 
 var expect = require('chai').expect;
-var mocks = require('../../../mocks');
+var mocks = require('test/mocks');
 
 describe('mail/queue', function () {
   var queue, amqplib,

@@ -12,12 +12,12 @@ var SettingsStore = require('application/stores/SettingsStore').SettingsStore;
 var createMockActionContext = require('fluxible/utils').createMockActionContext;
 var pushAction = require('application/actions/push');
 
-var testDom = require('../../utils/testdom');
-var setupPushManager = require('../../mocks/global').setupPushManager;
-var setupPermissions = require('../../mocks/global').setupPermissions;
-var setupNotification = require('../../mocks/global').setupNotification;
-var getSettingsFields = require('../../utils/settings').getSettingsFields;
-var subscription = require('../../mocks/subscription');
+var testDom = require('test/utils/testdom');
+var setupPushManager = require('test/mocks/global').setupPushManager;
+var setupPermissions = require('test/mocks/global').setupPermissions;
+var setupNotification = require('test/mocks/global').setupNotification;
+var getSettingsFields = require('test/utils/settings').getSettingsFields;
+var subscription = require('test/mocks/subscription');
 
 describe('push action', function () {
   var context;

@@ -20,8 +20,8 @@ export default function fixturesTaskFactory (settings) {
   const options = {
     'routes-models.js': {
       output: {
-        routes: `${settings.src.tests}/fixtures/routes-response.js`,
-        models: `${settings.src.tests}/fixtures/models-response.js`
+        routes: 'routes-response.js',
+        models: 'models-response.js'
       }
     }
   }

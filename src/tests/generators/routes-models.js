@@ -9,6 +9,7 @@
 
 var debug = require('debug')('FixtureGenerator:Routes-Models');
 var fs = require('fs');
+var path = require('path');
 var config = require('configs').create();
 var fetch = require('application/server/services/data/fetch');
 var cache = require('application/server/services/data/cache-interface');
@@ -21,6 +22,7 @@ var template = '/** This is a generated file **/\n\
   NODE_ENV = ' + (process.env.NODE_ENV || 'development') + '\n\
   FRED_URL = ' + config.data.FRED.url() + '\n\
 **/\n\
+/*eslint quotes:0 */\n\
 module.exports = JSON.parse(JSON.stringify(\n' + replacement + '\n));'
 ;
 
@@ -39,13 +41,18 @@ function run (output, done) {
       routes.content
     ));
 
-    fs.writeFile(output.routes, contents, function (err) {
+    // Compute the output file location
+    var outputRoutes = require.resolve(path.join(
+      'test/fixtures/', output.routes
+    ));
+
+    fs.writeFile(outputRoutes, contents, function (err) {
       if (err) {
         debug('write of routes response failed');
         return done(err);
       }
 
-      debug('successfully wrote routes response file '+ output.routes);
+      debug('successfully wrote routes response file '+ outputRoutes);
 
       // Prepare models file output - models cached by main resource fetch
       contents = template.replace(replacement, JSON.stringify(
@@ -53,13 +60,18 @@ function run (output, done) {
         )
       );
 
-      fs.writeFile(output.models, contents, function (err) {
+      // Compute the output file location
+      var outputModels = require.resolve(path.join(
+        'test/fixtures', output.models
+      ));
+
+      fs.writeFile(outputModels, contents, function (err) {
         if (err) {
           debug('write of models response failed');
           return done(err);
         }
 
-        debug('successfully wrote models response file '+ output.models);
+        debug('successfully wrote models response file '+ outputModels);
         done();
       });
     });

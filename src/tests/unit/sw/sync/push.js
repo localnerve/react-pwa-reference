@@ -6,8 +6,8 @@
 'use strict';
 
 var expect = require('chai').expect;
-var mocks = require('../../../mocks');
-var Self = require('../../../mocks/self');
+var mocks = require('test/mocks');
+var Self = require('test/mocks/self');
 
 describe('sw/sync/push', function () {
   var globalFetch, treoMock, toolboxMock,
@@ -28,7 +28,7 @@ describe('sw/sync/push', function () {
 
     toolboxMock.mockSetup();
 
-    globalFetch = require('../../../mocks/sw-fetch');
+    globalFetch = require('test/mocks/sw-fetch');
     global.fetch = globalFetch.fetch;
 
     self.setup();
@@ -140,9 +140,9 @@ describe('sw/sync/push', function () {
 
       before(function () {
         self.setup();
-        global.Blob = require('../../../mocks/blob');
-        global.Request = require('../../../mocks/request');
-        global.Response = require('../../../mocks/response');
+        global.Blob = require('test/mocks/blob');
+        global.Request = require('test/mocks/request');
+        global.Response = require('test/mocks/response');
       });
 
       after(function () {

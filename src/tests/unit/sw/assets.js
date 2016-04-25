@@ -7,7 +7,7 @@
 
 var _ = require('lodash');
 var expect = require('chai').expect;
-var mocks = require('../../mocks');
+var mocks = require('test/mocks');
 var urlm = require('utils/urls');
 
 describe('sw/assets', function () {
@@ -21,7 +21,7 @@ describe('sw/assets', function () {
     mocks.swData.begin();
     data = require('./data');
     toolbox = require('sw-toolbox');
-    global.Request = require('../../mocks/request');
+    global.Request = require('test/mocks/request');
 
     assets = require('application/assets/scripts/sw/assets');
   });

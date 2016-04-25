@@ -8,8 +8,8 @@
 var expect = require('chai').expect;
 var _ = require('lodash');
 var syncable = require('utils/syncable');
-var mocks = require('../../../mocks');
-var Self = require('../../../mocks/self');
+var mocks = require('test/mocks');
+var Self = require('test/mocks/self');
 
 describe('sw/sync/serviceable', function () {
   var index, treoMock, toolboxMock, self,
@@ -39,9 +39,9 @@ describe('sw/sync/serviceable', function () {
     toolboxMock.mockSetup();
     treoMock.setValue([]);
 
-    global.Request = require('../../../mocks/request');
-    global.Response = require('../../../mocks/response');
-    global.Blob = require('../../../mocks/blob');
+    global.Request = require('test/mocks/request');
+    global.Response = require('test/mocks/response');
+    global.Blob = require('test/mocks/blob');
 
     serviceable = require('application/assets/scripts/sw/sync/serviceable');
   });

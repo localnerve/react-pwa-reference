@@ -6,7 +6,7 @@
 'use strict';
 
 var expect = require('chai').expect;
-var mocks = require('../../../mocks');
+var mocks = require('test/mocks');
 
 describe('sw/init/backgrounds', function () {
   var toolbox, backgrounds,
@@ -26,8 +26,8 @@ describe('sw/init/backgrounds', function () {
   before('sw/init/backgrounds', function () {
     this.timeout(5000);
 
-    global.Request = require('../../../mocks/request');
-    global.caches = require('../../../mocks/sw-caches').create();
+    global.Request = require('test/mocks/request');
+    global.caches = require('test/mocks/sw-caches').create();
     mocks.swToolbox.begin();
     toolbox = require('sw-toolbox');
 

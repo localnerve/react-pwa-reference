@@ -7,8 +7,8 @@
 
 var expect = require('chai').expect;
 
-var mocks = require('../../mocks');
-var routesResponse = require('../../fixtures/routes-response');
+var mocks = require('test/mocks');
+var routesResponse = require('test/fixtures/routes-response');
 
 describe('routes service', function () {
   var routes;

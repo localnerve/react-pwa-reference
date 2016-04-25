@@ -6,7 +6,7 @@
 'use strict';
 
 var expect = require('chai').expect;
-var mocks = require('../../../mocks');
+var mocks = require('test/mocks');
 
 describe('sw/utils/customNetworkFirst', function () {
   var toolbox, globalFetch, GlobalRequest, globalCacheStorage;
@@ -23,15 +23,15 @@ describe('sw/utils/customNetworkFirst', function () {
     toolbox = require('sw-toolbox');
     toolbox.mockSetup();
 
-    globalFetch = require('../../../mocks/sw-fetch');
+    globalFetch = require('test/mocks/sw-fetch');
     global.fetch = globalFetch.fetch;
 
-    globalCacheStorage = require('../../../mocks/sw-caches');
+    globalCacheStorage = require('test/mocks/sw-caches');
 
     // so far, not used by module under test, so keep it here
-    GlobalRequest = require('../../../mocks/request');
+    GlobalRequest = require('test/mocks/request');
 
-    global.Response = require('../../../mocks/response');
+    global.Response = require('test/mocks/response');
 
     // The module under test
     customNetworkFirst = require('application/assets/scripts/sw/utils/customNetworkFirst');

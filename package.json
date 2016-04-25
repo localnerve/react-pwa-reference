@@ -27,7 +27,7 @@
   "scripts": {
     "_test": "mocha output/tests/unit --recursive --reporter spec",
     "build": "npm run lint && gulp build",
-    "build:output": "rimraf output/ && babel ./src --ignore='build/*' -d output && gulp json",
+    "build:output": "rimraf output/ && gulp json && babel ./src --ignore='build/*' -d output",
     "build:list": "gulp --tasks",
     "ccss": "gulp ccss",
     "config:dev": "gulp dumpconfigDev",

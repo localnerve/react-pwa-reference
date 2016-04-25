@@ -11,10 +11,10 @@ var createMockActionContext = require('fluxible/utils').createMockActionContext;
 var SettingsStore = require('application/stores/SettingsStore').SettingsStore;
 var settingsAction = require('application/actions/settings').settingsState;
 
-var testDom = require('../../utils/testdom');
-var setupPermissions = require('../../mocks/global').setupPermissions;
-var setupPushManager = require('../../mocks/global').setupPushManager;
-var getSettingsFields = require('../../utils/settings').getSettingsFields;
+var testDom = require('test/utils/testdom');
+var setupPermissions = require('test/mocks/global').setupPermissions;
+var setupPushManager = require('test/mocks/global').setupPushManager;
+var getSettingsFields = require('test/utils/settings').getSettingsFields;
 
 describe('settings action', function () {
   var context, params = {};
