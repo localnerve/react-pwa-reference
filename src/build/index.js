@@ -8,7 +8,7 @@ import util from 'util';
 import { create as configCreate } from 'configs';
 import cleanTaskFactory from './clean';
 import copyTaskFactory from './copy';
-import jsonTaskFactory from './json';
+import prepTaskFactory from './prep';
 import imageminTaskFactory from './imagemin';
 import ccssTaskFactory from './ccss';
 import nodemonTaskFactory from './nodemon';
@@ -16,6 +16,7 @@ import webpackTaskFactory from './webpack';
 import fixturesTaskFactory from './fixtures';
 import serviceWorkerTaskFactory from './service-worker';
 import perfbudgetTaskFactory from './perfbudget';
+import symlinkTaskFactory from './symlink';
 
 /**
  * Setup the build process environment.
@@ -142,16 +143,38 @@ function dumpConfigTaskFactory (prod) {
  *
  * @returns The json task.
  */
-function jsonTaskCompFactory () {
+function prepTaskCompFactory () {
   const tasks = {};
 
   return gulp.series(
     function setup (done) {
-      tasks.json = jsonTaskFactory(configCreate().settings);
+      tasks.prep = prepTaskFactory(configCreate().settings);
       done();
     },
-    function json (done) {
-      return tasks.json(done);
+    function prep (done) {
+      return tasks.prep(done);
+    }
+  );
+}
+
+/**
+ * Factory for standalone task to process symlinks.
+ *
+ * TODO: use settings.
+ *
+ * @param {Boolean} output - True to create symlink in output, false for src.
+ * @returns The symlink task.
+ */
+function symlinkTaskCompFactory (output) {
+  const tasks = {};
+
+  return gulp.series(
+    function setup (done) {
+      tasks.symlink = symlinkTaskFactory(output);
+      done();
+    },
+    function symlink (done) {
+      return tasks.symlink(done);
     }
   );
 }
@@ -210,7 +233,8 @@ function bundleCompFactory (group, target) {
 
 // Public aliases for targeted task composition factories
 const ccss = ccssTaskCompFactory;
-const json = jsonTaskCompFactory;
+const prep = prepTaskCompFactory;
+const symlinkSrc = symlinkTaskCompFactory.bind(this, false);
 const perfbudget = perfbudgetTaskFactory;
 const dumpconfigDev = dumpConfigTaskFactory.bind(this, false);
 const dumpconfigProd = dumpConfigTaskFactory.bind(this, true);
@@ -241,11 +265,12 @@ export default {
   dev,
   dumpconfigDev,
   dumpconfigProd,
-  perf,
-  perfbudget,
-  prod,
   fixturesDev,
   fixturesProd,
-  json,
+  perf,
+  perfbudget,
+  prep,
+  prod,
+  symlinkSrc,
   'default': build
 };

@@ -27,7 +27,7 @@
   "scripts": {
     "_test": "mocha output/tests/unit --recursive --reporter spec",
     "build": "npm run lint && gulp build",
-    "build:output": "rimraf output/ && gulp json && babel ./src --ignore='build/*' -d output",
+    "build:output": "gulp prep && babel ./src --ignore='build/*,node_modules/application' -d output",
     "build:list": "gulp --tasks",
     "ccss": "gulp ccss",
     "config:dev": "gulp dumpconfigDev",
@@ -39,7 +39,7 @@
     "lint": "eslint .",
     "perf": "npm run lint && gulp perf",
     "perfbudget": "gulp perfbudget",
-    "postinstall": "node -e 'try{require(\"fs\").symlinkSync(\"../application\",\"src/node_modules/application\",\"dir\")}catch(e){}'",
+    "postinstall": "gulp symlinkSrc",
     "prod": "npm run lint && gulp prod",
     "start": "node -e 'process.env.NODE_ENV = process.env.NODE_ENV || \"production\"; require(\"./output/application/server\");'",
     "test": "npm run build:output && npm run _test",
@@ -96,7 +96,6 @@
     "nyc": "^6.4.0",
     "precommit-hook": "^3.0.0",
     "q": "^1.4.1",
-    "rimraf": "^2.5.2",
     "sw-precache": "^3.1.1",
     "wd": "^0.4.0",
     "webpack": "^1.12.15"
