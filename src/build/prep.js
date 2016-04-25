@@ -11,19 +11,18 @@ import del from 'del';
  * Runs before a compilation task to make the output complete/correct.
  * Copies json, makes symlinks.
  *
- * TODO: use settings.
- *
+ * @param {Object} settings - The project settings.
  * @returns {Function} the prep task.
  */
-export default function prepTaskFactory () {
+export default function prepTaskFactory (settings) {
   return gulp.series(
     function clean () {
-      return del(['./output']);
+      return del([settings.output.baseDir]);
     },
     function json () {
-      return gulp.src('./src/**/*.json')
-      .pipe(gulp.dest('./output'));
+      return gulp.src(`${settings.src.baseDir}/**/*.json`)
+      .pipe(gulp.dest(settings.output.baseDir));
     },
-    symlinkTaskFactory(true)
+    symlinkTaskFactory(settings, true)
   );
 }

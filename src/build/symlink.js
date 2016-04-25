@@ -7,16 +7,15 @@ import gulp from 'gulp';
 /**
  * Factory for the symlink task.
  *
- * TODO: use settings.
- *
+ * @param {Object} settings - The project settings.
  * @param {Boolean} output - True to create symlink in output, false for src.
  * @returns {Function} the symlink task.
  */
-export default function symlinkTaskFactory (output) {
-  const baseDir = `./${output ? 'output' : 'src'}`;
+export default function symlinkTaskFactory (settings, output) {
+  const target = output ? 'output' : 'src';
 
   return function symlink () {
-    return gulp.src(`${baseDir}/application`)
-    .pipe(gulp.symlink(`${baseDir}/node_modules`));
+    return gulp.src(`./${settings[target].application}`)
+    .pipe(gulp.symlink(`./${settings[target].baseDir}/node_modules`));
   }
 }

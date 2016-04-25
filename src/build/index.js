@@ -170,7 +170,7 @@ function symlinkTaskCompFactory (output) {
 
   return gulp.series(
     function setup (done) {
-      tasks.symlink = symlinkTaskFactory(output);
+      tasks.symlink = symlinkTaskFactory(configCreate().settings, output);
       done();
     },
     function symlink (done) {

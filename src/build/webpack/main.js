@@ -27,7 +27,7 @@ export default function mainConfig (settings, type) {
     resolve: {
       extensions: ['', '.js', '.jsx']
     },
-    entry: `./${settings.src.baseDir}/client.js`,
+    entry: `./${settings.src.clientEntry}`,
     output: {
       path: settings.dist.scripts,
       publicPath: settings.web.scripts
