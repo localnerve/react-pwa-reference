@@ -2,11 +2,9 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
-
-var path = require('path');
-var webpack = require('webpack');
-var uglifyPluginFactory = require('./plugins/uglify');
+import path from 'path';
+import webpack from 'webpack';
+import uglifyPluginFactory from './plugins/uglify';
 
 /**
  * Generate the inline script bundle.
@@ -15,9 +13,9 @@ var uglifyPluginFactory = require('./plugins/uglify');
  * @param {String} type - One of ['dev', 'prod', 'perf'].
  * @returns {Object} The web pack config for the inline bundle.
  */
-function inlineConfig (settings, type) {
-  var config = {
-    entry: './' + settings.src.inlineScript,
+export default function inlineConfig (settings, type) {
+  const config = {
+    entry: `./${settings.src.inlineScript}`,
     output: {
       path: settings.dist.scripts,
       filename: path.basename(settings.dist.inlineScript)
@@ -42,5 +40,3 @@ function inlineConfig (settings, type) {
 
   return config;
 }
-
-module.exports = inlineConfig;

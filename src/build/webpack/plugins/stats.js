@@ -3,15 +3,14 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /*eslint no-console:0 */
-'use strict';
+import fs from 'fs';
+import merge from 'lodash/merge';
+import AsyncLock from 'async-lock';
 
-var fs = require('fs');
-var merge = require('lodash/merge');
-var AsyncLock = require('async-lock');
-var lock = new AsyncLock({
+const lock = new AsyncLock({
   timeout: 5000
 });
-var statsKey = 'stats';
+const statsKey = 'stats';
 
 /**
  * Add the options for consumption by statsPlugin.
@@ -19,18 +18,18 @@ var statsKey = 'stats';
  * @param {Object} settings - The project settings.
  * @param {Object} [options] - The options object to ammend.
  */
-function statsPluginOptions (settings, options) {
+export function statsPluginOptions (settings, options) {
   options = options || {};
 
-  var statsPluginOptions = {
+  const pluginOptions = {
     assetsJson: settings.src.assetsJson,
     CHUNK_REGEX: /^([A-Za-z0-9_\-]+)\..*/
   };
 
   if (options.custom) {
-    options.custom = merge(options.custom, statsPluginOptions);
+    options.custom = merge(options.custom, pluginOptions);
   } else {
-    options.custom = statsPluginOptions;
+    options.custom = pluginOptions;
   }
 
   return options;
@@ -42,20 +41,20 @@ function statsPluginOptions (settings, options) {
  * @param {Object} self - A reference to the current webpack execution context
  * @param {String} [statsJson] - A path to a file to collect the build stats.
  */
-function statsPlugin (self, statsJson) {
+export function statsPlugin (self, statsJson) {
   self.plugin('done', function (stats) {
-    var assetsJsonFile = self.options.custom.assetsJson;
-    var data = stats.toJson();
-    var assets = data.assetsByChunkName;
-    var output = {
+    const assetsJsonFile = self.options.custom.assetsJson;
+    const data = stats.toJson();
+    const assets = data.assetsByChunkName;
+    let output = {
       assets: {}
     };
 
-    Object.keys(assets).forEach(function (key) {
-      var value = assets[key];
+    Object.keys(assets).forEach((key) => {
+      const value = assets[key];
 
       // If regex matched, use [name] for key
-      var matches = key.match(self.options.custom.CHUNK_REGEX);
+      const matches = key.match(self.options.custom.CHUNK_REGEX);
       if (matches) {
         key = matches[1];
       }
@@ -63,10 +62,10 @@ function statsPlugin (self, statsJson) {
     });
 
     // webpack can be running multiple configurations in parallel...
-    lock.acquire(statsKey, function (done) {
+    lock.acquire(statsKey, (done) => {
       // If assetsJsonFile exists, merge output
       if (fs.existsSync(assetsJsonFile)) {
-        var previousOutput = JSON.parse(
+        const previousOutput = JSON.parse(
          fs.readFileSync(assetsJsonFile, { encoding: 'utf8' })
         );
         output = merge(previousOutput, output);
@@ -78,7 +77,7 @@ function statsPlugin (self, statsJson) {
         fs.writeFileSync(statsJson, JSON.stringify(data));
       }
       done();
-    }, function (err) {
+    }, (err) => {
       if (err) {
         console.error('lock.acquire error writing assets/stats: ' + err);
       }
@@ -86,7 +85,7 @@ function statsPlugin (self, statsJson) {
   });
 }
 
-module.exports = {
-  statsPluginOptions: statsPluginOptions,
-  statsPlugin: statsPlugin
+export default {
+  statsPluginOptions,
+  statsPlugin
 };

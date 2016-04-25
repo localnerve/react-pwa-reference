@@ -2,18 +2,20 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
+import webpack from 'webpack';
+import inlineConfig from './inline';
+import mainConfig from './main';
+import swMainConfig from './swMain';
+import swRegConfig from './swReg';
 
-var webpack = require('webpack');
-
-var configFactoryGroups = {
+const configFactoryGroups = {
   main: [
-    require('./inline'),
-    require('./main'),
-    require('./swReg')
+    inlineConfig,
+    mainConfig,
+    swRegConfig
   ],
   sw: [
-    require('./swMain')
+    swMainConfig
   ]
 };
 
@@ -25,16 +27,12 @@ var configFactoryGroups = {
  * @param {String} target - ['dev', 'perf', 'prod'].
  * @returns nothing, calls done when complete.
  */
-function webpackTaskFactory (group, settings, target) {
+export default function webpackTaskFactory (group, settings, target) {
   return function taskWebpack (done) {
     const configFactories = configFactoryGroups[group];
 
-    webpack(configFactories.map(function (configFactory) {
+    webpack(configFactories.map((configFactory) => {
       return configFactory(settings, target);
-    }), function (err) {
-      done(err);
-    });
+    }), done);
   };
 }
-
-module.exports = webpackTaskFactory;

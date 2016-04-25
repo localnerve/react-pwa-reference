@@ -2,12 +2,9 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
-
-var webpack = require('webpack');
-var uglifyPluginFactory = require('./plugins/uglify');
-var statsPluginOptions = require('./plugins/stats').statsPluginOptions;
-var statsPlugin = require('./plugins/stats').statsPlugin;
+import webpack from 'webpack';
+import uglifyPluginFactory from './plugins/uglify';
+import { statsPlugin, statsPluginOptions } from './plugins/stats';
 
 /**
  * Generate the webpack config for the service worker registration bundle.
@@ -16,13 +13,12 @@ var statsPlugin = require('./plugins/stats').statsPlugin;
  * @param {String} type - One of ['dev', 'prod', 'perf'].
  * @returns {Object} The web pack config for the sw reg bundle.
  */
-function swRegConfig (settings, type) {
-  var devtoolModuleFilenameTemplate = 'webpack:///sw-reg/[resource-path]';
-  var additionalPlugins = [];
-
-  var config = statsPluginOptions(settings, {
+export default function swRegConfig (settings, type) {
+  const devtoolModuleFilenameTemplate = 'webpack:///sw-reg/[resource-path]';
+  const additionalPlugins = [];
+  const config = statsPluginOptions(settings, {
     entry: {
-      swReg: './' + settings.src.serviceWorker.registration
+      swReg: `./${settings.src.serviceWorker.registration}`
     },
     output: {
       path: settings.dist.scripts,
@@ -64,5 +60,3 @@ function swRegConfig (settings, type) {
 
   return config;
 }
-
-module.exports = swRegConfig;

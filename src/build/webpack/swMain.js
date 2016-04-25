@@ -2,12 +2,9 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
-
-var webpack = require('webpack');
-var uglifyPluginFactory = require('./plugins/uglify');
-var statsPluginOptions = require('./plugins/stats').statsPluginOptions;
-var statsPlugin = require('./plugins/stats').statsPlugin;
+import webpack from 'webpack';
+import uglifyPluginFactory from './plugins/uglify';
+import { statsPlugin, statsPluginOptions } from './plugins/stats';
 
 /**
  * Generate the service worker main script bundle.
@@ -16,12 +13,12 @@ var statsPlugin = require('./plugins/stats').statsPlugin;
  * @param {String} type - One of ['dev', 'prod', 'perf'].
  * @returns {Object} The web pack config for the service worker bundle.
  */
-function swMainConfig (settings, type) {
-  var devtoolModuleFilenameTemplate = 'webpack:///sw/[resource-path]';
+export default function swMainConfig (settings, type) {
+  const devtoolModuleFilenameTemplate = 'webpack:///sw/[resource-path]';
 
-  var config = statsPluginOptions(settings, {
+  const config = statsPluginOptions(settings, {
     entry: {
-      sw: './' + settings.src.serviceWorker.entry
+      sw: `./${settings.src.serviceWorker.entry}`
     },
     output: {
       path: settings.dist.scripts,
@@ -66,5 +63,3 @@ function swMainConfig (settings, type) {
 
   return config;
 }
-
-module.exports = swMainConfig;
