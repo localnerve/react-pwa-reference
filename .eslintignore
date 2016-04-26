@@ -3,5 +3,4 @@ dist
 reports
 tmp
 output
-src/tests/fixtures
-src/application/assets/scripts/sw/precache.js
+src/application/client/sw/precache.js

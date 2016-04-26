@@ -10,7 +10,7 @@ var expect = require('chai').expect;
 var testDom = require('test/utils/testdom');
 var requestAPI = require('test/mocks/request');
 var blobAPI = require('test/mocks/blob');
-var requestLib = require('application/assets/scripts/sw/utils/requests');
+var requestLib = require('application/client/sw/utils/requests');
 
 describe('sw/utils/requests', function () {
   var absoluteUrlNoSearch = 'https://example.org/route',

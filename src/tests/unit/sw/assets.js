@@ -23,7 +23,7 @@ describe('sw/assets', function () {
     toolbox = require('sw-toolbox');
     global.Request = require('test/mocks/request');
 
-    assets = require('application/assets/scripts/sw/assets');
+    assets = require('application/client/sw/assets');
   });
 
   after(function () {

@@ -32,7 +32,7 @@ describe('sw/sync/push', function () {
     global.fetch = globalFetch.fetch;
 
     self.setup();
-    push = require('application/assets/scripts/sw/sync/push');
+    push = require('application/client/sw/sync/push');
   });
 
   after('sw/sync/push teardown', function () {

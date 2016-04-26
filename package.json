@@ -27,7 +27,7 @@
   "scripts": {
     "_test": "mocha output/tests/unit --recursive --reporter spec",
     "build": "npm run lint && gulp build",
-    "build:output": "gulp prep && babel ./src --ignore='build/*,node_modules/application' -d output",
+    "build:output": "gulp prep && babel ./src --ignore='build/*,assets/*,node_modules/application' -d output",
     "build:list": "gulp --tasks",
     "ccss": "gulp ccss",
     "config:dev": "gulp dumpconfigDev",

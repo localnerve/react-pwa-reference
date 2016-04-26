@@ -19,7 +19,7 @@ describe('sw/utils/db', function () {
     toolbox = require('sw-toolbox');
     toolbox.mockSetup();
 
-    db = require('application/assets/scripts/sw/utils/db');
+    db = require('application/client/sw/utils/db');
   });
 
   after(function () {

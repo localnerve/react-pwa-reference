@@ -32,7 +32,7 @@ describe('sw/sync/serviceable', function () {
       }
     });
 
-    index = require('application/assets/scripts/sw/sync');
+    index = require('application/client/sw/sync');
     treoMock = require('treo');
     toolboxMock = require('sw-toolbox');
 
@@ -43,7 +43,7 @@ describe('sw/sync/serviceable', function () {
     global.Response = require('test/mocks/response');
     global.Blob = require('test/mocks/blob');
 
-    serviceable = require('application/assets/scripts/sw/sync/serviceable');
+    serviceable = require('application/client/sw/sync/serviceable');
   });
 
   after('sw/sync/serviceable teardown', function () {

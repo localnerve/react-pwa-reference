@@ -90,7 +90,7 @@ export default function ccssTaskFactory (settings, prod) {
       if (!prod) {
         gulp.watch('*.scss', {
           cwd: settings.src.styles
-        }, sass.bind(null, settings));
+        }, sass.bind(null, settings, prod));
       }
       done();
     }

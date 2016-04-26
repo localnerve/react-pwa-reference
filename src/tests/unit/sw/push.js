@@ -49,7 +49,7 @@ describe('sw/push', function () {
       openWindow: function () {}
     };
 
-    require('application/assets/scripts/sw/push');
+    require('application/client/sw/push');
   });
 
   beforeEach(function () {

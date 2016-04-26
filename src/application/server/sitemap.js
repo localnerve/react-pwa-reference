@@ -10,15 +10,13 @@
 import debugLib from 'debug';
 import urlLib from 'url';
 import sitemapLib from 'sitemap-xml';
-import utils from 'utils';
+import utils from 'utils/node';
 import configs from 'configs';
 import serviceData from './services/data';
 
 const debug = debugLib('server:sitemap');
 
-const config = configs.create({
-  baseDir: '..'
-});
+const config = configs.create();
 const settings = config.settings;
 
 /**

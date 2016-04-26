@@ -105,7 +105,7 @@ describe('sw/sync/filters', function () {
   }
 
   before(function () {
-    filters = require('application/assets/scripts/sw/sync/filters');
+    filters = require('application/client/sw/sync/filters');
   });
 
   describe('latest', function () {

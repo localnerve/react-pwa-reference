@@ -31,7 +31,7 @@ describe('sw/init/backgrounds', function () {
     mocks.swToolbox.begin();
     toolbox = require('sw-toolbox');
 
-    backgrounds = require('application/assets/scripts/sw/init/backgrounds');
+    backgrounds = require('application/client/sw/init/backgrounds');
   });
 
   after(function () {

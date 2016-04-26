@@ -11,7 +11,7 @@ import debugLib from 'debug';
 import React from 'react';
 import { render } from 'react-dom';
 import { createElementWithContext } from 'fluxible-addons-react';
-import app from './app';
+import app from 'application/app';
 
 if (DEBUG) {
   window.React = React; // for chrome dev tool support

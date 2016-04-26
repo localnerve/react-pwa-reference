@@ -24,10 +24,10 @@ node_modules/*
 tmp
 dist/
 reports/
-.nyc_output/
 output/
+.nyc_output/
 /src/node_modules/application
 /src/node_modules/configs/settings/assets.json
-/src/application/assets/scripts/sw/precache.js
-/src/application/assets/scripts/sw/data.json
+/src/application/client/sw/precache.js
+/src/application/client/sw/data.json
 /webpack-stats*

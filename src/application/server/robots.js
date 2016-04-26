@@ -13,15 +13,13 @@
 import debugLib from 'debug';
 import fs from 'fs';
 import urlLib from 'url';
-import utils from 'utils';
+import utils from 'utils/node';
 import configs from 'configs';
 import serviceData from './services/data';
 
 const debug = debugLib('server:robots');
 
-const config = configs.create({
-  baseDir: '..'
-});
+const config = configs.create();
 const settings = config.settings;
 
 /**

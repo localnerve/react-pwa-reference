@@ -34,7 +34,7 @@ describe('sw/utils/customNetworkFirst', function () {
     global.Response = require('test/mocks/response');
 
     // The module under test
-    customNetworkFirst = require('application/assets/scripts/sw/utils/customNetworkFirst');
+    customNetworkFirst = require('application/client/sw/utils/customNetworkFirst');
   });
 
   after('sw/utils/customNetworkFirst', function () {

@@ -9,7 +9,7 @@ var expect = require('chai').expect;
 var mocks = require('test/mocks');
 var Self = require('test/mocks/self');
 var syncable = require('utils/syncable');
-var apiHelpers = require('application/assets/scripts/sw/utils/api');
+var apiHelpers = require('application/client/sw/utils/api');
 
 describe('sw/sync/index', function () {
   var index, treoMock, toolboxMock, fetchMock;
@@ -27,7 +27,7 @@ describe('sw/sync/index', function () {
     // setup for fetchMock is local to suites below
     fetchMock = require('test/mocks/sw-fetch');
 
-    index = require('application/assets/scripts/sw/sync');
+    index = require('application/client/sw/sync');
     treoMock = require('treo');
     toolboxMock = require('sw-toolbox');
 

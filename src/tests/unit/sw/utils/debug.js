@@ -19,7 +19,7 @@ describe('sw/utils/debug', function () {
 
     mocks.swUtilsIdbTreo.begin();
     treoMock = require('treo');
-    debugLib = require('application/assets/scripts/sw/utils/debug');
+    debugLib = require('application/client/sw/utils/debug');
 
     treoMock.setValue(mockValue);
   });

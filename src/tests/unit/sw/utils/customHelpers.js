@@ -33,7 +33,7 @@ describe('sw/utils/customHelpers', function () {
     global.Response = require('test/mocks/response');
 
     // The module under test
-    customHelpers = require('application/assets/scripts/sw/utils/customHelpers');
+    customHelpers = require('application/client/sw/utils/customHelpers');
   });
 
   after('sw/utils/customHelpers', function () {
