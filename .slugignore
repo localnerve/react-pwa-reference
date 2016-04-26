@@ -1,6 +1,7 @@
 /src
 /reports
 /output/tests
+/output/application/assets
 start.js
 gulpfile*.js
 README.md
