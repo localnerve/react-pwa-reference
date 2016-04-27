@@ -12,19 +12,24 @@
 
 var toolbox = require('sw-toolbox');
 var data = require('./data.json');
+var dataManifest = data.manifest || {
+  debug: false,
+  cacheId: 'app'
+};
 
-toolbox.options.debug = data.debug;
+toolbox.options.debug = dataManifest.debug;
 
 // Construct cache name and save scope.
 // Relies on sw-toolbox default name format for scope.
 // CacheId must always start name.
 var m = toolbox.options.cache.name.match(/([^\$]+)\${3}$/);
 toolbox.options.scope = m && m[1];
-toolbox.options.cache.name = data.cacheId + '-' + toolbox.options.cache.name;
+toolbox.options.cache.name = dataManifest.cacheId + '-' +
+  toolbox.options.cache.name;
 
 // Setup debugging
 var debugLib = require('./utils/debug');
-if (data.debug) {
+if (toolbox.options.debug) {
   debugLib.enable('*');
 }
 var debug = debugLib('index');
