@@ -1,13 +1,22 @@
 # react-pwa-boilerplate
 
-> A project boilerplate for reactiflux progressive web applications.
+> A project boilerplate for universal reactiflux progressive web applications.
 
 ## WIP
 
-> This works, but it's a work in progress.
+> Working, but a work in progress.
 
 ## Prerequisites
-1. At least Node 4 LTS, recommend 5+, [nvm](https://github.com/creationix/nvm)
+Just Node.
+* At least Node 4 LTS, recommend 5+, [nvm](https://github.com/creationix/nvm)
+
+## Stack
+* **N**ode
+* **E**xpress
+* **R**eact (Facebook)
+* **F**luxible (Yahoo)
+* sw-toolbox, sw-precache (Google)
+* babel6, gulp4, eslint, mocha, chai, sass
 
 ## Setup
 1. `git clone https://github.com/localnerve/react-pwa-boilerplate`
