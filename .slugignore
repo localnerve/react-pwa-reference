@@ -1,7 +1,7 @@
 /src
+/assets
 /reports
 /output/tests
-/output/assets
 /output/application/client
 start.js
 gulpfile*.js

@@ -16,7 +16,7 @@ import gulpImagemin from 'gulp-imagemin';
 export default function imageminTaskFactory (settings) {
   return function imagemin () {
     return gulp.src('**/*.{jpg,jpeg,png}', {
-      cwd: settings.src.images
+      cwd: settings.assets.images
     })
     .pipe(gulpImagemin({
       progressive: true

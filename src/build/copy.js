@@ -23,7 +23,7 @@ export default function copyTaskFactory (settings) {
       // scripts are processed by webpack
       '!scripts/**'
     ], {
-      cwd: settings.src.assets
+      cwd: settings.assets.baseDir
     })
     .pipe(gulp.dest(settings.dist.baseDir));
   }

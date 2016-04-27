@@ -19,7 +19,7 @@ import assetFunctions from 'node-sass-asset-functions';
  */
 function svg2png (settings) {
   return gulp.src('**/*.svg', {
-    cwd: settings.src.images
+    cwd: settings.assets.images
   })
   .pipe(gulpSvg2png())
   .pipe(gulp.dest(settings.dist.images));
@@ -32,7 +32,7 @@ function svg2png (settings) {
  */
 function svgmin (settings) {
   return gulp.src('**/*.svg', {
-    cwd: settings.src.images
+    cwd: settings.assets.images
   })
   .pipe(gulpSvgmin())
   .pipe(gulp.dest(settings.dist.images));
