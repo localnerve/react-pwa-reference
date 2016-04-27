@@ -32,6 +32,7 @@
     "config:dev": "gulp dumpconfigDev",
     "config:prod": "gulp dumpconfigProd",
     "dev": "npm run lint && gulp dev",
+    "dev:analyze": "webpack-bundle-size-analyzer",
     "dev:ccss": "gulp ccss",
     "dev:debug": "npm run lint && gulp debug",
     "dev:perf": "npm run lint && gulp perf",
@@ -98,7 +99,8 @@
     "q": "^1.4.1",
     "sw-precache": "^3.1.1",
     "wd": "^0.4.0",
-    "webpack": "^1.12.15"
+    "webpack": "^1.12.15",
+    "webpack-bundle-size-analyzer": "^2.0.1"
   },
   "dependencies": {
     "amqplib": "^0.4.1",
