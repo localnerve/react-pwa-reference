@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+/***
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global window, document */
@@ -7,10 +7,17 @@ import debugLib from 'debug';
 import React from 'react';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 import { handleHistory, navigateAction } from 'fluxible-router';
+import Background from './Background';
+import PageContainer from './PageContainer';
 
 const debug = debugLib('application');
 
 let Application = React.createClass({
+  propTypes: {
+    navigateComplete: React.PropTypes.bool.isRequired,
+    pageTitle: React.PropTypes.string.isRequired,
+    analytics: React.PropTypes.string.isRequired
+  },
   contextTypes: {
     getStore: React.PropTypes.func.isRequired,
     executeAction: React.PropTypes.func.isRequired
@@ -18,7 +25,7 @@ let Application = React.createClass({
 
   handleMessage: function (event) {
     if (event.data.command === 'navigate') {
-      this.modalClose();
+      // this.modalClose();
       this.context.executeAction(navigateAction, {
         url: event.data.url
       });
@@ -30,7 +37,10 @@ let Application = React.createClass({
 
     return (
       <div className="app-block">
-        <h1>Place Application Here</h1>
+        <Background prefetch={false} />
+        <PageContainer>
+          <h1>Place Application Here</h1>
+        </PageContainer>
       </div>
     );
   },
@@ -87,10 +97,10 @@ Application = connectToStores(
   }
 );
 
-Application = handleHistory(Application, {
-  enableScroll: false
-});
+Application = provideContext(
+  handleHistory(Application, {
+    enableScroll: false
+  })
+);
 
-Application = provideContext(Application);
-
-export default Application;
+export default Application

@@ -1,14 +1,17 @@
-/**
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+/***
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Only rendered on the server
  */
+/*eslint react/no-danger:0 */
 import React from 'react';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 
 let Html = React.createClass({
   propTypes: {
+    currentPageTitle: React.PropTypes.string.isRequired,
+    imageServiceHost: React.PropTypes.string.isRequired,
     images: React.PropTypes.string.isRequired,
     inlineStyles: React.PropTypes.string.isRequired,
     trackingSnippet: React.PropTypes.string.isRequired,
@@ -90,4 +93,4 @@ Html = provideContext(
   })
 );
 
-export default Html;
+export default Html

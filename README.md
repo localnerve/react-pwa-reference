@@ -7,8 +7,7 @@
 > Working, but a work in progress.
 
 ## Prerequisites
-Just Node.
-* At least Node 4 LTS, recommend 5+, [nvm](https://github.com/creationix/nvm)
+Just Node - At least Node 4 LTS, recommend [nvm](https://github.com/creationix/nvm)
 
 ## Stack
 * **N**ode

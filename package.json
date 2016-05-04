@@ -105,6 +105,7 @@
   "dependencies": {
     "amqplib": "^0.4.1",
     "body-parser": "^1.15.0",
+    "classnames": "^2.2.5",
     "compression": "^1.6.1",
     "connect-modrewrite": "^0.9.0",
     "cookie-parser": "^1.4.1",
@@ -126,6 +127,7 @@
     "object-assign": "^4.0.1",
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
+    "react-element-size-reporter": "^0.2.1",
     "react-spinner": "localnerve/react-spinner",
     "remarkable": "^1.6.2",
     "serialize-javascript": "^1.2.0",
@@ -137,11 +139,9 @@
     "web-push": "0.0.11"
   },
   "devEngines": {
-    "node": "4.x || 5.x",
-    "npm": "2.x || 3.x"
+    "node": ">= 4.x"
   },
   "engines": {
-    "node": "4.x || 5.x",
-    "npm": "2.x || 3.x"
+    "node": "> = 4.x"
   }
 }

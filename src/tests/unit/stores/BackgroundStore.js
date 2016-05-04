@@ -193,7 +193,7 @@ describe('Background store', function () {
     }, {
       height: 10,
       top: 10,
-      add: true
+      accumulate: true
     }, {
       width: 200,
       height: 200
@@ -203,7 +203,7 @@ describe('Background store', function () {
     }, {
       width: 200,
       height: 200,
-      add: true
+      accumulate: true
     }];
 
     it('should set a width and height', function () {

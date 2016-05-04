@@ -43,13 +43,13 @@ const backgroundStore = createStore({
    * UPDATE_SIZE action handler.
    *
    * @param {Object} payload - The payload for the update size action.
-   * @param {Boolean} [payload.add] - Boolean indicating the size updates are additive.
+   * @param {Boolean} [payload.accumulate] - Boolean indicating the size updates are additive.
    * @param {Number} [payload.width] - The width dimension of the size update.
    * @param {Number} [payload.height] - The height dimension of the size update.
    * @param {Number} [payload.top] - The top measurement of the size update.
    */
   updateSize: function (payload) {
-    if (payload.add) {
+    if (payload.accumulate) {
       this.width += payload.width || 0;
       this.height += payload.height || 0;
     } else {
