@@ -19,4 +19,4 @@ export function updateSize (context, payload, done) {
   done();
 }
 
-export default updateSize;
+export default updateSize
