@@ -1,0 +1,39 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// styles for all pages
+
+.page-content {
+  @include grid-content;
+  min-width: 20rem;
+
+  // set a layout boundary
+  // height: 22rem;
+  // width: 100%;
+  // let content dictate, get perf elsewhere
+
+  @include breakpoint(medium) {
+    padding: 0 2rem;
+    min-height: 20rem;
+    min-width: 26rem;
+  }
+
+  p {
+    @include breakpoint(medium) {
+      font-size: 1.2rem;
+    }
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
+
+@import "contact/styles";
+
+@import "spinner";
+// Pulled directly from the react-spinner package.
+@import "react-spinner";
+
+// This was split into another bundle.
+// @import "settings/styles";

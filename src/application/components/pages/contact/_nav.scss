@@ -1,0 +1,94 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// styles for the nav component
+@import "arrows";
+
+@mixin button-span() {
+  display: block;
+  float: left;
+  padding: $rem-base/2 !important;
+  min-width: 0;
+}
+
+// $button-submit-bgcolor: $app-accent-dark-bgcolor;
+// $button-submit-color: $app-primary-light-color;
+$button-submit-bgcolor: $app-accent-light-bgcolor;
+$button-submit-color: $app-primary-dark-color;
+
+// use if you need a different color scheme for .last
+// $button-submit-last-bgcolor: $app-accent-light-bgcolor;
+// $button-submit-last-color: $app-primary-dark-color;
+
+$button-prev-bgcolor: $app-primary-bgcolor;
+$button-prev-color: $app-primary-light-color;
+
+.form-navigation {
+  @extend .grid-row-spaced;
+  margin: 1em 0;
+
+  // This hack stops the chrome justify-content: space-around bug (issue #34)
+  transform: TranslateZ(0);
+
+  button {
+    display: inline-block;
+    border: 0;
+    background: transparent;
+  }
+  button[type=submit] {
+    &::before {
+      @include pre-triangle($rem-base, $rem-base, $button-submit-bgcolor, left);
+      display: block;
+      float: left;
+    }
+    &::after {
+      @include post-triangle($rem-base, $rem-base, $button-submit-bgcolor, left);
+      display: block;
+      float: left;
+    }
+    span {
+      @include arrow-text(
+        $rem-base, $rem-base, $button-submit-bgcolor, $button-submit-color
+      );
+      @include button-span;
+    }
+    /*
+    &.last {
+      &::before {
+        @include pre-triangle($rem-base, $rem-base, $button-submit-last-bgcolor, left);
+        display: block;
+        float: left;
+      }
+      &::after {
+        @include post-triangle($rem-base, $rem-base, $button-submit-last-bgcolor, left);
+        display: block;
+        float: left;
+      }
+      span {
+        @include arrow-text(
+          $rem-base, $rem-base, $button-submit-last-bgcolor, $button-submit-last-color
+        );
+        @include button-span;
+      }
+    }
+    */
+  }
+  button[type=button] {
+    &::before {
+      @include post-triangle($rem-base, $rem-base, $button-prev-bgcolor, right);
+      display: block;
+      float: left;
+    }
+    &::after {
+      @include pre-triangle($rem-base, $rem-base, $button-prev-bgcolor, right);
+      display: block;
+      float: left;
+    }
+    span {
+      @include arrow-text(
+        $rem-base, $rem-base, $button-prev-bgcolor, $button-prev-color
+      );
+      @include button-span;
+    }
+  }
+}

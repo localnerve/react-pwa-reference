@@ -58,10 +58,9 @@ a:hover {
 %header-footer-bg {
   background: $app-primary-bgcolor;
 }
-/*
+
 @import "header/styles";
 @import "pages/styles";
 @import "footer/styles";
-@import "react-modal";
-*/
+// @import "react-modal";
 @import "notification";

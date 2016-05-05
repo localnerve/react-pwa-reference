@@ -1,0 +1,116 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+
+$arrow-fatten-size: 2;
+
+@mixin pre-triangle($size, $medium-size, $color, $direction: left, $fatten: false) {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: 0;
+
+  @if $fatten {
+    border: inset ($size + $arrow-fatten-size);
+  } @else {
+    border: inset $size;
+  }
+
+  border-style: solid;
+
+  @if ($direction == left) {
+    border-color: $color $color $color transparent;
+    margin-right: -($size * 0.75);
+  }
+  @if ($direction == right) {
+    border-color: $color transparent $color $color;
+    margin-left: -($size * 0.75);
+  }
+
+  @include breakpoint(medium) {
+    @if $fatten {
+      border: inset ($medium-size + $arrow-fatten-size);
+    } @else {
+      border: inset $medium-size;
+    }
+
+    border-style: solid;
+    @if ($direction == left) {
+      border-color: $color $color $color transparent;
+      margin-right: -($medium-size * 0.75);
+    }
+    @if ($direction == right) {
+      border-color: $color transparent $color $color;
+      margin-left: -($medium-size * 0.75);
+    }
+  }
+}
+
+@mixin clip-triangle($direction) {
+  @if ($direction == left) {
+    border-right-width: 0;
+  }
+  @if ($direction == right) {
+    border-left-width: 0;
+  }
+}
+
+@mixin post-triangle($size, $medium-size, $color, $direction: left, $fatten: false) {
+  display: inline-block;
+
+  @if $fatten {
+    $size: $size + $arrow-fatten-size;
+  }
+
+  @include css-triangle($size, $color, $direction);
+  @include clip-triangle($direction);
+  @include breakpoint(medium) {
+    @if $fatten {
+      $medium-size: $medium-size + $arrow-fatten-size;
+    }
+
+    @include css-triangle($medium-size, $color, $direction);
+    @include clip-triangle($direction);
+  }
+}
+
+@mixin arrow-text($size, $medium-size, $bgcolor, $color, $fatten: false) {
+  position: relative;
+  z-index: 1;
+  @if $fatten {
+    padding: (($size/2) + $arrow-fatten-size) 0;
+  } @else {
+    padding: ($size/2) 0;
+  }
+  background: $bgcolor;
+  color: $color;
+  flex-grow: 1;
+  min-width: 55%;
+  font-weight: bold;
+
+  @include breakpoint(medium) {
+    @if $fatten {
+      padding: (($medium-size/2) + $arrow-fatten-size) 0;
+    } @else {
+      padding: ($medium-size/2) 0;
+    }
+  }
+}
+
+@mixin arrow-decorate($size, $medium-size, $color, $direction: right, $fatten: false) {
+  @if ($direction == right) {
+    &::before {
+      @include pre-triangle($size, $medium-size, $color, left, $fatten);
+    }
+    &::after {
+      @include post-triangle($size, $medium-size, $color, left, $fatten);
+    }
+  }
+  @if ($direction == left) {
+    &::before {
+      @include post-triangle($size, $medium-size, $color, right, $fatten);
+    }
+    &::after {
+      @include pre-triangle($size, $medium-size, $color, right, $fatten);
+    }
+  }
+}

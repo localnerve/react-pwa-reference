@@ -1,0 +1,93 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// Styles for the contact steps
+@import "arrows";
+
+// between 0 and 1
+$step-size-scale: 0.75;
+
+$step-size: $rem-base * $step-size-scale;
+@function step-size-unscale($size) {
+  @return $rem-base;
+}
+
+$step-tighten-size: 10px;
+
+$step-complete-bgcolor: $app-accent-dark-bgcolor;
+$step-complete-color: $app-primary-light-color;
+$step-incomplete-bgcolor: $app-accent-dark-bgcolor;
+$step-incomplete-color: $app-primary-light-color;
+$step-current-bgcolor: $app-primary-bgcolor;
+$step-current-color: $app-primary-light-color;
+
+
+@mixin step-text($bgcolor, $color, $fatten: false) {
+  @include arrow-text($step-size, step-size-unscale($step-size), $bgcolor, $color, $fatten);
+}
+
+@mixin step-arrows($color, $fatten: false) {
+  @include arrow-decorate($step-size, step-size-unscale($step-size), $color, right, $fatten);
+}
+
+.contact-steps {
+  @extend .grid-row-spaced;
+  font-size: $step-size;
+
+  list-style-type: none;
+  user-select: none;
+  padding: 0;
+
+  @include breakpoint(medium) {
+    font-size: step-size-unscale($step-size);
+  }
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+    text-align: center;
+
+    &.result-message {
+      background: $app-primary-bgcolor;
+      color: $app-primary-light-color;
+      padding: 0.5rem;
+      justify-content: center;
+
+      font-weight: bold;
+      line-height: 1.2;
+      font-size: 1.2rem;
+
+      &.failure {
+        background: $app-alert-bgcolor;
+      }
+    }
+  }
+  li:not(:first-child) {
+    margin-left: -$step-tighten-size;
+    &.current {
+      margin-left: -($step-tighten-size + $arrow-fatten-size);
+    }
+  }
+
+  .complete {
+    @include step-arrows($step-complete-bgcolor);
+    span {
+      @include step-text($step-complete-bgcolor, $step-complete-color);
+    }
+  }
+  .current {
+    @include step-arrows($step-current-bgcolor, true);
+    span {
+      @include step-text($step-current-bgcolor, $step-current-color, true);
+    }
+  }
+  .incomplete {
+    @include step-arrows($step-incomplete-bgcolor);
+    span {
+      @include step-text($step-incomplete-bgcolor, $step-incomplete-color);
+    }
+  }
+}

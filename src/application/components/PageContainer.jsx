@@ -28,7 +28,7 @@ PageContainer = fluxibleWindowResizeReporter(
     sizeReporter: {
       reportWidth: true,
       reportHeight: true,
-      cover: {
+      grow: {
         height: 10
       }
     }

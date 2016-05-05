@@ -1,0 +1,34 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+
+// manually keep in sync with animTimeout in Contact.jsx
+$transition-duration: 0.5s;
+
+.contact-anim-container {
+  transform: TranslateZ(0);
+
+  padding: 10px; // give the spread some room to show
+
+/*
+ * Add layout bounderizer
+ */
+  height: 4.5rem;
+  width: 100%;
+  overflow: hidden;
+  &.final {
+    height: auto;
+    overflow: visible;
+  }
+}
+
+.contact-anim {
+  transition: background-color $transition-duration,
+              box-shadow $transition-duration,
+              color $transition-duration;
+}
+.contact-anim-prev-enter, .contact-anim-next-enter {
+  background-color: rgba($app-accent-light-bgcolor, 0.87);
+  box-shadow: 0px 0px 10px 4px $app-accent-light-bgcolor;
+  color: $app-primary-dark-color;
+}

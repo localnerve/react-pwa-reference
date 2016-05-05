@@ -115,4 +115,4 @@ const Background = React.createClass({
   }
 });
 
-export default Background
+export default Background;

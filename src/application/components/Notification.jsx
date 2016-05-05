@@ -105,4 +105,4 @@ const Notification = React.createClass({
   }
 });
 
-export default Notification
+export default Notification;

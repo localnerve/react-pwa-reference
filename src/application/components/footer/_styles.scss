@@ -1,0 +1,83 @@
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+.app-footer {
+  @include vertical-block(left) {
+    max-height: 8rem;
+    min-height: 8rem;
+    @media #{$height-constrained-phone} {
+      max-height: 6rem;
+      min-height: 6rem;
+    }
+  }
+
+  @extend %header-footer-bg;
+
+  box-shadow: inset 0 8px 10px -7px $app-accent-dark-shadow;
+/*
+  span {
+    @extend %header-footer-text;
+  }
+*/
+}
+
+.footer-line {
+  align-items: center;
+  padding: 0 1rem;
+  overflow-y: hidden;
+
+  .contact-text {
+    font-size: 85%;
+    padding-right: 1em;
+
+    @media #{$height-constrained-phone} {
+      font-size: 80%;
+    }
+  }
+  .contact-links {
+    a {
+      display: block;
+      padding: 0.25em 0;
+      text-align: right;
+    }
+  }
+}
+
+.contact-line {
+  @include grid-container;
+
+  margin: 0;
+  @include breakpoint(medium) {
+    margin: 0 auto;
+    min-width: 40rem;
+    // hack for IE, ref: #41
+    width: 0;
+  }
+}
+
+.att-line {
+  padding-top: 0.25rem;
+
+  span {
+    line-height: 1.2;
+    font-size: 1.2rem;
+    font-weight: bold;
+
+    @media #{$height-constrained-phone} {
+      font-size: inherit;
+    }
+  }
+}
+
+.license {
+  font-size: 75%;
+}
+
+.by-line {
+  padding-bottom: 0.25rem;
+
+  @media #{$height-constrained-phone} {
+    font-size: 75%;
+    overflow-y: visible;
+  }
+}

@@ -7,17 +7,18 @@
 import debugLib from 'debug';
 import FluxibleApp from 'fluxible';
 import fetchrPlugin from 'fluxible-plugin-fetchr';
-import appComponent from './components/Application';
+import Application from './components/Application';
 import ApplicationStore from './stores/ApplicationStore';
 import BackgroundStore from './stores/BackgroundStore';
 import ContentStore from './stores/ContentStore';
+import ContactStore from './stores/ContactStore';
 import RouteStore from './stores/RouteStore';
 
 const debug = debugLib('app');
 
 debug('Creating FluxibleApp');
 const app = new FluxibleApp({
-  component: appComponent
+  component: Application
 });
 
 debug('Adding Plugins');
@@ -27,6 +28,7 @@ debug('Registering Stores');
 app.registerStore(ApplicationStore);
 app.registerStore(BackgroundStore);
 app.registerStore(ContentStore);
+app.registerStore(ContactStore);
 app.registerStore(RouteStore);
 
 export default app;
