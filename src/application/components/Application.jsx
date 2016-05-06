@@ -84,7 +84,10 @@ let Application = React.createClass({
             className="swipe-container"
             callback={this.handleSwipe}
             startSlide={routeOrdinal}
-            slideToIndex={routeOrdinal}>
+            slideToIndex={routeOrdinal}
+            shouldUpdate={() => {
+              return true;
+            }}>
             {pageElements}
           </ReactSwipe>
         </PageContainer>
@@ -109,8 +112,19 @@ let Application = React.createClass({
     }
   },
 
+  /**
+   * Allow rendering if the page has changed (The result of NAVIGATE_START).
+   * Allow rendering if the navigation has completed (and been complete -
+   * NAVIGATE_SUCCESS + 1). TODO: Simplify by reducing/eliminating
+   * ApplicationStore.
+   *
+   * @param {Object} nextProps - The nextProps, per React lifecycle docs.
+   */
   shouldComponentUpdate: function (nextProps) {
-    return nextProps.navigateComplete && this.props.navigateComplete;
+    const pageChange = nextProps.pageName !== this.props.pageName;
+    const navigationComplete =
+      nextProps.navigateComplete && this.props.navigateComplete;
+    return pageChange || navigationComplete;
   },
 
   componentDidUpdate: function () {

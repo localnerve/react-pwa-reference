@@ -22,7 +22,9 @@ const ContentPage = React.createClass({
   },
 
   shouldComponentUpdate: function (nextProps) {
-    return this.props.content !== nextProps.content;
+    const spinnerChange = this.props.spinner !== nextProps.spinner;
+    const contentChange = this.props.content !== nextProps.content;
+    return spinnerChange || contentChange;
   },
 
   /*eslint-disable react/no-danger */
