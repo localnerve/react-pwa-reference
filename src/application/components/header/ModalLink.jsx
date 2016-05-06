@@ -8,6 +8,7 @@ import React from 'react';
 const ModalLink = React.createClass({
   propTypes: {
     data: React.PropTypes.object.isRequired,
+    className: React.PropTypes.string,
     children: React.PropTypes.any
   },
   contextTypes: {
@@ -16,7 +17,7 @@ const ModalLink = React.createClass({
 
   render: function () {
     return (
-      <a onClick={this.clickHandler}>
+      <a className={this.props.className || ''} onClick={this.clickHandler}>
         {this.props.children}
       </a>
     );

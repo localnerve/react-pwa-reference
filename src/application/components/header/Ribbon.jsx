@@ -18,20 +18,30 @@ const Ribbon = React.createClass({
 
     return (
       <div className="grid-row-spaced ribbon">
-        <NavLink className="mail" routeName="contact">
-          <span className="icon-envelop"></span>
+        <NavLink className="glyph" routeName="contact">
+          <svg className="icon icon-envelop">
+            <use xlinkHref="#icon-mail2"></use>
+          </svg>
         </NavLink>
-        <a className="phone" href={uriTel}>
-          <span className="icon-phone"></span>
+        <a className="glyph" href={uriTel}>
+          <svg className="icon icon-phone">
+            <use xlinkHref="#icon-phone"></use>
+          </svg>
         </a>
-        <a href={this.props.social.twitter}>
-          <span className="icon-twitter"></span>
+        <a className="glyph" href={this.props.social.twitter}>
+          <svg className="icon icon-twitter">
+            <use xlinkHref="#icon-twitter"></use>
+          </svg>
         </a>
-        <a href={this.props.social.github}>
-          <span className="icon-github4"></span>
+        <a className="glyph" href={this.props.social.github}>
+          <svg className="icon icon-github">
+            <use xlinkHref="#icon-github"></use>
+          </svg>
         </a>
-        <ModalLink data={this.props.settings}>
-          <span className="icon-cog"></span>
+        <ModalLink className="glyph" data={this.props.settings}>
+          <svg className="icon icon-cog">
+            <use xlinkHref="#icon-cog"></use>
+          </svg>
         </ModalLink>
       </div>
     );

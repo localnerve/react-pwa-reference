@@ -92,8 +92,8 @@ describe('html component', function () {
 
   it('should render a title', function () {
     var component =
-      testUtils.findRenderedDOMComponentWithTag(htmlComponent, 'title');
-    expect(component.textContent).to.be.empty;
+      testUtils.scryRenderedDOMComponentsWithTag(htmlComponent, 'title');
+    expect(component[0].textContent).to.be.empty;
   });
 
   it('should render a section', function () {

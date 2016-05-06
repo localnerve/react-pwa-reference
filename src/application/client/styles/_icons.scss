@@ -1,0 +1,22 @@
+//
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// icon styles
+// -------------------------
+
+.glyph {
+  padding-right: 0.2em;
+  // this controls the size of the icons since icons are ems
+  font-size: 1.6rem;
+  @include breakpoint(medium) {
+    font-size: 2rem;
+  }
+}
+
+.icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+}
