@@ -11,7 +11,7 @@ var fluxibleRoutesFixture = require('test/fixtures/fluxible-routes');
 var helperTests = require('test/utils/tests');
 
 var transformer = require('utils').createFluxibleRouteTransformer({
-  actions: require('application/actions/interface')
+  actions: require('application/actions/interface').getActions()
 });
 
 var ApplicationStore = require('application/stores/ApplicationStore').ApplicationStore;

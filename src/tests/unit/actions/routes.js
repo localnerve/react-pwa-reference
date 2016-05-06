@@ -11,9 +11,9 @@ var createMockActionContext = require('fluxible/utils').createMockActionContext;
 var MockService = require('fluxible-plugin-fetchr/utils/MockServiceManager');
 
 var RouteStore = require('application/stores/RouteStore').RouteStore;
-var routes = require('application/actions/routes');
+var routes = require('application/actions/routes').routes;
 var transformer = require('utils').createFluxibleRouteTransformer({
-  actions: require('application/actions/interface')
+  actions: require('application/actions/interface').getActions()
 });
 
 var routesResponse = require('test/fixtures/routes-response');

@@ -8,7 +8,7 @@
 var expect = require('chai').expect;
 var RouteStore = require('application/stores/RouteStore').RouteStore;
 var transformer = require('utils').createFluxibleRouteTransformer({
-  actions: require('application/actions/interface')
+  actions: require('application/actions/interface').getActions()
 });
 
 var routesResponseFixture = require('test/fixtures/routes-response');

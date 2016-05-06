@@ -6,10 +6,7 @@
   "ignore": [
     "react-pwa-boilerplate/node_modules/**",
     "reports/*",
-    "dist/*",
-    "src/application/actions/interface.js",
-    "src/application/actions/routes.js",
-    "src/application/actions/page.js"
+    "dist/*"
   ],
   "env": {
     "cover": {

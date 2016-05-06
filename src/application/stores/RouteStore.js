@@ -8,9 +8,11 @@
 import { RouteStore as FluxibleRouteStore } from 'fluxible-router';
 import inherits from 'inherits';
 import { createFluxibleRouteTransformer } from 'utils';
-import actions from '../actions/interface';
+import actionsInterface from 'application/actions/interface';
 
-const transformer = createFluxibleRouteTransformer({ actions });
+const transformer = createFluxibleRouteTransformer({
+  actions: actionsInterface.getActions()
+});
 
 /**
  * Creates a RouteStore.

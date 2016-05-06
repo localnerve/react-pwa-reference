@@ -8,7 +8,7 @@
 var expect = require('chai').expect;
 var testDom = require('test/utils/testdom');
 var jsonToFluxible = require('utils').createFluxibleRouteTransformer({
-  actions: require('application/actions/interface')
+  actions: require('application/actions/interface').getActions()
 }).jsonToFluxible;
 
 describe('application component', function () {

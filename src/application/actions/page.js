@@ -2,9 +2,9 @@
  * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
+import debugLib from 'debug';
 
-var debug = require('debug')('Example:PageAction');
+const debug = debugLib('actions:page');
 
 /**
  * The compound action dispatch associated with each page action.
@@ -47,7 +47,7 @@ function serviceRequest (context, payload, done) {
     if (!data) {
       debug('no data found', payload.resource);
 
-      var noData = new Error('Page not found');
+      const noData = new Error('Page not found');
       noData.statusCode = 404;
       return done(noData);
     }
@@ -67,11 +67,11 @@ function serviceRequest (context, payload, done) {
  * @param {String} payload.pageTitle - The page title.
  * @param {Function} done - The callback to execute on action completion.
  */
-function page (context, payload, done) {
-  var data = context.getStore('ContentStore').get(payload.resource);
+export function page (context, payload, done) {
+  const data = context.getStore('ContentStore').get(payload.resource);
 
   if (data) {
-    debug('Found '+payload.resource+' in cache');
+    debug(`Found ${payload.resource} in cache`);
     dispatchActions(context, payload.resource, payload.pageTitle, data);
     return done();
   }
@@ -79,4 +79,4 @@ function page (context, payload, done) {
   serviceRequest(context, payload, done);
 }
 
-module.exports = page;
+export default page;

@@ -1,11 +1,11 @@
 /**
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-'use strict';
+import debugLib from 'debug';
+import { createFluxibleRouteTransformer } from 'utils';
 
-var debug = require('debug')('actions:routes');
-var createFluxibleRouteTransformer = require('utils').createFluxibleRouteTransformer;
+const debug = debugLib('actions:routes');
 
 /**
  * The routes action.
@@ -20,14 +20,17 @@ var createFluxibleRouteTransformer = require('utils').createFluxibleRouteTransfo
  * @param {Object} [payload.routes] - Optional routes to add to the app without a service request.
  * @param {String} payload.resource - The name of the routes resource to retrieve with a service request.
  */
-function routes (context, payload, done) {
-  var transformer = (typeof payload.transform === 'function' ?
-        payload.transform : createFluxibleRouteTransformer({
-          actions: require('./interface')
-        }).jsonToFluxible);
+export function routes (context, payload, done) {
+  // This is done late in case routes (this) in interface, TODO: revisit.
+  const actions = require('./interface').getActions();
+
+  const transformer = (typeof payload.transform === 'function' ?
+    payload.transform : createFluxibleRouteTransformer({
+      actions
+    }).jsonToFluxible);
 
   if (payload.routes) {
-    var fluxibleRoutes = payload.routes;
+    let fluxibleRoutes = payload.routes;
 
     if (payload.transform) {
       debug('transforming routes');
@@ -47,10 +50,10 @@ function routes (context, payload, done) {
       return done(err);
     }
 
-    var fluxibleRoutes = transformer(routes);
+    const fluxibleRoutes = transformer(routes);
     context.dispatch('RECEIVE_ROUTES', fluxibleRoutes);
     done(null, fluxibleRoutes);
   });
 }
 
-module.exports = routes;
+export default routes;
