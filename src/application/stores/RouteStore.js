@@ -33,7 +33,7 @@ RouteStore.handlers = FluxibleRouteStore.handlers;
  * @returns {Object} The RouteStore represented as state.
  */
 RouteStore.prototype.dehydrate = function dehydrate () {
-  var state = FluxibleRouteStore.prototype.dehydrate.apply(this, arguments);
+  const state = FluxibleRouteStore.prototype.dehydrate.apply(this, arguments);
   state.routes = transformer.fluxibleToJson(state.routes);
   return state;
 };
