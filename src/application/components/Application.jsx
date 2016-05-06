@@ -9,9 +9,9 @@ import { connectToStores, provideContext } from 'fluxible-addons-react';
 import { handleHistory, navigateAction } from 'fluxible-router';
 import ReactSwipe from 'react-swipe';
 import Background from './Background';
-import Header from './Header';
-import Footer from './Footer';
 import PageContainer from './PageContainer';
+import Header from './header';
+import Footer from './footer';
 import pages from './pages';
 
 const debug = debugLib('application');
@@ -41,9 +41,9 @@ let Application = React.createClass({
   },
 
   handleSwipe: function (index) {
-    var pages = this.props.pages;
+    const pages = this.props.pages;
     if (pages[this.props.pageName].order !== index) {
-      var nextPageName = Object.keys(pages).filter(function (page) {
+      const nextPageName = Object.keys(pages).filter(function (page) {
         return pages[page].order === index && pages[page].mainNav;
       })[0];
 
@@ -116,7 +116,7 @@ let Application = React.createClass({
   componentDidUpdate: function () {
     document.title = this.props.pageTitle;
 
-    var analytics = window[this.props.analytics];
+    const analytics = window[this.props.analytics];
     if (analytics) {
       analytics('set', {
         title: this.props.pageTitle
