@@ -28,6 +28,7 @@
     "_test": "mocha output/tests/unit --recursive --reporter spec",
     "build:assets": "npm run lint && gulp build",
     "build:output": "gulp prep && babel ./src --ignore='build/*,node_modules/application' -d output",
+    "build:server": "npm run build:assets && npm run build:output",
     "build:list": "gulp --tasks",
     "config:dev": "gulp dumpconfigDev",
     "config:prod": "gulp dumpconfigProd",

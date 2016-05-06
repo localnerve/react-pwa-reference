@@ -24,11 +24,12 @@ Just Node - At least Node 4 LTS, recommend [nvm](https://github.com/creationix/n
 ## Run
 
 ### Run Production
-1. `npm run build:assets && npm run build:output`
-2. `npm start`
+  `npm run build:server && npm start`
 
 ### Run Development
+  `npm run dev`
 
+#### Development Tasks
 | command | description |
 | :--- | :--- |
 | `npm run build:list` | dump the asset build task tree to console |
@@ -37,7 +38,7 @@ Just Node - At least Node 4 LTS, recommend [nvm](https://github.com/creationix/n
 | `npm run dev` | lint, build assets, start the server, verbose, NODE_ENV=development |
 | `npm run dev:analyze` | analyze webpack stats file and dump bundle size analysis to console |
 | `npm run dev:ccss` | build css assets, watch and recompile sass on change |
-| `npm run dev:debug` | lint, build assets, start the server, NODE_ENV=development, wait debugger attach |
+| `npm run dev:debug` | lint, build assets, start/debug server, NODE_ENV=development, wait debugger attach |
 | `npm run dev:perf` | lint, build assets, scripts w/source maps, start server, NODE_ENV=production |
 | `npm run dev:prod` | lint, build assets, start server, NODE_ENV=production |
 | `npm run fixtures:dev` | build test fixtures from data service, development |
