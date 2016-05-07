@@ -14,7 +14,7 @@ import Contact from './contact';
  */
 const pageTypes = {
   ContentPage,
-  Contact: Contact
+  Contact
 };
 
 /**
@@ -122,7 +122,7 @@ export function createModalElement (component, props, failure) {
   if (component) {
     props = props || {};
 
-    props = merge(getProps(props.content, props.models), { failure: failure });
+    props = merge(getProps(props.content, props.models), { failure });
 
     return React.createElement(component, props);
   }

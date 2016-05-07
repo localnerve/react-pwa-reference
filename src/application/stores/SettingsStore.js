@@ -1,12 +1,12 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Store for service settings.
  */
 import { createStore } from 'fluxible/addons';
 
-const settingsStore = createStore({
+export const SettingsStore = createStore({
   storeName: 'SettingsStore',
 
   handlers: {
@@ -212,5 +212,4 @@ const settingsStore = createStore({
   }
 });
 
-export const SettingsStore = settingsStore;
 export default SettingsStore;

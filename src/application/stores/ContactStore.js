@@ -4,7 +4,7 @@
  */
 import { createStore } from 'fluxible/addons';
 
-const contactStore = createStore({
+export const ContactStore = createStore({
   storeName: 'ContactStore',
 
   handlers: {
@@ -93,5 +93,4 @@ const contactStore = createStore({
   }
 });
 
-export const ContactStore = contactStore;
 export default ContactStore;

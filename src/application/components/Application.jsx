@@ -116,8 +116,7 @@ let Application = React.createClass({
   /**
    * Allow rendering if the page has changed (The result of NAVIGATE_START).
    * Allow rendering if the navigation has completed (and been complete -
-   * NAVIGATE_SUCCESS + 1). TODO: Simplify by reducing/eliminating
-   * ApplicationStore.
+   * NAVIGATE_SUCCESS + 1).
    *
    * @param {Object} nextProps - The nextProps, per React lifecycle docs.
    */
