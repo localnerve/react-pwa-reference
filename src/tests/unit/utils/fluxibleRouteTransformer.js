@@ -14,7 +14,7 @@ var transformer = require('utils').createFluxibleRouteTransformer({
   actions: require('application/actions/interface').getActions()
 });
 
-var ApplicationStore = require('application/stores/ApplicationStore').ApplicationStore;
+var RouteStore = require('application/stores/RouteStore').RouteStore;
 var ContentStore = require('application/stores/ContentStore').ContentStore;
 var MockService = require('fluxible-plugin-fetchr/utils/MockServiceManager');
 var createMockActionContext = require('fluxible/utils').createMockActionContext;
@@ -30,7 +30,7 @@ describe('transformers', function () {
 
   function createMockContext () {
     context = createMockActionContext({
-      stores: [ApplicationStore, ContentStore]
+      stores: [RouteStore, ContentStore]
     });
     context.service = new MockService();
     context.service.setService('routes', function (method, params, config, callback) {

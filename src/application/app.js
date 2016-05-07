@@ -8,7 +8,6 @@ import debugLib from 'debug';
 import FluxibleApp from 'fluxible';
 import fetchrPlugin from 'fluxible-plugin-fetchr';
 import Application from './components/Application';
-import ApplicationStore from './stores/ApplicationStore';
 import BackgroundStore from './stores/BackgroundStore';
 import ContentStore from './stores/ContentStore';
 import ContactStore from './stores/ContactStore';
@@ -25,7 +24,6 @@ debug('Adding Plugins');
 app.plug(fetchrPlugin({ xhrPath: '/_api' }));
 
 debug('Registering Stores');
-app.registerStore(ApplicationStore);
 app.registerStore(BackgroundStore);
 app.registerStore(ContentStore);
 app.registerStore(ContactStore);

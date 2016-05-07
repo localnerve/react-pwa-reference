@@ -109,10 +109,17 @@ let Html = React.createClass({
 });
 
 Html = provideContext(
-  connectToStores(Html, ['ApplicationStore', 'BackgroundStore'], (context) => {
+  connectToStores(Html, ['RouteStore', 'BackgroundStore'], (context) => {
+    const routeStore = context.getStore('RouteStore'),
+      backgroundStore = context.getStore('BackgroundStore'),
+      currentRoute = routeStore.getCurrentRoute() || {};
+
+    const pageTitle = currentRoute.pageTitle || '';
+    const imageServiceUrl = backgroundStore.getImageServiceUrl() || '';
+
     return {
-      currentPageTitle: context.getStore('ApplicationStore').getCurrentPageTitle(),
-      imageServiceHost: context.getStore('BackgroundStore').getImageServiceUrl().replace(/https?\:/, '')
+      currentPageTitle: pageTitle,
+      imageServiceHost: imageServiceUrl.replace(/https?\:/, '')
     };
   })
 );

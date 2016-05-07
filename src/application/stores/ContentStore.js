@@ -92,6 +92,15 @@ const contentStore = createStore({
   },
 
   /**
+   * Get the defaultResource this store was initialized with.
+   *
+   * @returns {String} The defaultResource.
+   */
+  getDefaultResource: function () {
+    return this.defaultResource;
+  },
+
+  /**
    * Reduce this store to state.
    *
    * @returns {Object} this store as state.

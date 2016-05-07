@@ -7,25 +7,6 @@ import debugLib from 'debug';
 const debug = debugLib('actions:page');
 
 /**
- * The compound action dispatch associated with each page action.
- *
- * @param {Object} context - The fluxible action context.
- * @param {String} resource - The content resource name.
- * @param {String} title - The page title.
- * @param {Object} data - The content data.
- */
-function dispatchActions (context, resource, title, data) {
-  context.dispatch('RECEIVE_PAGE_CONTENT', {
-    resource: resource,
-    data: data
-  });
-
-  context.dispatch('UPDATE_PAGE_TITLE', {
-    title: title
-  });
-}
-
-/**
  * Perform the service request for the page action.
  *
  * @param {Object} context - The fluxible action context.
@@ -52,7 +33,10 @@ function serviceRequest (context, payload, done) {
       return done(noData);
     }
 
-    dispatchActions(context, payload.resource, payload.pageTitle, data);
+    context.dispatch('RECEIVE_PAGE_CONTENT', {
+      resource: payload.resource,
+      data: data
+    });
 
     return done();
   });
@@ -72,7 +56,12 @@ export function page (context, payload, done) {
 
   if (data) {
     debug(`Found ${payload.resource} in cache`);
-    dispatchActions(context, payload.resource, payload.pageTitle, data);
+
+    context.dispatch('RECEIVE_PAGE_CONTENT', {
+      resource: payload.resource,
+      data: data
+    });
+
     return done();
   }
 

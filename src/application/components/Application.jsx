@@ -21,7 +21,7 @@ let Application = React.createClass({
     navigateComplete: React.PropTypes.bool.isRequired,
     currentNavigateError: React.PropTypes.object,
     pageTitle: React.PropTypes.string.isRequired,
-    analytics: React.PropTypes.string.isRequired,
+    analytics: React.PropTypes.string,
     pageName: React.PropTypes.string.isRequired,
     pages: React.PropTypes.object.isRequired,
     pageModels: React.PropTypes.object.isRequired
@@ -56,6 +56,7 @@ let Application = React.createClass({
 
   render: function () {
     debug('pageName', this.props.pageName);
+    debug('pageTitle', this.props.pageTitle);
     debug('pages', this.props.pages);
     debug('navigateError', this.props.currentNavigateError);
 
@@ -141,19 +142,20 @@ let Application = React.createClass({
 });
 
 Application = connectToStores(
-  Application, ['ApplicationStore', 'ContentStore', 'RouteStore'],
-  (context) => {
+  Application, ['ContentStore', 'RouteStore'], (context) => {
     const routeStore = context.getStore('RouteStore'),
-      appStore = context.getStore('ApplicationStore'),
+      contentStore = context.getStore('ContentStore'),
       currentRoute = routeStore.getCurrentRoute(),
       pageName = (currentRoute && currentRoute.page) ||
-        appStore.getDefaultPageName();
+        contentStore.getDefaultResource(),
+      pageTitle = (currentRoute && currentRoute.pageTitle) ||
+        contentStore.getDefaultResource();
 
     return {
       navigateComplete: routeStore.isNavigateComplete(),
       pageName: pageName,
-      pageTitle: appStore.getCurrentPageTitle(),
-      pageModels: context.getStore('ContentStore').getCurrentPageModels(),
+      pageTitle: pageTitle,
+      pageModels: contentStore.getCurrentPageModels(),
       pages: routeStore.getRoutes()
     };
   }

@@ -9,7 +9,6 @@ var expect = require('chai').expect;
 
 var createMockActionContext = require('fluxible/utils').createMockActionContext;
 var MockService = require('fluxible-plugin-fetchr/utils/MockServiceManager');
-var ApplicationStore = require('application/stores/ApplicationStore').ApplicationStore;
 var ContentStore = require('application/stores/ContentStore').ContentStore;
 var pageAction = require('application/actions/page').page;
 var serviceData = require('test/mocks/service-data');
@@ -25,26 +24,12 @@ describe('page action', function () {
   beforeEach(function () {
     calledService = 0;
     context = createMockActionContext({
-      stores: [ApplicationStore, ContentStore]
+      stores: [ContentStore]
     });
     context.service = new MockService();
     context.service.setService('page', function (method, params, config, callback) {
       calledService++;
       serviceData.fetch(params, callback);
-    });
-  });
-
-  it('should update the ApplicationStore', function (done) {
-    context.executeAction(pageAction, params, function (err) {
-      if (err) {
-        return done(err);
-      }
-
-      var title = context.getStore(ApplicationStore).getCurrentPageTitle();
-
-      expect(calledService).to.equal(1);
-      expect(title).to.be.a('string').and.not.be.empty;
-      done();
     });
   });
 

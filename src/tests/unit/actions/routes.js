@@ -101,7 +101,7 @@ describe('routes action', function () {
       });
     });
 
-    it('should update the ApplicationStore', function (done) {
+    it('should update the RouteStore', function (done) {
       context.executeAction(routes, {}, function (err, fluxibleRoutes) {
         if (err) {
           return done(err);

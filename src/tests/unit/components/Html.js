@@ -7,8 +7,8 @@
 
 var expect = require('chai').expect;
 var testUtils = require('react-addons-test-utils');
-var ApplicationStore =
-  require('application/stores/ApplicationStore').ApplicationStore;
+var RouteStore =
+  require('application/stores/RouteStore').RouteStore;
 var BackgroundStore =
   require('application/stores/BackgroundStore').BackgroundStore;
 var HtmlComponent = require('react')
@@ -67,7 +67,7 @@ describe('html component', function () {
 
   beforeEach(function () {
     testProps.context = createMockComponentContext({
-      stores: [ApplicationStore, BackgroundStore]
+      stores: [RouteStore, BackgroundStore]
     });
     var htmlElement = HtmlComponent(testProps);
 
