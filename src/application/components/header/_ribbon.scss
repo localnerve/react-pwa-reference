@@ -1,12 +1,20 @@
-//
-// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
 // Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
 //
-// icon styles
-// -------------------------
+// ribbon styles
+// =========================
+
+.ribbon {
+  margin: 0.25rem 0;
+  padding-top: 0.2rem;
+  overflow-y: hidden;
+  @include breakpoint(medium) {
+    margin: 1rem 0;
+    padding-top: 0;
+  }
+}
 
 .glyph {
-  padding-right: 0.2em;
   // this controls the size of the icons since icons are ems
   font-size: 1.6rem;
   @include breakpoint(medium) {

@@ -1,0 +1,58 @@
+// Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// logo styles
+// =========================
+
+.logo {
+  @include vertical-block(center, shrink) {
+    overflow-y: visible;
+    overflow-x: visible;
+    align-items: center;
+  }
+  margin: 0 2rem 0.8rem;
+
+  @include breakpoint(medium) {
+    margin: 0 2rem 1.5rem;
+  }
+  @media #{$height-constrained-phone} {
+    margin: 0 1.2rem 0.5rem;
+  }
+}
+
+.logo h1 {
+  padding: 0.3em 2.2em 1em 0em;
+  margin: 0;
+
+  font-size: 1.8em;
+
+  // png fallback
+  background: image-url("logo.png") no-repeat 100% 50% / 35%;
+  background: none, inline-image("logo.svg", "image/svg+xml") no-repeat 100% 80%;
+
+  @include breakpoint(medium) {
+    font-size: 3em;
+  }
+  @media #{$height-constrained-phone} {
+    font-size: 1.4em;
+  }
+}
+
+.logo .tagline {
+  @include grid-content;
+  overflow-y: visible;
+
+  padding-left: 0;
+  position: relative;
+  margin-top: 1.2 * $rem-base * $base-line-height * -1;
+
+  max-width: 80%;
+  font-size: 85%;
+  @include breakpoint(medium) {
+    font-size: 100%;
+    margin-top: 2 * $rem-base * $base-line-height * -1;
+  }
+  @media #{$height-constrained-phone} {
+    margin-top: $rem-base * $base-line-height * -1;
+  }
+}

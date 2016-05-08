@@ -1,0 +1,38 @@
+// Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// nav styles
+// =========================
+
+.navigation {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.navigation-link {
+  line-height: 1.4;
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 0 1rem;
+  flex-grow: 1;
+  text-align: center;
+
+  background: $app-primary-bgcolor;
+  box-shadow: inset 0 -8px 6px -7px $app-accent-dark-shadow;
+  z-index: $app-max-zindex - 1;
+
+  @include breakpoint(medium) {
+    font-size: 1.8rem;
+  }
+
+  &.selected {
+    background: transparent;
+    box-shadow: 0 7px 6px 4px $app-accent-dark-shadow;
+    z-index: $app-max-zindex;
+  }
+
+  a {
+    display: block;
+    width: 100%;
+  }
+}
