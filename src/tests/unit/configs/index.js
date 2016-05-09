@@ -231,12 +231,12 @@ describe('configs', function () {
       describe('username', function () {
         before(function () {
           // just in case this is hanging around in a local env
-          delete process.env.MANDRILL_USERNAME;
+          delete process.env.SPARKPOST_USERNAME;
           delete process.env.MAIL_USERNAME;
         });
 
         afterEach(function () {
-          delete process.env.MANDRILL_USERNAME;
+          delete process.env.SPARKPOST_USERNAME;
           delete process.env.MAIL_USERNAME;
         });
 
@@ -247,13 +247,13 @@ describe('configs', function () {
 
         it('should return MANDRILL_USERNAME if defined', function () {
           var username = 'correct_username';
-          process.env.MANDRILL_USERNAME = username;
+          process.env.SPARKPOST_USERNAME = username;
           expect(config.contact.mail.username()).to.equal(username);
         });
 
         it('should return MAIL_USERNAME if defined', function () {
           var username = 'sircharlesbarkley@sportscenter.com';
-          process.env.MANDRILL_USERNAME = 'wrong_username';
+          process.env.SPARKPOST_USERNAME = 'wrong_username';
           process.env.MAIL_USERNAME = username;
           expect(config.contact.mail.username()).to.equal(username);
         });
@@ -264,12 +264,12 @@ describe('configs', function () {
 
         before(function () {
           // just in case this is hanging around in a local env
-          delete process.env.MANDRILL_APIKEY;
+          delete process.env.SPARKPOST_APIKEY;
           delete process.env.MAIL_PASSWORD;
         });
 
         afterEach(function () {
-          delete process.env.MANDRILL_APIKEY;
+          delete process.env.SPARKPOST_APIKEY;
           delete process.env.MAIL_PASSWORD;
         });
 
@@ -278,13 +278,13 @@ describe('configs', function () {
           expect(config.contact.mail.password()).to.be.undefined;
         });
 
-        it('should return MANDRILL_APIKEY if defined', function () {
-          process.env.MANDRILL_APIKEY = password;
+        it('should return SPARKPOST_APIKEY if defined', function () {
+          process.env.SPARKPOST_APIKEY = password;
           expect(config.contact.mail.password()).to.equal(password);
         });
 
         it('should return MAIL_PASSWORD if defined', function () {
-          process.env.MANDRILL_APIKEY = 'wrong_password';
+          process.env.SPARKPOST_APIKEY = 'wrong_password';
           process.env.MAIL_PASSWORD = password;
           expect(config.contact.mail.password()).to.equal(password);
         });
