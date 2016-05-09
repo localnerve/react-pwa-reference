@@ -1,21 +1,20 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Synchronize push subscription.
  */
 /* global Promise, fetch */
-'use strict';
+import syncable from 'utils/syncable';
+import * as sync from './index';
+import * as serviceable from './serviceable';
+import debugLib from 'sw/utils/debug';
+import * as idb from 'sw/utils/idb';
+import { createRequestBody } from 'sw/utils/api';
+import { rehydrateRequest } from 'sw/utils/requests';
 
-var syncable = require('utils/syncable');
-var sync = require('./index');
-var serviceable = require('./serviceable');
-var debug = require('../utils/debug')('sync.push');
-var idb = require('../utils/idb');
-var requestLib = require('../utils/requests');
-var apiHelpers = require('../utils/api');
-
-var subscriptionService = '/_api';
+const debug = debugLib('sync:push');
+const subscriptionService = '/_api';
 
 /**
  * Get the existing subscriptionId and apiInfo for the subscription service.
@@ -34,10 +33,10 @@ var subscriptionService = '/_api';
  *  api call should not be made.
  */
 function getSubscriptionInfo (subscriptionId) {
-  var result = {};
+  const result = {};
 
   return idb.get(idb.stores.state, 'subscriptionId')
-  .then(function (existingId) {
+  .then((existingId) => {
     result.existingId = existingId;
 
     if (existingId && subscriptionId !== existingId) {
@@ -45,7 +44,7 @@ function getSubscriptionInfo (subscriptionId) {
       return idb.get(idb.stores.init, 'apis');
     }
   })
-  .then(function (apis) {
+  .then((apis) => {
     if (apis) {
       result.apiInfo = apis[subscriptionService];
       if (!result.apiInfo) {
@@ -70,7 +69,7 @@ function getSubscriptionInfo (subscriptionId) {
  * @returns {Promise} Resolves to undefined for del, Response, or false if no request was/will be made.
  */
 function synchronizePushSubscription (subscriptionId) {
-  var apiInfo, requestState, existingId;
+  let apiInfo, requestState, existingId;
 
   debug('synchronize push subscription', subscriptionId);
 
@@ -79,7 +78,7 @@ function synchronizePushSubscription (subscriptionId) {
   }
 
   return getSubscriptionInfo(subscriptionId)
-  .then(function (result) {
+  .then((result) => {
     apiInfo = result.apiInfo;
     existingId = result.existingId;
 
@@ -88,7 +87,7 @@ function synchronizePushSubscription (subscriptionId) {
         url: apiInfo.xhrPath,
         method: 'POST',
         bodyType: 'json',
-        body: apiHelpers.createRequestBody(apiInfo.xhrContext, {
+        body: createRequestBody(apiInfo.xhrContext, {
           body: {},
           operation: 'update',
           params: {
@@ -99,12 +98,12 @@ function synchronizePushSubscription (subscriptionId) {
         })
       };
 
-      return fetch(requestLib.rehydrateRequest(requestState, apiInfo));
+      return fetch(rehydrateRequest(requestState, apiInfo));
     }
   })
-  .then(function (resp) {
-    var response = resp || {};
-    var updateSubscriptionId = !existingId || response.ok;
+  .then((resp) => {
+    const response = resp || {};
+    const updateSubscriptionId = !existingId || response.ok;
 
     // If subscription not found or service successfully updated, update
     // subscriptionId in IndexedDB.
@@ -113,14 +112,14 @@ function synchronizePushSubscription (subscriptionId) {
         serviceable.updatePushSubscription(response.ok && subscriptionId),
         idb.put(idb.stores.state, 'subscriptionId', subscriptionId)
       ])
-      .then(function () {
+      .then(() => {
         debug('successfully updated subscriptionId');
         return resp ? response : false;
       });
     }
 
     if (response.ok === false) {
-      debug('fetch failed (' + response.status + '), ' + response.statusText);
+      debug(`fetch failed (${response.status}), ${response.statusText}`);
 
       // Add syncable property to body
       requestState.body = syncable.push(
@@ -131,12 +130,9 @@ function synchronizePushSubscription (subscriptionId) {
 
       return sync.deferRequest(
         subscriptionService,
-        requestLib.rehydrateRequest(requestState, apiInfo)
+        rehydrateRequest(requestState, apiInfo)
       );
     }
   });
 }
-
-module.exports = {
-  synchronize: synchronizePushSubscription
-};
+export { synchronizePushSubscription as synchronize }

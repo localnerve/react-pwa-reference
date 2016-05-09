@@ -32,7 +32,7 @@ export default function swMainConfig (settings, type) {
           loader: 'json'
         },
         {
-          exclude: /(^\/node_modules|client)/,
+          exclude: /(^\/node_modules|\.json$)/,
           loader: 'babel-loader'
         }
       ]

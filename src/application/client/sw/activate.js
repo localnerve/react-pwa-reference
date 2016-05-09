@@ -1,5 +1,5 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Install activate message handler for this code's concerns.
@@ -10,11 +10,17 @@
  * 2. activate will occur after startup.
  */
 /* global self, Promise, caches */
-'use strict';
+import toolbox from 'sw-toolbox';
+import debugLib from 'sw/utils/debug';
+import data from 'sw/data';
 
-var toolbox = require('sw-toolbox');
-var cacheId = require('./data').cacheId;
-var debug = require('./utils/debug')('activate');
+const dataManifest = data.manifest || {
+  debug: false,
+  cacheId: 'app'
+};
+const cacheId = dataManifest.cacheId;
+
+const debug = debugLib('activate');
 
 /**
  * Remove any previous cache that might have been under this code's governance.

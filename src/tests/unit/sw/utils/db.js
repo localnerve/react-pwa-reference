@@ -14,17 +14,19 @@ describe('sw/utils/db', function () {
   before('setup sw/utils/db', function () {
     this.timeout(5000);
 
+    mocks.swData.begin();
     mocks.swUtilsDb.begin();
 
     toolbox = require('sw-toolbox');
     toolbox.mockSetup();
 
-    db = require('application/client/sw/utils/db');
+    db = require('application/client/sw/node_modules/sw/utils/db').stores;
   });
 
   after(function () {
     toolbox.mockTeardown();
     mocks.swUtilsDb.end();
+    mocks.swData.end();
   });
 
   it('should export expected methods', function () {

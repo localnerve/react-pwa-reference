@@ -17,6 +17,7 @@ describe('sw/utils/customHelpers', function () {
   before('sw/utils/customHelpers', function () {
     this.timeout(5000);
 
+    mocks.swData.begin();
     mocks.swToolbox.begin();
 
     toolbox = require('sw-toolbox');
@@ -33,7 +34,8 @@ describe('sw/utils/customHelpers', function () {
     global.Response = require('test/mocks/response');
 
     // The module under test
-    customHelpers = require('application/client/sw/utils/customHelpers');
+    customHelpers =
+      require('application/client/sw/node_modules/sw/utils/customHelpers');
   });
 
   after('sw/utils/customHelpers', function () {
@@ -41,6 +43,7 @@ describe('sw/utils/customHelpers', function () {
     delete global.fetch;
     toolbox.mockTeardown();
     mocks.swToolbox.end();
+    mocks.swData.end();
   });
 
   afterEach(function () {

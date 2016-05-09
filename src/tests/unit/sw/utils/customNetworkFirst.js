@@ -18,6 +18,7 @@ describe('sw/utils/customNetworkFirst', function () {
   before('sw/utils/customNetworkFirst', function () {
     this.timeout(5000);
 
+    mocks.swData.begin();
     mocks.swToolbox.begin();
 
     toolbox = require('sw-toolbox');
@@ -34,7 +35,8 @@ describe('sw/utils/customNetworkFirst', function () {
     global.Response = require('test/mocks/response');
 
     // The module under test
-    customNetworkFirst = require('application/client/sw/utils/customNetworkFirst');
+    customNetworkFirst =
+      require('application/client/sw/node_modules/sw/utils/customNetworkFirst');
   });
 
   after('sw/utils/customNetworkFirst', function () {
@@ -42,6 +44,7 @@ describe('sw/utils/customNetworkFirst', function () {
     delete global.fetch;
     toolbox.mockTeardown();
     mocks.swToolbox.end();
+    mocks.swData.end();
   });
 
   beforeEach(function () {

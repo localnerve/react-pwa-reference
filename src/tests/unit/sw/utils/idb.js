@@ -16,7 +16,7 @@ describe('sw/utils/idb', function () {
 
     mocks.swUtilsIdbTreo.begin();
 
-    idb = require('application/client/sw/utils/idb');
+    idb = require('application/client/sw/node_modules/sw/utils/idb');
     treoMock = require('treo');
     treoMock.setValue('some value');
   });

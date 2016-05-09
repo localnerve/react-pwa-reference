@@ -1,21 +1,22 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Init message and data handling.
  */
 /* global Promise, self */
-'use strict';
+import backgrounds from './backgrounds';
+import routes from './routes';
+import update from './update';
+import apiRequests from './apiRequests';
+import { serviceAllRequests } from '../sync';
+import { stores as dbStores } from 'sw/utils/db';
+import debugLib from 'sw/utils/debug';
 
-var backgrounds = require('./backgrounds');
-var routes = require('./routes');
-var update = require('./update');
-var apiRequests = require('./apiRequests');
-var sync = require('../sync');
-var stores = require('../utils/db').init({ key: 'stores' });
-var apis = require('../utils/db').init({ key: 'apis' });
-var timestamp = require('../utils/db').init({ key: 'timestamp' });
-var debug = require('../utils/debug')('init');
+const debug = debugLib('init:index');
+const stores = dbStores.init({ key: 'stores' });
+const apis = dbStores.init({ key: 'apis' });
+const timestamp = dbStores.init({ key: 'timestamp' });
 
 /**
  * Kick-off the maintenance and synchronization of stored requests.
@@ -28,13 +29,13 @@ var debug = require('../utils/debug')('init');
  */
 function startRequestSync (payload) {
   // If this is run at worker startup and has sync capability, don't run.
-  var shouldRun = !payload.startup || !self.registration.sync;
+  const shouldRun = !payload.startup || !self.registration.sync;
 
   if (shouldRun) {
     debug('running request sync');
 
-    return sync.serviceAllRequests(payload.apis)
-    .catch(function (error) {
+    return serviceAllRequests(payload.apis)
+    .catch((error) => {
       debug('serviceAllRequests failed ', error);
     });
   } else {
@@ -57,15 +58,15 @@ function startRequestSync (payload) {
  * needs initializing.
  */
 function updateAndSetup (payload) {
-  return update(payload).then(function (updated) {
+  return update(payload).then((updated) => {
     if (updated || payload.startup) {
       debug('running setup');
 
       return backgrounds(payload.stores)
-      .then(function () {
+      .then(() => {
         return apiRequests(payload.apis);
       })
-      .then(function () {
+      .then(() => {
         return routes(payload.stores);
       });
     } else {
@@ -95,19 +96,19 @@ function updateAndSetup (payload) {
  * @param {Object} payload - Initial payload.
  * @param {Function} responder - Function to call to resolve the message.
  */
-function init (payload, responder) {
+export function initCommand (payload, responder) {
   debug('Running init, payload:', payload);
 
   return updateAndSetup(payload)
-  .then(function () {
+  .then(() => {
     return startRequestSync(payload);
   })
-  .then(function () {
+  .then(() => {
     return responder({
       error: null
     });
   })
-  .catch(function (error) {
+  .catch((error) => {
     debug('init failed', error);
     return responder({
       error: error.toString()
@@ -120,13 +121,13 @@ function init (payload, responder) {
  *
  * @return {Promise} A Promise that resolves to a Object with the init payload.
  */
-function initData () {
+export function initData () {
   return Promise.all([
     stores.read(),
     apis.read(),
     timestamp.read()
   ])
-  .then(function (data) {
+  .then((data) => {
     return {
       stores: data[0],
       apis: data[1],
@@ -134,11 +135,3 @@ function initData () {
     };
   });
 }
-
-/**
- * Expose the init command and storage access for relevant init keys.
- */
-module.exports = {
-  command: init,
-  data: initData
-};

@@ -9,7 +9,8 @@ var expect = require('chai').expect;
 var mocks = require('test/mocks');
 var Self = require('test/mocks/self');
 var syncable = require('utils/syncable');
-var apiHelpers = require('application/client/sw/utils/api');
+var apiHelpers =
+  require('application/client/sw/node_modules/sw/utils/api');
 
 describe('sw/sync/index', function () {
   var index, treoMock, toolboxMock, fetchMock;
@@ -21,6 +22,7 @@ describe('sw/sync/index', function () {
   before('sw/sync/index setup', function () {
     this.timeout(5000);
 
+    mocks.swData.begin();
     mocks.swSyncIndex.begin();
     self.setup();
 
@@ -45,6 +47,7 @@ describe('sw/sync/index', function () {
     toolboxMock.mockTeardown();
     self.teardown();
     mocks.swSyncIndex.end();
+    mocks.swData.end();
   });
 
   beforeEach(function () {

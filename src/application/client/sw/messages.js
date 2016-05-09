@@ -1,14 +1,15 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Message handling for the service worker.
  */
 /* global Promise, self, clients */
-'use strict';
+import debugLib from 'sw/utils/debug';
+import push from './sync/push';
+import { initCommand } from './init';
 
-var debug = require('./utils/debug')('messages');
-var push = require('./sync/push');
+const debug = debugLib('messages');
 
 /***
  * Add any new messaging command handlers to this object.
@@ -18,23 +19,23 @@ var push = require('./sync/push');
  * @param {Function} responder - The sendResponse function with event prebound.
  * @returns {Promise} Resolves when complete.
  */
-var commands = {
+const commands = {
   /***
    * Handle init messages
    */
-  init: require('./init').command,
+  init: initCommand,
 
   /**
    * Handle pushSync messages
    */
-  pushSync: function (payload, responder) {
+  pushSync: (payload, responder) => {
     return push.synchronize(payload.subscriptionId)
-    .then(function () {
+    .then(() => {
       return responder({
         error: null
       });
     })
-    .catch(function (error) {
+    .catch((error) => {
       debug('pushSync failed', error);
       return responder({
         error: error.toString()
@@ -63,15 +64,15 @@ function unknownCommand (payload, responder) {
  * @param {Object} response - The message response payload.
  */
 function sendResponse (event, response) {
-  var result,
-    respondTo = event.data.port || event.source;
+  let result;
+  const respondTo = event.data.port || event.source;
 
   if (respondTo) {
     respondTo.postMessage(response);
   } else {
     if (self.clients) {
-      result = clients.matchAll().then(function (clients) {
-        for (var i = 0; i < clients.length; i++) {
+      result = clients.matchAll().then((clients) => {
+        for (let i = 0; i < clients.length; i++) {
           clients[i].postMessage(response);
         }
       });
@@ -81,15 +82,15 @@ function sendResponse (event, response) {
   return result || Promise.resolve();
 }
 
-self.addEventListener('message', function (event) {
-  var commandName = event.data.command,
+self.addEventListener('message', (event) => {
+  const commandName = event.data.command,
     payload = event.data.payload,
     command = commands[commandName] || unknownCommand,
-    handler = 'waitUntil' in event ? event.waitUntil : function () {};
+    handler = 'waitUntil' in event ? event.waitUntil : () => {};
 
-  debug('\'' + commandName + '\' command received', payload);
+  debug(`"${commandName}" command received`, payload);
 
   handler(
-    command(payload, sendResponse.bind(this, event))
+    command(payload, sendResponse.bind(null, event))
   );
 });

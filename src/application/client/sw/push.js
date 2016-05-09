@@ -1,18 +1,17 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Install push message handler.
  */
 /* global self, fetch, clients */
-'use strict';
+import pushUtil from 'utils/push';
+import debugLib from 'sw/utils/debug';
+import { addOrReplaceUrlSearchParameter } from 'sw/utils/requests';
+import pushSync from './sync/push';
 
-var pushUtil = require('utils/push');
-var debug = require('./utils/debug')('push');
-var requests = require('./utils/requests');
-var pushSync = require('./sync/push');
-
-var pushUrl = '/_api/push';
+const debug = debugLib('push');
+const pushUrl = '/_api/push';
 
 /**
  * Retrieve the push data payload from the pushUrl endpoint, and show the
@@ -23,26 +22,26 @@ var pushUrl = '/_api/push';
  */
 function getPayloadAndShowNotification (timestamp) {
   return self.registration.pushManager.getSubscription()
-  .then(function (subscription) {
-    var payloadUrl = requests.addOrReplaceUrlSearchParameter(
+  .then((subscription) => {
+    let payloadUrl = addOrReplaceUrlSearchParameter(
       pushUrl, 'subscriptionId', pushUtil.getSubscriptionId(subscription)
     );
-    payloadUrl = requests.addOrReplaceUrlSearchParameter(
+    payloadUrl = addOrReplaceUrlSearchParameter(
       payloadUrl, 'timestamp', timestamp
     );
 
-    return fetch(payloadUrl).then(function (response) {
+    return fetch(payloadUrl).then((response) => {
       debug('Received push payload response', response);
 
       if (response.status !== 200) {
         throw new Error('Push payload response error, status' + response.status);
       }
 
-      return response.json().then(function (data) {
+      return response.json().then((data) => {
         debug('Received push payload data', data);
 
-        var title = data.title;
-        var options = {
+        const title = data.title;
+        const options = {
           body: data.message,
           icon: data.icon,
           tag: data.tag,
@@ -53,7 +52,7 @@ function getPayloadAndShowNotification (timestamp) {
 
         return self.registration.showNotification(title, options);
       });
-    }).catch(function (error) {
+    }).catch((error) => {
       debug('Failed to get push payload', error);
 
       return self.registration.showNotification('An error occurred', {
@@ -69,7 +68,7 @@ function getPayloadAndShowNotification (timestamp) {
  * Handle push messages.
  * Retrieves the message payload and shows the notification.
  */
-self.addEventListener('push', function (event) {
+self.addEventListener('push', (event) => {
   debug('Received a push message', event);
 
   event.waitUntil(
@@ -80,17 +79,17 @@ self.addEventListener('push', function (event) {
 /**
  * Handle push message notification clicks.
  */
-self.addEventListener('notificationclick', function (event) {
+self.addEventListener('notificationclick', (event) => {
   debug('Received a notification click', event);
 
-  var url = event.notification.data.url;
+  const url = event.notification.data.url;
 
   event.notification.close();
 
   event.waitUntil(
     clients.matchAll({
       type: 'window'
-    }).then(function (windowClients) {
+    }).then((windowClients) => {
       if (windowClients.length > 0) {
         windowClients[0].postMessage({
           command: 'navigate',
@@ -107,17 +106,17 @@ self.addEventListener('notificationclick', function (event) {
 /**
  * Handle push subscription change event.
  */
-self.addEventListener('pushsubscriptionchange', function (event) {
+self.addEventListener('pushsubscriptionchange', (event) => {
   event.waitUntil(
     self.registration.pushManager.getSubscription()
-    .then(function (subscription) {
-      var subscriptionId = pushUtil.getSubscriptionId(subscription);
+    .then((subscription) => {
+      const subscriptionId = pushUtil.getSubscriptionId(subscription);
       if (subscriptionId) {
         return pushSync.synchronize(subscriptionId);
       }
       throw new Error('could not getSubscriptionId');
     })
-    .catch(function (error) {
+    .catch((error) => {
       // catch here and just log for now
       debug('pushsubscriptionchange failed: ', error);
     })

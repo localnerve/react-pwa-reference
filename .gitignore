@@ -29,5 +29,5 @@ output/
 /src/node_modules/application
 /src/node_modules/configs/settings/assets.json
 /src/application/client/sw/precache.js
-/src/application/client/sw/data.json
+/src/application/client/sw/node_modules/sw/data.json
 /webpack-stats*

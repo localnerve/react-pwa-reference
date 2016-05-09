@@ -1,5 +1,5 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Handling for api requests.
@@ -29,14 +29,14 @@
  *
  */
 /* global Promise, Request */
-'use strict';
+import toolbox from 'sw-toolbox';
+import { resourceContentResponse } from './stores';
+import * as sync from '../sync';
+import debugLib from 'sw/utils/debug';
+import { routeHandlerFactory } from 'sw/utils/customNetworkFirst';
+import { stripSearchParameters } from 'sw/utils/requests';
 
-var toolbox = require('sw-toolbox');
-var stores = require('./stores');
-var sync = require('../sync');
-var debug = require('../utils/debug')('apiRequests');
-var networkFirst = require('../utils/customNetworkFirst');
-var requestLib = require('../utils/requests');
+const debug = debugLib('init:apiRequests');
 
 /***
  * factorCacheFailoverTime
@@ -54,11 +54,11 @@ var requestLib = require('../utils/requests');
  *
  * Change this to 0.1 to play around with slow network fallback behaviors.
  */
-var factorCacheFailoverTime = 0.85; // if 85% of app timeout, serve from cache.
+const factorCacheFailoverTime = 0.85; // if 85% of app timeout, serve from cache.
 
-var defaultXhrTimeout = 3000;
+const defaultXhrTimeout = 3000;
 
-var defaultXhrPath = '/api';
+const defaultXhrPath = '/api';
 
 /**
  * Create the network request for fetch.
@@ -70,7 +70,9 @@ var defaultXhrPath = '/api';
  */
 function networkRequest (request) {
   // Thought 'same-origin' would work by spec, but it doesn't. 'include' does.
-  return Promise.resolve(new Request(request.clone(), { credentials: 'include' }));
+  return Promise.resolve(new Request(request.clone(), {
+    credentials: 'include'
+  }));
 }
 
 /**
@@ -89,7 +91,7 @@ function networkRequest (request) {
  *  used in caching.
  */
 function cacheRequest (request) {
-  return Promise.resolve(requestLib.stripSearchParameters(request.url));
+  return Promise.resolve(stripSearchParameters(request.url));
 }
 
 /**
@@ -132,20 +134,19 @@ function passThruRequest (request) {
  * @param {Number} payload.KEY.xhrTimeout - The timeout of the api.
  * @returns {Promise} a Promise that resolves to undefined when work complete.
  */
-module.exports = function apiRequests (payload) {
-  var xhrTimeout, xhrPath;
-
+export default function apiRequests (payload) {
   // For each defined api...
-  Object.keys(payload).forEach(function (key) {
-    xhrPath = payload[key].xhrPath || defaultXhrPath;
-    xhrTimeout = parseInt(payload[key].xhrTimeout, 10) || defaultXhrTimeout;
+  Object.keys(payload).forEach((key) => {
+    const xhrPath = payload[key].xhrPath || defaultXhrPath;
+    const xhrTimeout = parseInt(payload[key].xhrTimeout, 10) ||
+      defaultXhrTimeout;
 
     debug('install api handler', xhrPath);
 
     // Handle GET requests, fail to cache, fail to resourceContent
-    toolbox.router.get(xhrPath + '*',
-      networkFirst.routeHandlerFactory(
-        networkRequest, cacheRequest, stores.resourceContentResponse
+    toolbox.router.get(`${xhrPath}*`,
+      routeHandlerFactory(
+        networkRequest, cacheRequest, resourceContentResponse
       ), {
         debug: toolbox.options.debug,
         networkTimeout: xhrTimeout * factorCacheFailoverTime
@@ -154,8 +155,8 @@ module.exports = function apiRequests (payload) {
 
     // Handle POST requests, fail to sync.deferRequest
     // Maintain deferred requests on success
-    toolbox.router.post(xhrPath + '*',
-      networkFirst.routeHandlerFactory(
+    toolbox.router.post(`${xhrPath}*`,
+      routeHandlerFactory(
         sync.removeFallback.bind(null, {
           credentials: 'include'
         }),
@@ -171,4 +172,4 @@ module.exports = function apiRequests (payload) {
 
   // Nothing deferred (yet), so return a resolved Promise
   return Promise.resolve();
-};
+}

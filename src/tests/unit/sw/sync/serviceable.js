@@ -22,6 +22,7 @@ describe('sw/sync/serviceable', function () {
   before('sw/sync/serviceable setup', function () {
     this.timeout(5000);
 
+    mocks.swData.begin();
     mocks.swSyncIndex.begin();
 
     self = new Self();
@@ -54,6 +55,7 @@ describe('sw/sync/serviceable', function () {
     toolboxMock.mockTeardown();
     self.teardown();
     mocks.swSyncIndex.end();
+    mocks.swData.end();
   });
 
   function createDehydratedRequests (bodies) {

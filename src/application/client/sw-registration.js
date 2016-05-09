@@ -1,5 +1,5 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * A heavily modified serviceWorker registration script originally from Google.
@@ -50,12 +50,12 @@ if ('serviceWorker' in window.navigator &&
     const stores = JSON.parse(
       JSON.stringify(window.App.context.dispatcher.stores)
     );
-    const apis = {};
     const fetchrPlugin = JSON.parse(
       JSON.stringify(window.App.context.plugins.FetchrPlugin)
     );
-
-    apis[fetchrPlugin.xhrPath] = fetchrPlugin;
+    const apis = {
+      [fetchrPlugin.xhrPath]: fetchrPlugin
+    };
 
     /**
      * When the ServiceWorkerContainer is ready, send the init message
@@ -70,9 +70,9 @@ if ('serviceWorker' in window.navigator &&
       messages.workerSendMessage({
         command: 'init',
         payload: {
-          stores: stores,
-          apis: apis,
-          timestamp: timestamp
+          stores,
+          apis,
+          timestamp
         }
       }, registration.active).then(() => {
         console.log('[sw-reg] Successfully sent init to worker');

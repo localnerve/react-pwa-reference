@@ -1,16 +1,17 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Handles IndexedDB updates.
  * Only updates init IDBObjectStore if it gets new/first data.
  */
-'use strict';
+import * as stores from './stores';
+import * as db from 'sw/utils/db';
+import debugLib from 'sw/utils/debug';
 
-var stores = require('./stores');
-var apis = require('../utils/db').init({ key: 'apis' });
-var timestamp = require('../utils/db').init({ key: 'timestamp' });
-var debug = require('../utils/debug')('init.update');
+const debug = debugLib('init:update');
+const apis = db.stores.init({ key: 'apis' });
+const timestamp = db.stores.init({ key: 'timestamp' });
 
 /**
  * Update the IndexedDB init IDBObjectStore if appropriate.
@@ -22,29 +23,29 @@ var debug = require('../utils/debug')('init.update');
  * @return {Boolean} A promise that resolves to boolean indicating if init
  * got new data and should run.
  */
-module.exports = function update (payload) {
+export default function update (payload) {
   debug('Running update');
 
-  return timestamp.read().then(function (currentTs) {
+  return timestamp.read().then((currentTs) => {
     // If the incoming timestamp is newer, it's on.
     return payload.timestamp && currentTs < payload.timestamp;
-  }, function () {
+  }, () => {
     // No existing timestamp found, so brand new - it's on!
     return true;
-  }).then(function (shouldUpdate) {
+  }).then((shouldUpdate) => {
     if (shouldUpdate) {
       // Update the init.timestamp
       return timestamp.update(payload.timestamp)
-      .then(function () {
+      .then(() => {
         // Update init.stores
         return stores.updateInitStores(payload.stores);
       })
-      .then(function () {
+      .then(() => {
         // Update init.apis
-        return apis.update(payload.apis).then(function () {
+        return apis.update(payload.apis).then(() => {
           return true;
         });
-      }).catch(function (error) {
+      }).catch((error) => {
         debug('Failed to update', error);
         throw error; // rethrow
       });
@@ -52,4 +53,4 @@ module.exports = function update (payload) {
       return false;
     }
   });
-};
+}

@@ -1,13 +1,14 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Module to contain sync filters.
  */
-'use strict';
+import syncable from 'utils/syncable';
+import property from 'utils/property';
 
-var syncable = require('utils/syncable');
-var property = require('utils/property');
+export const getFallback = property.find.bind(null, syncable.propertyName);
+export const getPropertyByName = property.find;
 
 /**
  * Get latest of type and operation for each unique key or prop.
@@ -53,17 +54,16 @@ var property = require('utils/property');
  * @returns {Array} The latest of type and operation, each unique key.
  */
 function latestTypeAndOperation (dehydratedRequests, type, operations, prop) {
-  var vals = [], keys = [],
+  const vals = [], keys = [],
     propFind = prop && property.find.bind(null, prop);
 
   return dehydratedRequests
-  .sort(function (a, b) {
+  .sort((a, b) => {
     return (a.timestamp - b.timestamp) * -1; // descending order (latest first)
   })
-  .filter(function (req) {
-    var propVal, fallback = req.fallback;
-
-    propVal = prop && propFind(req);
+  .filter((req) => {
+    const fallback = req.fallback;
+    const propVal = prop && propFind(req);
 
     // Match type and operation (operaion match is any one of given set).
     // Then, unique key or unqiue custom prop val.
@@ -79,6 +79,7 @@ function latestTypeAndOperation (dehydratedRequests, type, operations, prop) {
     return false;
   });
 }
+export { latestTypeAndOperation as latest }
 
 /**
  * Return array of dehydrated requests that match type, one of a given
@@ -91,14 +92,15 @@ function latestTypeAndOperation (dehydratedRequests, type, operations, prop) {
  * @returns {Array} The array of dehydratedRequests that match the criteria.
  */
 function typeAndOperation (dehydratedRequests, type, operations, key) {
-  return dehydratedRequests.filter(function (req) {
-    var fallback = req.fallback;
+  return dehydratedRequests.filter((req) => {
+    const fallback = req.fallback;
 
     return (fallback.type === type &&
             operations.indexOf(fallback.operation) !== -1 &&
             (!key || fallback.key === key));
   });
 }
+export { typeAndOperation as match }
 
 /**
  * Return array of dehydrated requests from source that aren't in exclusions.
@@ -111,20 +113,12 @@ function typeAndOperation (dehydratedRequests, type, operations, key) {
  * @returns {Array} The dehydrated requests from source that are not in
  * exclusions.
  */
-function without (source, exclusions) {
-  var excludedTimestamps = exclusions.map(function (req) {
+export function without (source, exclusions) {
+  const excludedTimestamps = exclusions.map((req) => {
     return req.timestamp;
   });
 
-  return source.filter(function (req) {
+  return source.filter((req) => {
     return excludedTimestamps.indexOf(req.timestamp) === -1;
   });
 }
-
-module.exports = {
-  latest: latestTypeAndOperation,
-  match: typeAndOperation,
-  without: without,
-  getFallback: property.find.bind(null, syncable.propertyName),
-  getPropertyByName: property.find
-};

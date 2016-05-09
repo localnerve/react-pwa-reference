@@ -19,7 +19,7 @@ describe('sw/assets', function () {
 
     mocks.swToolbox.begin();
     mocks.swData.begin();
-    data = require('./data');
+    data = require('sw/data');
     toolbox = require('sw-toolbox');
     global.Request = require('test/mocks/request');
 

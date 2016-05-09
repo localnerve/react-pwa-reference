@@ -1,5 +1,5 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Handling for dynamic app routes.
@@ -8,17 +8,20 @@
  * to keep requests down and response as fast as possible.
  */
 /* global Promise, Request, URL, location */
-'use strict';
+import toolbox from 'sw-toolbox';
+import debugLib from 'sw/utils/debug';
+import { contentRace } from 'sw/utils/customHelpers';
+import { routeHandlerFactory } from 'sw/utils/customFastest';
+import * as idb from 'sw/utils/idb';
+import {
+  addOrReplaceUrlSearchParameter,
+  stripSearchParameters
+} from 'sw/utils/requests';
 
-var toolbox = require('sw-toolbox');
-var debug = require('../utils/debug')('init.routes');
-var helpers = require('../utils/customHelpers');
-var fastest = require('../utils/customFastest');
-var idb = require('../utils/idb');
-var requestLib = require('../utils/requests');
+const debug = debugLib('init:routes');
 
 // Recent Route Lifespan (after this, it is re-fetched and cached)
-var routeTTL = 1000 * 60 * 20;
+const routeTTL = 1000 * 60 * 20;
 
 /**
  * Create a request for network use.
@@ -36,8 +39,8 @@ var routeTTL = 1000 * 60 * 20;
  * @returns String of the new request url.
  */
 function networkRequest (request) {
-  var url =
-    requestLib.addOrReplaceUrlSearchParameter(
+  const url =
+    addOrReplaceUrlSearchParameter(
       (typeof request !== 'string') ? request.url : request, 'render', '0'
     );
 
@@ -63,7 +66,7 @@ function networkRequest (request) {
  * @returns A string of the modified request url to be used in caching.
  */
 function cacheRequest (request) {
-  return requestLib.stripSearchParameters(request.url);
+  return stripSearchParameters(request.url);
 }
 
 /**
@@ -78,12 +81,10 @@ function cacheRequest (request) {
  * @returns {Promise} A Promise resolving to the input response.
  */
 function addRecentRoute (request, response) {
-  return idb.get(idb.stores.init, 'routes').then(function (routes) {
-    routes = routes || {};
-
+  return idb.get(idb.stores.init, 'routes').then((routes = {}) => {
     routes[(new URL(request.url, location.origin)).pathname] = Date.now();
 
-    return idb.put(idb.stores.init, 'routes', routes).then(function () {
+    return idb.put(idb.stores.init, 'routes', routes).then(() => {
       return response;
     });
   });
@@ -99,16 +100,14 @@ function addRecentRoute (request, response) {
  * @returns {Promise} Promise resolves to Boolean, true if cache should be skipped.
  */
 function getRecentRoute (url) {
-  return idb.get(idb.stores.init, 'routes').then(function (routes) {
-    var age;
-
+  return idb.get(idb.stores.init, 'routes').then((routes) => {
     if (routes && routes[url]) {
-      age = Date.now() - routes[url];
+      const age = Date.now() - routes[url];
 
       if (age < routeTTL) {
-        return toolbox.cacheOnly(new Request(url)).then(function (response) {
+        return toolbox.cacheOnly(new Request(url)).then((response) => {
           if (response) {
-            debug('skipping fetchAndCache for '+url);
+            debug(`skipping fetchAndCache for ${url}`);
             return true;
           }
           return false;
@@ -136,11 +135,11 @@ function cacheAndInstallRoute (url) {
   installRouteGetHandler(url);
 
   // Must handle errors here, precache error is irrelevant beyond here.
-  return helpers.contentRace(networkRequest(url), url, null, {
+  return contentRace(networkRequest(url), url, null, {
     successHandler: addRecentRoute
   })
-  .catch(function (error) {
-    debug('failed to precache ' + url, error);
+  .catch((error) => {
+    debug(`failed to precache ${url}`, error);
   });
 }
 
@@ -155,7 +154,7 @@ function cacheAndInstallRoute (url) {
 function installRouteGetHandler (url) {
   debug('install route GET handler on', url);
 
-  toolbox.router.get(url, fastest.routeHandlerFactory(
+  toolbox.router.get(url, routeHandlerFactory(
     networkRequest, cacheRequest
   ), {
     debug: toolbox.options.debug,
@@ -183,21 +182,21 @@ function installRouteGetHandler (url) {
  * @param {Object} payload.RouteStore.routes - The routes of the application.
  * @returns {Promise} Resolves to array of all installed route promises.
  */
-module.exports = function cacheRoutes (payload) {
-  var routes = payload.RouteStore.routes;
+export default function cacheRoutes (payload) {
+  const routes = payload.RouteStore.routes;
 
   debug('received routes', routes);
 
-  return Promise.all(Object.keys(routes).map(function (route) {
+  return Promise.all(Object.keys(routes).map((route) => {
     if (routes[route].mainNav) {
-      var url = routes[route].path;
+      const url = routes[route].path;
 
-      return getRecentRoute(url).then(function (skipCache) {
+      return getRecentRoute(url).then((skipCache) => {
         if (skipCache) {
           return installRouteGetHandler(url);
         }
         return cacheAndInstallRoute(url);
-      }).catch(function (error) {
+      }).catch((error) => {
         debug('failed to get recentRoute', error);
         return cacheAndInstallRoute(url);
       });
@@ -205,4 +204,4 @@ module.exports = function cacheRoutes (payload) {
 
     return Promise.resolve();
   }));
-};
+}

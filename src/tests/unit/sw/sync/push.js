@@ -19,6 +19,7 @@ describe('sw/sync/push', function () {
   before('sw/sync/push setup', function () {
     this.timeout(5000);
 
+    mocks.swData.begin();
     mocks.swToolbox.begin();
     mocks.swUtilsIdbTreo.begin();
     self = new Self();
@@ -42,6 +43,7 @@ describe('sw/sync/push', function () {
 
     mocks.swUtilsIdbTreo.end();
     mocks.swToolbox.end();
+    mocks.swData.end();
   });
 
   describe('synchronize', function () {

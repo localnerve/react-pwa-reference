@@ -28,17 +28,19 @@ describe('sw/init/backgrounds', function () {
 
     global.Request = require('test/mocks/request');
     global.caches = require('test/mocks/sw-caches').create();
+    mocks.swData.begin();
     mocks.swToolbox.begin();
     toolbox = require('sw-toolbox');
 
-    backgrounds = require('application/client/sw/init/backgrounds');
+    backgrounds = require('application/client/sw/init/backgrounds').default;
   });
 
   after(function () {
-    delete global.Request;
-    delete global.caches;
     toolbox.mockTeardown();
     mocks.swToolbox.end();
+    mocks.swData.end();
+    delete global.Request;
+    delete global.caches;
   });
 
   function runTest (response) {

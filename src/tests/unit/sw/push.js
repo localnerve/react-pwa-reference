@@ -18,6 +18,7 @@ describe('sw/push', function () {
   before('setup sw/push', function () {
     this.timeout(5000);
 
+    mocks.swData.begin();
     mocks.swToolbox.begin();
     mocks.swSyncPush.begin();
 
@@ -63,6 +64,7 @@ describe('sw/push', function () {
     selfMock.teardown();
     mocks.swSyncPush.end();
     mocks.swToolbox.end();
+    mocks.swData.end();
   });
 
   describe('push event', function () {

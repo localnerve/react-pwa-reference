@@ -1,36 +1,38 @@
 /***
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
- * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyrights licensed under the BSD License. See the accompanying LICENSE file
+ * for terms.
  *
  * Module to contain sync operations.
  */
 /* global Blob, Promise, Request, Response, fetch, self */
-'use strict';
+import toolbox from 'sw-toolbox';
+import * as filters from './filters';
+import * as serviceable from './serviceable';
+import * as idb from 'sw/utils/idb';
+import debugLib from 'sw/utils/debug';
+import { dehydrateRequest, rehydrateRequest } from 'sw/utils/requests';
+import { createXHRContextFromText } from 'sw/utils/api';
 
-var toolbox = require('sw-toolbox');
-var filters = require('./filters');
-var serviceable = require('./serviceable');
-var idb = require('../utils/idb');
-var debug = require('../utils/debug')('sync');
-var requestLib = require('../utils/requests');
-var apiHelpers = require('../utils/api');
+const debug = debugLib('sync:index');
 
 /***
  * The maximum number of times a single request fail synchronization.
  * This is incremented on a request when a synchronization attempt fails.
  * @see serviceAllRequests
  */
-var MAX_FAILURES = 3;
+export const MAX_FAILURES = 3;
 
 /***
  * Synchronization operations.
  *
  * Add operations here to direct sync event handling.
  */
-var OPERATIONS = {
+const OPERATIONS = {
   delimiter: ':',
   deferredRequests: 'deferredRequests'
 };
+export { OPERATIONS as _ops }
 
 /**
  * Defer a request until later by storing it in IndexedDB.
@@ -45,13 +47,13 @@ var OPERATIONS = {
  * @param {Object} request - A Request object to use to make the post request.
  * @returns {Promise} Resolves to a Response with a status of 203 or 400.
  */
-function deferRequest (apiPath, request) {
-  var hasSync = !!self.registration.sync;
+export function deferRequest (apiPath, request) {
+  const hasSync = !!self.registration.sync;
 
-  return requestLib.dehydrateRequest(request, 'json')
-  .then(function (dehydratedRequest) {
+  return dehydrateRequest(request, 'json')
+  .then((dehydratedRequest) => {
     // This is THE source of the deferred request timestamp.
-    var timestamp = Date.now().toString(),
+    const timestamp = Date.now().toString(),
       fallback = filters.getFallback(dehydratedRequest.body, true) || {};
 
     // Store the timestamp with the value for easier management in serviceAllRequests.
@@ -66,9 +68,9 @@ function deferRequest (apiPath, request) {
 
     // Add it to IndexedDB.
     return idb.put(idb.stores.requests, timestamp, dehydratedRequest)
-    .then(function () {
+    .then(() => {
       // If no sync and user replayable, show user a failure.
-      var shouldSucceed = hasSync || !fallback.userReplayable,
+      const shouldSucceed = hasSync || !fallback.userReplayable,
         status = {
           code: 400,
           text: 'failed'
@@ -85,11 +87,11 @@ function deferRequest (apiPath, request) {
             OPERATIONS.deferredRequests,
             apiPath
           ].join(OPERATIONS.delimiter))
-          .catch(function (error) {
+          .catch((error) => {
             debug('sync register failed ', error);
           })
           // Always succeed.
-          .then(function () {
+          .then(() => {
             return status;
           });
         }
@@ -97,7 +99,7 @@ function deferRequest (apiPath, request) {
 
       return status;
     })
-    .then(function (status) {
+    .then((status) => {
       return new Response(null, {
         status: status.code,
         statusText: status.text
@@ -124,18 +126,18 @@ function deferRequest (apiPath, request) {
  * on the network that would be used for caching and contains a fallback object.
  * @returns {Promise} Resolves to the Response on success.
  */
-function maintainRequests (req, res, reqToCache) {
-  return idb.all(idb.stores.requests).then(function (dehydratedRequests) {
-    var request = reqToCache.clone();
+export function maintainRequests (req, res, reqToCache) {
+  return idb.all(idb.stores.requests).then((dehydratedRequests) => {
+    const request = reqToCache.clone();
 
-    return request.json().then(function (body) {
+    return request.json().then((body) => {
       return serviceable.pruneRequestsByPolicy(
         dehydratedRequests,
         filters.getFallback(body),
         body
       );
     });
-  }).then(function () {
+  }).then(() => {
     return res;
   });
 }
@@ -148,10 +150,10 @@ function maintainRequests (req, res, reqToCache) {
  * @returns {Promise} Resolves to a request clone with options and
  * fallback object removed.
  */
-function removeFallback (options, request) {
-  var req = request.clone();
+export function removeFallback (options, request) {
+  const req = request.clone();
 
-  return req.json().then(function (body) {
+  return req.json().then((body) => {
     // Remove the fallback object from the body
     filters.getFallback(body, true);
 
@@ -203,10 +205,8 @@ function manageAbandonedRequest (dehydratedRequest) {
  * @returns {Promise} Resolves to undefined on success or continued deferral.
  * Resolves to the dehydratedRequest with updated failureCount on abandonment.
  */
-function serviceOneRequest (dehydratedRequest, apis, options) {
-  options = options || {};
-
-  var req,
+function serviceOneRequest (dehydratedRequest, apis, options = {}) {
+  const
     timestamp = dehydratedRequest.timestamp,
     apiInfo = apis[dehydratedRequest.apiPath],
     successResponses =
@@ -215,18 +215,18 @@ function serviceOneRequest (dehydratedRequest, apis, options) {
   // apiInfo found for this request
   if (apiInfo) {
     // Rehydrate the request with up-to-date CSRF token.
-    req = requestLib.rehydrateRequest(dehydratedRequest, apiInfo);
+    const req = rehydrateRequest(dehydratedRequest, apiInfo);
 
     // Make the network request, delete the stored request on success.
     return fetch(req)
-    .then(function (response) {
+    .then((response) => {
       if (successResponses.test(response.status)) {
         debug('successful request sync', req);
         return idb.del(idb.stores.requests, timestamp);
       }
       throw response;
     })
-    .catch(function (error) {
+    .catch((error) => {
       if (options.noManage) {
         return Promise.reject(error);
       }
@@ -240,10 +240,10 @@ function serviceOneRequest (dehydratedRequest, apis, options) {
         debug('request ABANDONED after MAX_FAILURES', dehydratedRequest);
 
         return manageAbandonedRequest(dehydratedRequest)
-        .then(function () {
+        .then(() => {
           return idb.del(idb.stores.requests, timestamp);
         })
-        .then(function () {
+        .then(() => {
           // Resolve to the abandoned dehydratedRequest.
           return dehydratedRequest;
         });
@@ -259,7 +259,7 @@ function serviceOneRequest (dehydratedRequest, apis, options) {
   }
 
   // No apiInfo found for dehydratedRequest.apiPath
-  throw new Error('API Info for '+dehydratedRequest.apiPath+' not found');
+  throw new Error(`API Info for ${dehydratedRequest.apiPath} not found`);
 }
 
 /**
@@ -281,22 +281,20 @@ function serviceOneRequest (dehydratedRequest, apis, options) {
  * @returns A Promise that resolves on all synchronization outcomes, rejects on
  * first failure (Promise.all).
  */
-function serviceAllRequests (apis, options) {
-  options = options || {};
-
+export function serviceAllRequests (apis, options = {}) {
   return idb.all(idb.stores.requests)
-  .then(function (allRequests) {
+  .then((allRequests) => {
     return serviceable.getRequests(allRequests)
-    .then(function (serviceableRequests) {
+    .then((serviceableRequests) => {
       return serviceable.pruneRequests(allRequests, serviceableRequests)
-      .then(function () {
+      .then(() => {
         return serviceableRequests;
       });
     });
   })
-  .then(function (serviceableRequests) {
+  .then((serviceableRequests) => {
     return Promise.all(
-      serviceableRequests.map(function (dehydratedRequest) {
+      serviceableRequests.map((dehydratedRequest) => {
         return serviceOneRequest(dehydratedRequest, apis, options);
       })
     );
@@ -320,37 +318,36 @@ function serviceAllRequests (apis, options) {
  *          b. url csrf tokens are in the cookie and responseText.
  * 2. Service all deferred requests.
  */
-self.addEventListener('sync', function (event) {
-  var eventParts = event.tag.split(OPERATIONS.delimiter),
+self.addEventListener('sync', (event) => {
+  const eventParts = event.tag.split(OPERATIONS.delimiter),
     eventOperation = eventParts[0],
     eventDetail = eventParts[1];
 
-  debug('sync event, op ', eventOperation, ' detail ', eventDetail);
+  debug(`sync event, op ${eventOperation} detail`, eventDetail);
 
   if (eventOperation === OPERATIONS.deferredRequests) {
-    var apiPath = eventDetail;
+    const apiPath = eventDetail;
 
     event.waitUntil(
       ( apiPath ? Promise.resolve() :
         Promise.reject(new Error('bad apiPath supplied')) )
-      .then(function () {
+      .then(() => {
         return fetch('/?render=0', {
           credentials: 'include'
         });
       })
-      .then(function (response) {
+      .then((response) => {
         if (response.ok) {
           return response.text();
         }
 
-        throw new Error(
-          'sync event bad GET response'
-        );
+        throw new Error('sync event bad GET response');
       })
-      .then(function (text) {
-        var apis = {};
-        apis[apiPath] = {
-          xhrContext: apiHelpers.createXHRContextFromText(text)
+      .then((text) => {
+        var apis = {
+          [apiPath]: {
+            xhrContext: createXHRContextFromText(text)
+          }
         };
 
         return serviceAllRequests(apis, {
@@ -360,12 +357,3 @@ self.addEventListener('sync', function (event) {
     );
   }
 });
-
-module.exports = {
-  deferRequest: deferRequest,
-  maintainRequests: maintainRequests,
-  removeFallback: removeFallback,
-  serviceAllRequests: serviceAllRequests,
-  MAX_FAILURES: MAX_FAILURES,
-  _ops: OPERATIONS
-};
