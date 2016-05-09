@@ -45,7 +45,7 @@
     "postinstall": "gulp symlinkSrc",
     "start": "node -e 'process.env.NODE_ENV = process.env.NODE_ENV || \"production\"; require(\"./output/application/server\");'",
     "test": "npm run build:output && npm run _test",
-    "test:cover": "cross-env BABEL_ENV=cover npm run build:output && cross-env NYC_CWD=output nyc --reporter=lcov npm run _test",
+    "test:cover": "rimraf .nyc_output/ && cross-env BABEL_ENV=cover npm run build:output && cross-env NYC_CWD=output nyc --reporter=lcov npm run _test",
     "test:debug": "npm run build:output -- -s inline && npm run _test -- --debug-brk",
     "test:func": "node src/tests/functional/run-parallel '--reporter spec src/tests/functional/main.js'"
   },
@@ -99,6 +99,7 @@
     "nyc": "^6.4.0",
     "precommit-hook": "^3.0.0",
     "react-addons-test-utils": "^15.0.2",
+    "rimraf": "^2.5.2",
     "sw-precache": "^3.1.1",
     "wd": "^0.4.0",
     "webpack": "^1.12.15",
