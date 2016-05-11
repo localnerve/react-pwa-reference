@@ -1,13 +1,14 @@
-# react-pwa-boilerplate
+# react-pwa-reference
 
-> A project boilerplate for universal reactiflux progressive web applications.
+[![Build Status](https://secure.travis-ci.org/localnerve/react-pwa-reference.svg?branch=master)](http://travis-ci.org/localnerve/react-pwa-reference)
+[![Coverage Status](https://coveralls.io/repos/localnerve/react-pwa-reference/badge.svg?branch=master)](https://coveralls.io/r/localnerve/react-pwa-reference?branch=master)
+[![Dependency Status](https://david-dm.org/localnerve/react-pwa-reference.svg)](https://david-dm.org/localnerve/react-pwa-reference)
+[![devDependency Status](https://david-dm.org/localnerve/react-pwa-reference/dev-status.svg)](https://david-dm.org/localnerve/react-pwa-reference#info=devDependencies)
 
-## WIP
+> A project boilerplate and reference example for ~~isomorphic~~ universal reactiflux progressive web applications.
 
-> Working, but a work in progress.
-
-## Prerequisites
-Just Node - At least Node 4 LTS, recommend [nvm](https://github.com/creationix/nvm)
+## Environment Prerequisites
+Node >= 4 LTS, recommend [nvm](https://github.com/creationix/nvm)
 
 ## Stack
 * **N**ode
@@ -18,7 +19,7 @@ Just Node - At least Node 4 LTS, recommend [nvm](https://github.com/creationix/n
 * babel6, gulp4, eslint, mocha, chai, sass
 
 ## Setup
-1. `git clone https://github.com/localnerve/react-pwa-boilerplate`
+1. `git clone https://github.com/localnerve/react-pwa-reference`
 2. `npm install`
 
 ## Run
