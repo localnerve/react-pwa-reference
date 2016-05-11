@@ -137,4 +137,4 @@ export function settingsState (context, payload, done) {
   }
 }
 
-export default settingsState
+export default settingsState;

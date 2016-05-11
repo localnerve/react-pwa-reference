@@ -21,4 +21,4 @@ export function init (context, payload, done) {
   done();
 }
 
-export default init
+export default init;
