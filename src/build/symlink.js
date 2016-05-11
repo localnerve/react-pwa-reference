@@ -15,7 +15,9 @@ export default function symlinkTaskFactory (settings, output) {
   const target = output ? 'output' : 'src';
 
   return function symlink () {
-    return gulp.src(`./${settings[target].application}`)
+    return gulp.src(`./${settings[target].application}`, {
+      allowEmpty: true
+    })
     .pipe(gulp.symlink(`./${settings[target].baseDir}/node_modules`));
   }
 }
