@@ -1,0 +1,65 @@
+//
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// Topics styles
+//
+
+.topics-list {
+  list-style: none;
+
+  .topic-box > input {
+    position: absolute;
+    left: -9999px;
+    outline: none;
+  }
+  .topic-box {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    width: 2rem;
+    height: 2rem;
+    margin: 0.5rem auto;
+
+    input[type="checkbox"]:checked + label:after {
+      opacity: 1;
+    }
+
+    input[type="checkbox"]:disabled + label,
+    input[type="checkbox"]:disabled + label:after {
+      background: #ccc;
+    }
+
+    label {
+      cursor: pointer;
+      position: absolute;
+      width: 2rem;
+      height: 2rem;
+      top: 0;
+      border-radius: 0.25rem;
+      background: $app-primary-bgcolor;
+
+      &::after {
+        position: absolute;
+        content: '';
+        opacity: 0;
+        width: 0.9rem;
+        height: 0.5rem;
+        background: transparent;
+        top: 0.6rem;
+        left: 0.6rem;
+        border: 3px solid #fcfff4;
+        border-top: none;
+        border-right: none;
+        transform: rotate(-45deg);
+      }
+      &:hover::after {
+        opacity: 0.3;
+      }
+    }
+  }
+  .topic-label {
+    display: inline-block;
+    padding-left: 0.5rem;
+  }
+}

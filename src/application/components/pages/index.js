@@ -3,6 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import ReactModal from 'react-modal';
 import merge from 'lodash/merge';
 import { conformErrorStatus } from 'utils';
 import Spinner from './Spinner';
@@ -118,7 +119,7 @@ export function createElements (navPages, contentStore) {
  * @param {Boolean} failure - Modal creation failure.
  * @returns {Object} A React Element.
  */
-export function createModalElement (component, props, failure) {
+function createModalElement (component, props, failure) {
   if (component) {
     props = props || {};
 
@@ -130,8 +131,45 @@ export function createModalElement (component, props, failure) {
 }
 /*eslint-enable react/prop-types */
 
+/**
+ * If open, render the app modal container and internal component.
+ *
+ * @param {Object} modalProps - modal creation properties.
+ * @param {Boolean} modalProps.open - True if show.
+ * @param {String} modalProps.component - The name of the modal component.
+ * @param {Object} modalProps.props - The props for the component.
+ * @param {Boolean} modalProps.failure - True if component creation failure.
+ * @return {Object} The React Modal.
+ */
+export function createModal (modalProps, close) {
+  if (modalProps.open) {
+    return React.createElement(ReactModal, {
+      isOpen: true,
+      onRequestClose: close,
+      style: {
+        overlay: {
+          backgroundColor: 'rgba(70, 70, 70, 0.75)'
+        },
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          marginRight: '-50%',
+          overflow: 'visible',
+          transform: 'translate(-50%, -50%)',
+          background: 'rgba(255, 255, 255, 0.93)'
+        }
+      }
+    }, createModalElement(
+      modalProps.component, modalProps.props, modalProps.failure
+    ));
+  }
+  return null;
+}
+
 export default {
   createElements,
   getMainNavPages,
-  createModalElement
+  createModal
 }

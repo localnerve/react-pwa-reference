@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * The actions that are eligible to be referenced from the backend data service.
@@ -24,15 +24,16 @@ export function getActions () {
 }
 
 /**
- * Add an action to make it available to backend reference.
+ * Add or replace an action to make it available to backend reference.
  *
+ * @param {String} name - The public name of the action.
  * @param {Function} action - The action creator to add.
  */
-export function addAction (action) {
-  actions[action.name] = action;
+export function putAction (name, action) {
+  actions[name] = action;
 }
 
 export default {
   getActions,
-  addAction
+  putAction
 }

@@ -30,7 +30,7 @@ export default function mainConfig (settings, type) {
     entry: `./${settings.src.clientEntry}`,
     output: {
       path: settings.dist.scripts,
-      publicPath: settings.web.scripts
+      publicPath: `${settings.web.scripts}/`
     },
     module: {
       loaders: [

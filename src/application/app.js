@@ -12,6 +12,7 @@ import BackgroundStore from './stores/BackgroundStore';
 import ContentStore from './stores/ContentStore';
 import ContactStore from './stores/ContactStore';
 import RouteStore from './stores/RouteStore';
+import ModalStore from './stores/ModalStore';
 
 const debug = debugLib('app');
 
@@ -28,5 +29,6 @@ app.registerStore(BackgroundStore);
 app.registerStore(ContentStore);
 app.registerStore(ContactStore);
 app.registerStore(RouteStore);
+app.registerStore(ModalStore);
 
 export default app;

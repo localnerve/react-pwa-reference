@@ -3,7 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
-// import { openModal as modalAction } from 'applictions/actions/modal';
+import { openModal as modalAction } from 'application/actions/modal';
 
 const ModalLink = React.createClass({
   propTypes: {
@@ -24,7 +24,7 @@ const ModalLink = React.createClass({
   },
 
   clickHandler: function () {
-    // this.context.executeAction(modalAction, this.props.data);
+    this.context.executeAction(modalAction, this.props.data);
   }
 });
 

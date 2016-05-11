@@ -8,6 +8,7 @@ import React from 'react';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 import { handleHistory, navigateAction } from 'fluxible-router';
 import ReactSwipe from 'react-swipe';
+import { closeModal as modalAction } from 'application/actions/modal';
 import Background from './Background';
 import PageContainer from './PageContainer';
 import Header from './header';
@@ -24,7 +25,8 @@ let Application = React.createClass({
     analytics: React.PropTypes.string,
     pageName: React.PropTypes.string.isRequired,
     pages: React.PropTypes.object.isRequired,
-    pageModels: React.PropTypes.object.isRequired
+    pageModels: React.PropTypes.object.isRequired,
+    modal: React.PropTypes.object
   },
   contextTypes: {
     getStore: React.PropTypes.func.isRequired,
@@ -33,7 +35,7 @@ let Application = React.createClass({
 
   handleMessage: function (event) {
     if (event.data.command === 'navigate') {
-      // this.modalClose();
+      this.modalClose();
       this.context.executeAction(navigateAction, {
         url: event.data.url
       });
@@ -54,11 +56,12 @@ let Application = React.createClass({
     }
   },
 
+  modalClose: function () {
+    this.context.executeAction(modalAction);
+  },
+
   render: function () {
-    debug('pageName', this.props.pageName);
-    debug('pageTitle', this.props.pageTitle);
-    debug('pages', this.props.pages);
-    debug('navigateError', this.props.currentNavigateError);
+    debug('props', this.props);
 
     const routeOrdinal = this.props.pages[this.props.pageName].order;
 
@@ -72,8 +75,11 @@ let Application = React.createClass({
       navPages, this.context.getStore('ContentStore')
     );
 
+    const pageModal = pages.createModal(this.props.modal, this.modalClose);
+
     return (
       <div className="app-block">
+        {pageModal}
         <Background prefetch={false} />
         <Header
           selected={navPages[routeOrdinal].page}
@@ -141,9 +147,10 @@ let Application = React.createClass({
 });
 
 Application = connectToStores(
-  Application, ['ContentStore', 'RouteStore'], (context) => {
+  Application, ['ContentStore', 'RouteStore', 'ModalStore'], (context) => {
     const routeStore = context.getStore('RouteStore'),
       contentStore = context.getStore('ContentStore'),
+      modalStore = context.getStore('ModalStore'),
       currentRoute = routeStore.getCurrentRoute(),
       pageName = (currentRoute && currentRoute.page) ||
         contentStore.getDefaultResource(),
@@ -155,7 +162,13 @@ Application = connectToStores(
       pageName: pageName,
       pageTitle: pageTitle,
       pageModels: contentStore.getCurrentPageModels(),
-      pages: routeStore.getRoutes()
+      pages: routeStore.getRoutes(),
+      modal: {
+        open: modalStore.getIsOpen(),
+        component: modalStore.getComponent(),
+        props: modalStore.getProps(),
+        failure: modalStore.getFailure()
+      }
     };
   }
 );

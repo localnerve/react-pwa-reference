@@ -22,7 +22,7 @@ const debug = debugLib('actions:routes');
  */
 export function routes (context, payload, done) {
   // This is done late in case routes (this) in interface, TODO: revisit.
-  const actions = require('./interface').getActions();
+  const actions = require('application/actions/interface').getActions();
 
   const transformer = (typeof payload.transform === 'function' ?
     payload.transform : createFluxibleRouteTransformer({

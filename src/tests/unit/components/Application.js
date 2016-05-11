@@ -13,7 +13,7 @@ var jsonToFluxible = require('utils').createFluxibleRouteTransformer({
 
 describe('application component', function () {
   var createMockComponentContext,
-    ContentStore, RouteStore, ContactStore, BackgroundStore, // ModalStore,
+    ContentStore, RouteStore, ContactStore, BackgroundStore, ModalStore,
     serviceData, routesResponse, fluxibleRoutes, fluxibleApp,
     React, testUtils,
     routes;
@@ -54,7 +54,7 @@ describe('application component', function () {
       require('application/stores/ContactStore').ContactStore;
     BackgroundStore =
       require('application/stores/BackgroundStore').BackgroundStore;
-    // ModalStore = require('application/stores/ModalStore');
+    ModalStore = require('application/stores/ModalStore').ModalStore;
     serviceData = require('test/mocks/service-data');
     routesResponse = require('test/fixtures/routes-response');
     fluxibleRoutes = jsonToFluxible(routesResponse);
@@ -116,8 +116,8 @@ describe('application component', function () {
           ContentStore,
           RouteStore,
           ContactStore,
-          BackgroundStore // ,
-          // ModalStore
+          BackgroundStore,
+          ModalStore
         ]
       });
       context.makePath = makeHomePath;

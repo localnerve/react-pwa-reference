@@ -1,0 +1,48 @@
+//
+// Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+// Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+//
+// Settings styles
+//
+
+@import "topics";
+@import "switch";
+
+.settings {
+  min-height: rem-calc(350);
+
+  @include close-button;
+
+  .control-section {
+    margin-top: 1rem;
+
+    .push-demo {
+      button {
+        @extend %button;
+        @include button-size(large, true);
+        @include button-style(
+          $app-primary-bgcolor,
+          $app-accent-dark-bgcolor,
+          $app-primary-light-color,
+          solid
+        );
+        border-radius: 0.25rem
+      }
+      button:disabled {
+        background: #ccc;
+      }
+    }
+  }
+
+  // divider for sections
+  .control-section:not(:last-child) {
+    &::after {
+      content: '';
+      display: block;
+      margin: 1rem 0;
+      border-top: 1px solid $app-primary-bgcolor;
+      border-bottom: 1px solid $app-accent-dark-bgcolor;
+      height: 2px;
+    }
+  }
+}
