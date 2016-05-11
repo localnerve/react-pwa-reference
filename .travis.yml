@@ -18,6 +18,8 @@ addons:
       - g++-4.8
 before_install:
 - echo DEPLOY_URL=$DEPLOY_URL
+script:
+- npm run test:cover
 after_success:
 - cat reports/coverage/lcov.info | ./node_modules/.bin/coveralls
 # before_deploy:
