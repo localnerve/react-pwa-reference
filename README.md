@@ -1,7 +1,7 @@
 # react-pwa-reference
 
 [![Build Status](https://secure.travis-ci.org/localnerve/react-pwa-reference.svg?branch=master)](http://travis-ci.org/localnerve/react-pwa-reference)
-[![Coverage Status](https://coveralls.io/repos/localnerve/react-pwa-reference/badge.svg?branch=master)](https://coveralls.io/r/localnerve/react-pwa-reference?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/localnerve/react-pwa-reference/badge.svg?branch=master)](https://coveralls.io/github/localnerve/react-pwa-reference?branch=master)
 [![Dependency Status](https://david-dm.org/localnerve/react-pwa-reference.svg)](https://david-dm.org/localnerve/react-pwa-reference)
 [![devDependency Status](https://david-dm.org/localnerve/react-pwa-reference/dev-status.svg)](https://david-dm.org/localnerve/react-pwa-reference#info=devDependencies)
 
