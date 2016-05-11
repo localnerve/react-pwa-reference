@@ -3,11 +3,12 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /*eslint no-console:0 */
-/* global describe, it, before, beforeEach, afterEach */
+/* global describe, it, before, beforeEach, afterEach, require */
 'use strict';
 
 var expect = require('chai').expect;
 var assert = require('chai').assert;
+var path = require('path');
 var configLib = require('configs');
 var localEnv = require('configs/local.env.json');
 
@@ -74,7 +75,7 @@ describe('configs', function () {
 
     it('loads script asset dynamically as expected', function (done) {
       var fs = require('fs'),
-        assetsJsonFile = require.resolve('configs/settings/assets.json'),
+        assetsJsonFile = require.resolve('configs/settings/index.js'),
         assetsJsonData = JSON.stringify({
           assets: {
             main: [
@@ -91,6 +92,8 @@ describe('configs', function () {
             ]
           }
         });
+
+      assetsJsonFile = path.join(path.dirname(assetsJsonFile), 'assets.json');
 
       function testAssetScript (script, map) {
         expect(script).to.be.a('string').that.is.not.empty;

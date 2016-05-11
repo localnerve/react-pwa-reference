@@ -18,6 +18,7 @@ describe('sw/utils/debug', function () {
     this.timeout(5000);
 
     mocks.swUtilsIdbTreo.begin();
+    mocks.swData.begin();
     treoMock = require('treo');
     debugLib =
       require('application/client/sw/node_modules/sw/utils/debug').default;
@@ -26,6 +27,7 @@ describe('sw/utils/debug', function () {
   });
 
   after(function () {
+    mocks.swData.end();
     mocks.swUtilsIdbTreo.end();
   });
 
