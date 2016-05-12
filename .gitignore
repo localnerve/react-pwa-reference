@@ -21,6 +21,7 @@ node_modules/*
 .DS_Store
 
 # Project Boilerplate ignores
+.jshint*
 tmp
 dist/
 reports/
