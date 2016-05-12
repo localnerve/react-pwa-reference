@@ -42,7 +42,7 @@
     "fixtures:prod": "gulp fixturesProd",
     "lint": "eslint .",
     "perfbudget": "gulp perfbudget",
-    "postinstall": "node -e 'try{require(\"fs\").symlinkSync(require(\"path\").resolve(\"./src/application\"),\"./src/node_modules/application\",\"dir\");}catch(e){console.error(\"*** FAILED to create src/node_modules/application symlink *** \"+e);}'",
+    "postinstall": "node ./postinstall.js",
     "start": "node -e 'process.env.NODE_ENV=process.env.NODE_ENV || \"production\"; require(\"./output/application/server\");'",
     "test": "npm run build:output && npm run _test",
     "test:cover": "rimraf .nyc_output/ && cross-env BABEL_ENV=cover npm run build:output && cross-env NYC_CWD=output nyc --reporter=lcov npm run _test",

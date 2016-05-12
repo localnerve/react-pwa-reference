@@ -2,6 +2,7 @@
 /src
 /assets
 /reports
+/output/node_modules/application
 /output/tests
 /output/application/client
 .babelrc
