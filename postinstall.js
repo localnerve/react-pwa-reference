@@ -20,7 +20,7 @@ try {
   console.log('*** Successfully setup src application symlink ***');
 } catch(e){
   console.error(
-    '*** FAILED to create src application symlink *** ' + e
+    '*** FAILED to create src symlink *** ' + e
   );
 }
 
@@ -34,6 +34,6 @@ try {
   console.log('*** Successfully setup output application symlink ***');
 } catch (e) {
   console.error(
-    '*** FAILED to create src/node_modules/application symlink *** ' + e
+    '*** FAILED to create output symlink *** ' + e
   );
 }
