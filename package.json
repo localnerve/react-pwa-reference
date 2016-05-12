@@ -42,12 +42,13 @@
     "fixtures:prod": "gulp fixturesProd",
     "lint": "eslint .",
     "perfbudget": "gulp perfbudget",
-    "postinstall": "gulp symlinkSrc",
-    "start": "node -e 'process.env.NODE_ENV = process.env.NODE_ENV || \"production\"; require(\"./output/application/server\");'",
+    "postinstall": "node -e 'try{require(\"fs\").symlinkSync(require(\"path\").resolve(\"./src/application\"),\"./src/node_modules/application\",\"dir\");}catch(e){console.error(\"*** FAILED to create src/node_modules/application symlink *** \"+e);}'",
+    "start": "node -e 'process.env.NODE_ENV=process.env.NODE_ENV || \"production\"; require(\"./output/application/server\");'",
     "test": "npm run build:output && npm run _test",
     "test:cover": "rimraf .nyc_output/ && cross-env BABEL_ENV=cover npm run build:output && cross-env NYC_CWD=output nyc --reporter=lcov npm run _test",
     "test:debug": "npm run build:output -- -s inline && npm run _test -- --debug-brk",
-    "test:func": "node src/tests/functional/run-parallel '--reporter spec src/tests/functional/main.js'"
+    "test:func": "node src/tests/functional/run-parallel '--reporter spec src/tests/functional/main.js'",
+    "validate": "npm ls"
   },
   "pre-commit": [
     "lint",
@@ -85,7 +86,7 @@
     "gulp": "gulpjs/gulp#4.0",
     "gulp-cssmin": "^0.1.7",
     "gulp-if": "^2.0.0",
-    "gulp-imagemin": "^2.4.0",
+    "gulp-imagemin": "2.4.0",
     "gulp-nodemon": "^2.0.6",
     "gulp-postcss": "^6.1.0",
     "gulp-sass": "^2.2.0",
