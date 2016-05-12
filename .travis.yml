@@ -30,6 +30,7 @@ deploy:
     master: pwa-stage
     production: pwa
   skip_cleanup: true
+  run: "cd output/node_modules && ln -s ../application application"
   on:
     branch:
     - test

@@ -24,17 +24,3 @@ try {
     '*** FAILED to create src application symlink *** ' + e
   );
 }
-
-// try to setup the output symlink.
-try {
-  fs.symlinkSync(
-    path.resolve('./output/application'),
-    './output/node_modules/application',
-    'dir'
-  );
-  console.log('*** Successfully setup output application symlink ***');
-} catch (e) {
-  console.error(
-    '*** FAILED to create src/node_modules/application symlink *** ' + e
-  );
-}
