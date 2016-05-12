@@ -8,13 +8,12 @@
 /*eslint-disable no-console */
 'use strict';
 
-const fs = require('fs'),
-  path = require('path');
+const fs = require('fs');
 
 // try to setup the src symlink.
 try {
   fs.symlinkSync(
-    path.resolve('./src/application'),
+    '../application',
     './src/node_modules/application',
     'dir'
   );
@@ -22,5 +21,19 @@ try {
 } catch(e){
   console.error(
     '*** FAILED to create src application symlink *** ' + e
+  );
+}
+
+// try to setup the output symlink.
+try {
+  fs.symlinkSync(
+    '../application',
+    './output/node_modules/application',
+    'dir'
+  );
+  console.log('*** Successfully setup output application symlink ***');
+} catch (e) {
+  console.error(
+    '*** FAILED to create src/node_modules/application symlink *** ' + e
   );
 }
