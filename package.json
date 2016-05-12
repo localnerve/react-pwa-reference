@@ -1,16 +1,16 @@
 {
-  "name": "react-pwa-boilerplate",
+  "name": "react-pwa-reference",
   "version": "0.1.0",
-  "description": "A universal, reactiflux project boilerplate for a progressive web application",
+  "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/localnerve/react-pwa-boilerplate/issues"
+    "url": "https://github.com/localnerve/react-pwa-reference/issues"
   },
-  "homepage": "https://github.com/localnerve/react-pwa-boilerplate#readme",
+  "homepage": "https://github.com/localnerve/react-pwa-reference#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/localnerve/react-pwa-boilerplate.git"
+    "url": "git+https://github.com/localnerve/react-pwa-reference.git"
   },
   "keywords": [
     "pwa",
