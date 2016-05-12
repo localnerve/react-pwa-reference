@@ -32,9 +32,12 @@ describe('imageServiceUrls', function () {
         width = 10,
         height = 20;
 
-      it('should build a lorempixel url with random numeric image', function () {
-        var name = 'tester';
-
+      /**
+       * Test the buildImageUrl function with a different name input.
+       * @param {String} name - The image name.
+       * @param {Boolean} contains - true if url should contain name.
+       */
+      function testImageName (name, contains) {
         url = buildImageUrl(serviceUrl, {
           width: width,
           height: height,
@@ -45,59 +48,34 @@ describe('imageServiceUrls', function () {
         expect(url).to.match(new RegExp('^' + serviceUrl));
         expect(url).to.contain(width);
         expect(url).to.contain(height);
-        expect(url).to.not.contain(name);
+        if (contains) {
+          expect(url).to.contain(name);
+        } else {
+          expect(url).to.not.contain(name);
+        }
         expect(url).to.match(/[1-9]\/$/);
+      }
+
+      it('should build a lorempixel url with random numeric image', function () {
+        testImageName('tester');
       });
 
       it('should build a lorempixel url from image base name, not zero', function () {
-        var name = '0.jpg';
-
-        url = buildImageUrl(serviceUrl, {
-          width: width,
-          height: height,
-          name: name,
-          serviceOptions: {}
-        });
-
-        expect(url).to.match(new RegExp('^' + serviceUrl));
-        expect(url).to.contain(width);
-        expect(url).to.contain(height);
-        expect(url).to.not.contain(name);
-        expect(url).to.match(/[1-9]\/$/);
+        testImageName('0.jpg');
       });
 
       it('should build a lorempixel url from image base name', function () {
         var imageName = '4',
           name = imageName + '.jpg';
 
-        url = buildImageUrl(serviceUrl, {
-          width: width,
-          height: height,
-          name: name,
-          serviceOptions: {}
-        });
-
-        expect(url).to.match(new RegExp('^' + serviceUrl));
-        expect(url).to.contain(width);
-        expect(url).to.contain(height);
-        expect(url).to.not.contain(name);
+        testImageName(name);
         expect(url).to.match(new RegExp(imageName +'\/$'));
       });
 
       it('should build a lorempixel url from image name', function () {
         var name = '4';
 
-        url = buildImageUrl(serviceUrl, {
-          width: width,
-          height: height,
-          name: name,
-          serviceOptions: {}
-        });
-
-        expect(url).to.match(new RegExp('^' + serviceUrl));
-        expect(url).to.contain(width);
-        expect(url).to.contain(height);
-        expect(url).to.contain(name);
+        testImageName(name, true);
         expect(url).to.match(new RegExp(name +'\/$'));
       });
     });
@@ -220,16 +198,7 @@ describe('imageServiceUrls', function () {
         serviceUrl = 'https://res.cloudinary.com',
         matches;
 
-      it('should build a request, no cropMode', function () {
-        url = buildImageUrl(serviceUrl, {
-          serviceOptions: {
-            cloudName: cloudName
-          },
-          width: width,
-          height: height,
-          name: imageName
-        });
-
+      function basicTests (url) {
         // should start with the serviceUrl
         expect(url).to.match(new RegExp('^' + serviceUrl));
 
@@ -243,6 +212,19 @@ describe('imageServiceUrls', function () {
 
         expect(url).to.contain(imageName);
         expect(url).to.contain(cloudName);
+      }
+
+      it('should build a request, no cropMode', function () {
+        url = buildImageUrl(serviceUrl, {
+          serviceOptions: {
+            cloudName: cloudName
+          },
+          width: width,
+          height: height,
+          name: imageName
+        });
+
+        basicTests(url);
 
         // should default to c_fill
         expect(url).to.contain('c_fill');
@@ -259,19 +241,8 @@ describe('imageServiceUrls', function () {
           name: imageName
         });
 
-        // should start with the serviceUrl
-        expect(url).to.match(new RegExp('^' + serviceUrl));
+        basicTests(url);
 
-        // should be one occurrence of width in the request
-        matches = url.match(new RegExp('([^\\d]'+width+'[^\\d])', 'g'));
-        expect(matches || []).to.have.length(1);
-
-        // should be one occurrence of height in the request
-        matches = url.match(new RegExp('([^\\d]'+height+'[^\\d])', 'g'));
-        expect(matches || []).to.have.length(1);
-
-        expect(url).to.contain(imageName);
-        expect(url).to.contain(cloudName);
         expect(url).to.contain(cropMode);
       });
     });
