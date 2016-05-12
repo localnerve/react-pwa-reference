@@ -1,49 +1,40 @@
 language: node_js
 node_js:
 - '4.4'
-#- '6.1'
 env:
   global:
   - CXX=g++-4.8
   - DEPLOY_URL=$(if test $TRAVIS_BRANCH = production; then echo "https://pwa.localnerve.net"; else echo "https://pwa-stage.localnerve.net"; fi)
-#  - secure: JX3YuDKx3PLp9lTdWPfilIH80vVEMpxX4sEo+xowhkounTCLRZ9ssjc+E9TPqaqP4FczZv+I7SYzW13W1YrxNO0oCab0NnVKrPtcF7bHRJ0ZapGHDADRsf0T35GsEKJH4Ufpd+1FWD7LzgbYSARmyd6vHPTwCMtLAle3yNLQS+flVX3mq95jbwv2f7kHlgvBLy0ifTeIdSVyoKK1pZhNeHaB8hy+jR92AKRWT+NOow04EdJQc4lYIha0t7n0ief/A5AuB8H77n7tkWtHEA0wi3R17fys1ga9eUUC+y4HqeJqftp7eggxzrBEJ6a+s9DkZ4jjkMLuAAztwehFiU4bRua5CLv0KLZ0IsZTMy9FhJIISvbhsBPVqSyCNmeljQTo/aZCJ2MMK2kSqaIUpBMPsZ5YPRpoSuWZwnq1zDtUBUX1emNX4U1eTLPhLgsip+4MLrBatD+zIGZJRCay5vvwVYylqJy5cR6TK/0nxamfvaCCVDvHW0rZddYm8fXIiVNqBM2xXxa4l4M9LDW9KiRmByFQePO5Al5T2m1LNGmF/V3iX4BQM9UEOsTz3fzkiU1fNNPd3FcJHc6YKYxI8Dt+6DCh0RoukPTd55v2JlqK5UwElxQQgB+YIv4aGnKNTPge8notsS/9qEZfn5o9NHB1Dl7xlG7XsCMcZzL4Nbz+HRE=
-#  - secure: Op6nBVOIWcnsojGYAcP708HWmqO0ltrXkZRHTAkkG0y21MQaLPr1ryBl6c2P4KBiwnMgxVmqv3uD29+/bpMt59aVSe9r603JekDsfk52OptaIX0Pc2AlhXl1uTtdMpXuoI+QauRKGE57u6bVDhUnhj5vi+iIG1p1prs63C9WwnchWo3sXzDoJzTAB+BH1HOBcTjot02w6ZEnJB8g4aG5NDw2UalngIjdrlReB0yTL8V9BXITulhgGtFcdS0BwaQ5HL0rC4OekheFYCixdGMyVJV8KbDOQd70n4AjWpWsXnbTJdnsOFMpmvWOkEw9KnCKncP+5ySWoTzJRUYCq8uIJ/O0eVkc9OTjCvLPvItgrGpwCYAcikHxsp6fNPixDJWGXP5Ripndem8x4P/6Hkek9CEqlArJqALm0kF9u/pY6W8eB+8Yb4F0u2HdV9opJ2LyVDQSZwuawaTJ0k7flmFZIT4vmwxn0m1SokU5yXEP7MBUZolpaoqF3vqVhjSfgMAvct1W8Sp6dIZoS2iMebX4unQZxzBFyo29F89h/BFY5g7nf6O4g2qi7S/gWZdyVWhbOE0Pc94SMp36NUaMR5XNA0+J38Wz6e1yF0F2o6C9KrwFUmn94TkZQmX9qOaAedB2wOOWBY1Uvi0yHoIFqN6raHQuwral0mQE705OfSNokTA=
-#  - secure: US9pVhE8j6S/fe+A1xUCkTi46hpJmeirl6UCg7xV3L1sLKbNywORMMIpmkZsmA1Z/nQUUobImhKA2rO9nTActfytDTmWU7kjKIqwDwTQQUXeMRXuHzrtIC0+8+2qg/tBejQ5wAZGCEcfLLaPxTrbhoNwz17uMhxdEcbTDvbuBvtf1POX6Sev2Neg3ndinUQsHtEgFllp+PHVPed7gOpx7IvyOYYA7oHvob5m9ukiIdQvEYDfhPRFbh2Lj3Hr7Lv3OGYKTKa/27TXzReoo4g1vjrygxgvpjGppn/wb3fQhpImpNqCV4T+uhc/LMmdXscc9cFKjc8khE2A64PV6CmhLfjY2aZKj/My9iIE7a7UBrcCLvcxrfDyZnLzwQlwmI0B4Z2/S85dD0A7EB55h+cUgVH5m5pqsjJPdw4ENVd6THnmdDpJzL1hcCHf4rl/0tbh46hnLF1zkV59wPmLpjUU7v3n/mhDudtnJo2pvCpvpg8szFXcB+EUskcQ/cofgoCyoTyIlNPa+Bi/6o9HDgP/lVKt+zMWsjtbqpda9Vqc50G4Lg2wNUFayM9G6PKsaG6I9IoHANDhAdycuxDkNftTDk591pQ/MvQWv1XMgKEnRO95Gh68bJHsC744mL11MwhWnEQh8eDEACStRdMFimVpNG1qaEHimOL5Zm8bDLrcoJQ=
 addons:
-#  sauce_connect: true
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
+    - g++-4.8
 before_install:
 - echo DEPLOY_URL=$DEPLOY_URL
 script:
 - npm run test:cover
 after_success:
 - cat reports/coverage/lcov.info | ./node_modules/.bin/coveralls
-# before_deploy:
-# - npm run build:server
-# - rm -rf node_modules/
-# deploy:
-#   provider: heroku
-#   api_key:
-#     secure: DfC+naYDIR8JXr9vN+UZCJ8Gdf6rEVbYlsUXlyNj5xt7tccgBiGwZwl+QfoEZrZ4lKzlAoxv5nTEu0sVoP7Ii+htKK+YDqtwN4KsFtfQ45TidgPPYUdZx/w+/eaDdMh1OBoYEonvB9IXjZqTBR3tgabBq3291CHPq9BCdhkFUvwqQ2Zd5haqA10rZiLjQb38j2YZLKrOcyaMRe8CaIQsCAi282WnJ2vMMeumRJc2Z7o89Uypc/Pg9mB4d0mwHbKWw3jLb+j+TIyllXHYyunTZ9aIXcqe03E/wgZiI+HELUhKcHLLvAIsXrvrRiugzsraoJVc3QfFB0cowcf0+b34AxhJkiBAh07KIEPRWOgISC13EobvETAAk0347ESvH9i4si10ZcjT5usv3wP469zv4s8V3vr33CtayOEJ5ZEYwTegHZHethSNcBVKYwFhfBCL3KkLq0aA+wEFGX/f10RDfAsmfCUOyY6q5faaddsNQrYBBOIKY+DE7GiHSnCSEwgnd8SFIHIdKhja2JIywxDLkhCtRGQ+0v8Uu5LNKyymlBUUASoRYr/ZDB33Gm2JQPRL4bBLgEQo6N6l0cyWPI/f/6oC9iNCV9H1yUE7YgMHiZRFLxRJt4oE7k6xLyzafBQ0YTNydosGE8gE6MRqs9mSdBHNdA4cTtpxikaPUsObNBU=
-#   app:
-#     test: pwa-stage
-#     stage: pwa-stage
-#     master: pwa-stage
-#     production: pwa
-#   skip_cleanup: true
-#   on:
-#     branch:
-#     - test
-#     - stage
-#     - master
-#     - production
-#     repo: localnerve/react-pwa-reference
-#     node: 4.4
-# after_deploy:
-# - npm install
-# - npm run functest -- $DEPLOY_URL
-# - npm run perfbudget
+before_deploy:
+- npm run build:server
+- rm -rf node_modules/
+deploy:
+  provider: heroku
+  api_key:
+    secure: oyi7w0/E7906PXl6BcRn8ufHys9phr1jperPFFDeSUUSJH/MkDK3CIKGGyfmP0vojUN5lwOwglJ/KcZarvMBrlPSdL/IcXAey9+y4digINyFQ/1fboS7+P4xV5MH2CP+sdqunEvEGV4g6Arcp3dZJs4tBar/KLwHr40YexWupqvxw4heDBI3xlx1uTK9mC5p2kokPxohZLSd2LXYJDJXYzwEvHdTp4b0E5yWeETXqPAt6OP/3Oc2Wb1+0U73FXmFN+hNdJMfazf0lTVwRLJ2Oxw18bcZhXCWM4CVrmYMyNFlgtshoVj+OHPzTcOIvTSAwFhkvyygMuyoIfcMIeVzW3Usato/v1htkn3GCooyyc+AV8H5aPP05PkJmTKmOvQesb/FhirXVzP2j7SeWVLq6A2zP4a9kQWyiUxySsIjX6OYcqFO4lZSxeQLCDM0VUZlR8fEQ2FZBTCXmQz39gCwlqD3cAq/lTI7L5d5aO6xXC/8faXXZw+Y5ZdR3HyPQokC0q+RO0pXyvYr05+ypMjZ3Ahvz99FFhYy9T9vaZ4RJEsZyT2P2qKhBKqvZm1J/XqUqa/G2FWLoiPhP9t5WJLeGQTRxildW0h+Ypa3cfUTepFF4BVgNd2zt5L2Q3znzkZkQS50QcKMHFtWK636Zdfy6zOD7t/yvOB1D+x/YCxb1dM=
+  app:
+    test: pwa-stage
+    stage: pwa-stage
+    master: pwa-stage
+    production: pwa
+  skip_cleanup: true
+  on:
+    branch:
+    - test
+    - stage
+    - master
+    - production
+    repo: localnerve/react-pwa-reference
+    node: 4.4
