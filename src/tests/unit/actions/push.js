@@ -96,6 +96,21 @@ describe('push action', function () {
     });
 
     describe('subscribe', function () {
+      /**
+       * Execute pushAction.subscribe and check error result.
+       */
+      function executeSubscribeCheckError (pushOptions, done) {
+        context.executeAction(pushAction.subscribe, {}, function (err) {
+          var fields = getSettingsFields(context, SettingsStore);
+          expect(err).to.be.an('Error');
+          expect(fields.pushSubscriptionError).to.not.be.null;
+          expect(fields.pushSubscription).to.be.null;
+          expect(fields.pushTopics).to.be.null;
+          expect(pushOptions.countPostMessage).to.equal(0);
+          done();
+        });
+      }
+
       it('should create a subscription', function (done) {
         var pushOptions = {
           countPostMessage: 0
@@ -165,15 +180,7 @@ describe('push action', function () {
 
         setupPushManager(pushOptions);
 
-        context.executeAction(pushAction.subscribe, {}, function (err) {
-          var fields = getSettingsFields(context, SettingsStore);
-          expect(err).to.be.an('Error');
-          expect(fields.pushSubscriptionError).to.not.be.null;
-          expect(fields.pushSubscription).to.be.null;
-          expect(fields.pushTopics).to.be.null;
-          expect(pushOptions.countPostMessage).to.equal(0);
-          done();
-        });
+        executeSubscribeCheckError(pushOptions, done);
       });
 
       it('should handle subscription reject with notification, denied', function (done) {
@@ -190,15 +197,7 @@ describe('push action', function () {
           hasNotifications: true
         });
 
-        context.executeAction(pushAction.subscribe, {}, function (err) {
-          var fields = getSettingsFields(context, SettingsStore);
-          expect(err).to.be.an('Error');
-          expect(fields.pushSubscriptionError).to.not.be.null;
-          expect(fields.pushSubscription).to.be.null;
-          expect(fields.pushTopics).to.be.null;
-          expect(pushOptions.countPostMessage).to.equal(0);
-          done();
-        });
+        executeSubscribeCheckError(pushOptions, done);
       });
 
       it('should handle subscription reject with permissions, prompt', function (done) {
@@ -215,15 +214,7 @@ describe('push action', function () {
           hasPermissions: true
         });
 
-        context.executeAction(pushAction.subscribe, {}, function (err) {
-          var fields = getSettingsFields(context, SettingsStore);
-          expect(err).to.be.an('Error');
-          expect(fields.pushSubscriptionError).to.not.be.null;
-          expect(fields.pushSubscription).to.be.null;
-          expect(fields.pushTopics).to.be.null;
-          expect(pushOptions.countPostMessage).to.equal(0);
-          done();
-        });
+        executeSubscribeCheckError(pushOptions, done);
       });
 
       it('should handle subscription reject with permissions, denied', function (done) {
@@ -240,15 +231,7 @@ describe('push action', function () {
           hasPermissions: true
         });
 
-        context.executeAction(pushAction.subscribe, {}, function (err) {
-          var fields = getSettingsFields(context, SettingsStore);
-          expect(err).to.be.an('Error');
-          expect(fields.pushSubscriptionError).to.not.be.null;
-          expect(fields.pushSubscription).to.be.null;
-          expect(fields.pushTopics).to.be.null;
-          expect(pushOptions.countPostMessage).to.equal(0);
-          done();
-        });
+        executeSubscribeCheckError(pushOptions, done);
       });
 
       it('should handle subscription reject with permission reject', function (done) {
@@ -265,15 +248,7 @@ describe('push action', function () {
           hasPermissions: true
         });
 
-        context.executeAction(pushAction.subscribe, {}, function (err) {
-          var fields = getSettingsFields(context, SettingsStore);
-          expect(err).to.be.an('Error');
-          expect(fields.pushSubscriptionError).to.not.be.null;
-          expect(fields.pushSubscription).to.be.null;
-          expect(fields.pushTopics).to.be.null;
-          expect(pushOptions.countPostMessage).to.equal(0);
-          done();
-        });
+        executeSubscribeCheckError(pushOptions, done);
       });
     });
 

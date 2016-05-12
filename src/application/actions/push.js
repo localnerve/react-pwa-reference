@@ -4,12 +4,11 @@
  */
 /* global process, window */
 import debugLib from 'debug';
-import pushUtils from 'utils/push';
+import { getSubscriptionId } from 'utils/push';
 import syncable from 'utils/syncable';
 import messages from 'utils/messages';
 
 const debug = debugLib('actions:push');
-const getSubscriptionId = pushUtils.getSubscriptionId;
 const __DEV__ = process.env.NODE_ENV !== 'production';
 
 /**
@@ -254,6 +253,33 @@ export function unsubscribe (context, payload, done) {
 }
 
 /**
+ * Factory for subscription topic result handler.
+ *
+ * @private
+ *
+ * @param {Object} context - The fluxible action context.
+ * @param {String} verb - Subscription topic verb, one of 'read' or 'update'.
+ * @param {Function} done - The done callback.
+ */
+function subscriptionTopicResultHandler (context, verb, done) {
+  return (err, data) => {
+    debug(`completed push notification topics ${verb}`, err, data);
+
+    const state = {
+      pushTopicsError: err
+    };
+
+    if (!err) {
+      state.pushTopics = data;
+    }
+
+    context.dispatch('SETTINGS_STATE', state);
+
+    return done(err);
+  };
+}
+
+/**
  * Get push notification topics.
  *
  * @param {Object} context - The fluxible action context.
@@ -267,21 +293,9 @@ export function getTopics (context, payload, done) {
     pushTopics: true
   });
 
-  context.service.read('subscription', payload, {}, (err, data) => {
-    debug('completed push notification topics read', err, data);
-
-    const state = {
-      pushTopicsError: err
-    };
-
-    if (!err) {
-      state.pushTopics = data;
-    }
-
-    context.dispatch('SETTINGS_STATE', state);
-
-    return done(err);
-  });
+  context.service.read('subscription', payload, {},
+    subscriptionTopicResultHandler(context, 'read', done)
+  );
 }
 
 /**
@@ -308,21 +322,7 @@ export function updateTopics (context, payload, done) {
     syncable.push(payload, payload.subscriptionId, syncable.ops.updateTopics),
     body,
     {},
-    (err, data) => {
-      debug('completed push notification topic update', err, data);
-
-      const state = {
-        pushTopicsError: err
-      };
-
-      if (!err) {
-        state.pushTopics = data;
-      }
-
-      context.dispatch('SETTINGS_STATE', state);
-
-      return done(err);
-    }
+    subscriptionTopicResultHandler(context, 'update', done)
   );
 }
 
