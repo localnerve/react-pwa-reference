@@ -1,9 +1,14 @@
+.nyc_output
 /src
 /assets
 /reports
 /output/tests
 /output/application/client
+.babelrc
+.eslint*
+.jshint*
 start.js
 gulpfile*.js
+webpack*.json
 README.md
 LICENSE.md
