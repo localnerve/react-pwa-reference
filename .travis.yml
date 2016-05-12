@@ -31,10 +31,7 @@ deploy:
     production: pwa
   skip_cleanup: true
   run:
-  - pushd output/node_modules
-  - rm application
-  - ln -s ../application application
-  - popd
+  - cd output/node_modules && rm application && ln -s ../application application && cd -
   - restart
   on:
     branch:
