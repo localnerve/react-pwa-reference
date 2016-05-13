@@ -6,7 +6,7 @@
  */
 /* global Promise, self, clients */
 import debugLib from 'sw/utils/debug';
-import push from './sync/push';
+import { synchronize as pushSync } from './sync/push';
 import { initCommand } from './init';
 
 const debug = debugLib('messages');
@@ -29,7 +29,7 @@ const commands = {
    * Handle pushSync messages
    */
   pushSync: (payload, responder) => {
-    return push.synchronize(payload.subscriptionId)
+    return pushSync(payload.subscriptionId)
     .then(() => {
       return responder({
         error: null
