@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 /*eslint no-console:0 */
-/* global document, window */
+/* global document, window, require */
 
 if ('serviceWorker' in window.navigator &&
     // See http://www.chromium.org/Home/chromium-security/prefer-secure-origins-for-powerful-new-features
