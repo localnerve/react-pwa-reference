@@ -8,7 +8,7 @@
 import pushUtil from 'utils/push';
 import debugLib from 'sw/utils/debug';
 import { addOrReplaceUrlSearchParameter } from 'sw/utils/requests';
-import pushSync from './sync/push';
+import { synchronize as pushSync } from './sync/push';
 
 const debug = debugLib('push');
 const pushUrl = '/_api/push';
@@ -112,7 +112,7 @@ self.addEventListener('pushsubscriptionchange', (event) => {
     .then((subscription) => {
       const subscriptionId = pushUtil.getSubscriptionId(subscription);
       if (subscriptionId) {
-        return pushSync.synchronize(subscriptionId);
+        return pushSync(subscriptionId);
       }
       throw new Error('could not getSubscriptionId');
     })
