@@ -15,10 +15,10 @@ before_install:
 - echo DEPLOY_URL=$DEPLOY_URL
 script:
 - npm run test:cover
+- npm run build:server
 after_success:
 - cat reports/coverage/lcov.info | ./node_modules/.bin/coveralls
 before_deploy:
-- npm run build:server
 - rm -rf node_modules/
 deploy:
   provider: heroku
