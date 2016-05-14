@@ -78,7 +78,7 @@
     "coveralls": "^2.11.9",
     "cross-env": "^1.0.7",
     "del": "^2.2.0",
-    "eslint": "2.7.0",
+    "eslint": "2.10.1",
     "eslint-plugin-react": "5.0.1",
     "fg-loadcss": "^1.2.0",
     "fontfaceobserver": "1.5.4",
