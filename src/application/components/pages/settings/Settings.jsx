@@ -9,7 +9,7 @@ import { closeModal as modalAction } from 'application/actions/modal';
 import {
   subscribe as subscribeAction,
   unsubscribe as unsubscribeAction,
-  send as sendAction,
+  demoSend as sendAction,
   updateTopics as updateTopicsAction
 } from 'application/actions/push';
 import { getSubscriptionId } from 'utils/push';
@@ -20,7 +20,7 @@ import Switch from './Switch';
 
 const debug = debugLib('Settings');
 
-var Settings = React.createClass({
+let Settings = React.createClass({
   propTypes: {
     failure: React.PropTypes.bool.isRequired,
     spinner: React.PropTypes.bool,
@@ -61,7 +61,7 @@ var Settings = React.createClass({
    * Render the settings dialog contents.
    */
   renderSettings: function () {
-    const failureElement =this.renderFailure(),
+    const failureElement = this.renderFailure(),
       notSupported = this.renderNotSupported(),
       settingsControls = this.renderControls();
 
