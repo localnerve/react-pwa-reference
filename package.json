@@ -93,7 +93,7 @@
     "gulp-svg2png": "1.0.0",
     "gulp-svgmin": "1.2.2",
     "gulp-webpagetest": "1.1.1",
-    "jsdom": "9.0.0",
+    "jsdom": "9.1.0",
     "json-loader": "0.5.4",
     "mkdirp": "0.5.1",
     "mocha": "2.4.5",
