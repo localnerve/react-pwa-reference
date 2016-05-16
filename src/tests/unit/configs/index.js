@@ -163,11 +163,6 @@ describe('configs', function () {
         expect(config.images.service.url()).to.be.a('string').that.is.not.empty;
       });
 
-      it.skip('should return FIRESIZE_URL if defined', function () {
-        process.env.FIRESIZE_URL = url;
-        expect(config.images.service.url()).to.equal(url);
-      });
-
       it('should return IMAGE_SERVICE_URL if defined', function () {
         process.env.FIRESIZE_URL = 'wrong_url';
         process.env.IMAGE_SERVICE_URL = url;
