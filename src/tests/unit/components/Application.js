@@ -1,18 +1,17 @@
 /**
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global after, describe, it, before, beforeEach */
-'use strict';
 
-var expect = require('chai').expect;
-var testDom = require('test/utils/testdom');
-var jsonToFluxible = require('utils').createFluxibleRouteTransformer({
+const expect = require('chai').expect;
+const testDom = require('test/utils/testdom');
+const jsonToFluxible = require('utils').createFluxibleRouteTransformer({
   actions: require('application/actions/interface').getActions()
 }).jsonToFluxible;
 
-describe('application component', function () {
-  var createMockComponentContext,
+describe('application component', () => {
+  let createMockComponentContext, context, appElement,
     ContentStore, RouteStore, ContactStore, BackgroundStore, ModalStore,
     serviceData, routesResponse, fluxibleRoutes, fluxibleApp,
     React, testUtils,
@@ -39,7 +38,7 @@ describe('application component', function () {
     setTimeout(done, timeout);
   }
 
-  before('setup', function (done) {
+  before('setup', (done) => {
     // We'll be rendering the isomorphic component, so set dom env for react here
     testDom.start();
 
@@ -86,23 +85,48 @@ describe('application component', function () {
     settle(250, done);
   });
 
-  after(function () {
+  after(() => {
     testDom.stop();
   });
 
-  describe('home', function () {
-    var appElement, context, homePage;
+  function createContextAndApp (routeName, content, makePath) {
+    context = createMockComponentContext({
+      stores: [
+        ContentStore,
+        RouteStore,
+        ContactStore,
+        BackgroundStore,
+        ModalStore
+      ]
+    });
+    context.makePath = makePath;
+
+    const routeStore = context.getStore(RouteStore);
+    const contentStore = context.getStore(ContentStore);
+
+    routeStore._handleReceiveRoutes(fluxibleRoutes);
+    routeStore._handleNavigateStart(routes[routeName]);
+    routeStore._handleNavigateSuccess(routes[routeName]);
+    contentStore.receivePageContent(content);
+
+    appElement = React.createElement(fluxibleApp.getComponent(), {
+      context: context
+    });
+  }
+
+  describe('home', () => {
+    let homePage;
 
     function makeHomePath () {
       return '/';
     }
 
-    before(function () {
+    before('home', () => {
       homePage = {
         resource: routesResponse.home.action.params.resource
       };
 
-      serviceData.fetch(homePage, function(err, data) {
+      serviceData.fetch(homePage, (err, data) => {
         if (err) {
           throw err;
         }
@@ -110,54 +134,95 @@ describe('application component', function () {
       });
     });
 
-    beforeEach(function () {
-      context = createMockComponentContext({
-        stores: [
-          ContentStore,
-          RouteStore,
-          ContactStore,
-          BackgroundStore,
-          ModalStore
-        ]
-      });
-      context.makePath = makeHomePath;
-
-      var routeStore = context.getStore(RouteStore);
-      var contentStore = context.getStore(ContentStore);
-
-      routeStore._handleReceiveRoutes(fluxibleRoutes);
-      routeStore._handleNavigateStart(routes.home);
-      routeStore._handleNavigateSuccess(routes.home);
-      contentStore.receivePageContent(homePage);
-
-      appElement = React.createElement(fluxibleApp.getComponent(), {
-        context: context
-      });
+    beforeEach(() => {
+      createContextAndApp('home', homePage, makeHomePath);
     });
 
-    it('should render home content', function (done) {
-      var app, components;
-
+    it('should render home content', (done) => {
       // Get composite component in document
-      app = testUtils.renderIntoDocument(appElement);
+      const app =
+        testUtils.renderIntoDocument(appElement);
 
-      components = testUtils.scryRenderedDOMComponentsWithClass(app, 'page-content');
+      const components =
+        testUtils.scryRenderedDOMComponentsWithClass(app, 'page-content');
 
-      // 'Home' content comes from service-data, not the real doc
-      expect(components[0].textContent).to.match(/Home/i);
+      // 'Home' content comes from service-data
+      expect(components[0].textContent).to.match(/Welcome/i);
 
       settle(250, done);
     });
 
-    it('should render home navigation', function (done) {
-      var app, component;
-
-      app = testUtils.renderIntoDocument(appElement);
+    it('should render home navigation', (done) => {
+      const app =
+        testUtils.renderIntoDocument(appElement);
 
       // throws if not exactly 1
-      component = testUtils.findRenderedDOMComponentWithClass(app, 'selected');
+      const component =
+        testUtils.findRenderedDOMComponentWithClass(app, 'selected');
 
       expect(component.textContent).to.match(/Home/i);
+
+      settle(250, done);
+    });
+  });
+
+  describe('contact', () => {
+    let contactPage;
+
+    function makeContactPath () {
+      return '/contact';
+    }
+
+    before('contact', () => {
+      contactPage = {
+        resource: routesResponse.contact.action.params.resource
+      };
+
+      serviceData.fetch(contactPage, (err, data) => {
+        if (err) {
+          throw err;
+        }
+        contactPage.data = data;
+      });
+    });
+
+    beforeEach(() => {
+      createContextAndApp('contact', contactPage, makeContactPath);
+    });
+
+    it('should render contact content', (done) => {
+      const app =
+        testUtils.renderIntoDocument(appElement);
+
+      const component =
+        testUtils.findRenderedDOMComponentWithClass(app, 'selected');
+
+      expect(component.textContent).to.match(/Contact/i);
+
+      settle(250, done);
+    });
+
+    it.skip('should respond to enter', (done) => {
+      const app =
+        testUtils.renderIntoDocument(appElement);
+
+      const formInput =
+        testUtils.findRenderedDOMComponentWithClass(app, 'form-value-element');
+
+      formInput.value = 'test';
+
+      testUtils.simulate.change(formInput);
+      testUtils.simulate.keyDown(formInput, {
+        key: 'Enter',
+        keyCode: 13,
+        which: 13
+      });
+
+      const listItem =
+        testUtils.findRenderedDOMComponentWithClass(
+          app, 'contact-steps current'
+        );
+      expect(listItem.textContent).to.match(/email/i);
 
       settle(250, done);
     });

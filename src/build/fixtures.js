@@ -2,7 +2,7 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-/* global module, Promise */
+/* global require, Promise */
 import fs from 'fs';
 import path from 'path';
 import utils from 'utils/node';
@@ -18,13 +18,8 @@ import utils from 'utils/node';
 export default function fixturesTaskFactory (settings) {
   const generatorsDir = `./${settings.src.tests}/generators`;
   const options = {
-    'routes-models.js': {
-      output: {
-        routes: 'routes-response.js',
-        models: 'models-response.js'
-      }
-    }
-  }
+    // 'script-filename.js': {}
+  };
 
   return function fixtures () {
     return utils.nodeCall(fs.readdir, generatorsDir)
@@ -32,8 +27,8 @@ export default function fixturesTaskFactory (settings) {
       return Promise.all(generators.map((generatorScript) => {
         const generator = path.resolve('.', generatorsDir, generatorScript);
         return utils.nodeCall(
-          module.require(generator),
-          options[generatorScript].output
+          require(generator).run,
+          options[generatorScript]
         );
       }))
       .catch((error) => {

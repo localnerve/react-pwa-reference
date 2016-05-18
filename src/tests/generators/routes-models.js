@@ -1,22 +1,22 @@
 /**
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
  * Fetch main resource and write routes and models fixture files.
  * Run as npm script
  */
-'use strict';
+import debugLib from 'debug';
+import fs from 'fs';
+import path from 'path';
+import configLib from 'configs';
+import fetch from 'application/server/services/data/fetch';
+import cache from 'application/server/services/data/cache-interface';
 
-var debug = require('debug')('FixtureGenerator:Routes-Models');
-var fs = require('fs');
-var path = require('path');
-var config = require('configs').create();
-var fetch = require('application/server/services/data/fetch');
-var cache = require('application/server/services/data/cache-interface');
+const debug = debugLib('fixture-generator:routes-models');
+const config = configLib.create();
+const replacement = 'DATA';
 
-var replacement = 'DATA';
-
-var template = '/** This is a generated file **/\n\
+const template = '/** This is a generated file **/\n\
 /**\n\
   GENERATION_TIME = ' + (new Date()).toString() + '\n\
   NODE_ENV = ' + (process.env.NODE_ENV || 'development') + '\n\
@@ -26,27 +26,33 @@ var template = '/** This is a generated file **/\n\
 module.exports = JSON.parse(JSON.stringify(\n' + replacement + '\n));'
 ;
 
-function run (output, done) {
+/**
+ * Run the routes and modules response fixture generation.
+ *
+ * @param {Object} params - ignored.
+ * @param {Function} done - callback when complete.
+ */
+export function run (params, done) {
   // Get main resource - includes routes, models
   // Fetch uses the environment to target backend versions (using branches)
   // The target environment is set in the calling grunt task
-  fetch.fetchMain(function (err, routes) {
+  fetch.fetchMain((err, routes) => {
     if (err) {
       debug('main resource fetch failed');
       return done(err);
     }
 
     // Prepare routes file output
-    var contents = template.replace(replacement, JSON.stringify(
+    let contents = template.replace(replacement, JSON.stringify(
       routes.content
     ));
 
     // Compute the output file location
-    var outputRoutes = require.resolve(path.join(
-      'test/fixtures/', output.routes
+    const outputRoutes = require.resolve(path.join(
+      'test/fixtures/', 'routes-response.js'
     ));
 
-    fs.writeFile(outputRoutes, contents, function (err) {
+    fs.writeFile(outputRoutes, contents, (err) => {
       if (err) {
         debug('write of routes response failed');
         return done(err);
@@ -61,11 +67,11 @@ function run (output, done) {
       );
 
       // Compute the output file location
-      var outputModels = require.resolve(path.join(
-        'test/fixtures', output.models
+      const outputModels = require.resolve(path.join(
+        'test/fixtures', 'models-response.js'
       ));
 
-      fs.writeFile(outputModels, contents, function (err) {
+      fs.writeFile(outputModels, contents, (err) => {
         if (err) {
           debug('write of models response failed');
           return done(err);
@@ -77,5 +83,3 @@ function run (output, done) {
     });
   });
 }
-
-module.exports = run;
