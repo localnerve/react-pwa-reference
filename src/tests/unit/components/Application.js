@@ -2,20 +2,22 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-/* global after, describe, it, before, beforeEach */
+/* global require, after, describe, it, before, beforeEach */
+import { expect } from 'chai';
+import testDom from 'test/utils/testdom';
+import { createFluxibleRouteTransformer } from 'utils';
 
-const expect = require('chai').expect;
-const testDom = require('test/utils/testdom');
-const jsonToFluxible = require('utils').createFluxibleRouteTransformer({
+const jsonToFluxible = createFluxibleRouteTransformer({
   actions: require('application/actions/interface').getActions()
 }).jsonToFluxible;
 
 describe('application component', () => {
-  let createMockComponentContext, context, appElement,
+  let componentContext, appElement,
+    createMockActionContext, createMockComponentContext, MockService,
+    serviceMail,
     ContentStore, RouteStore, ContactStore, BackgroundStore, ModalStore,
     serviceData, routesResponse, fluxibleRoutes, fluxibleApp,
-    React, testUtils,
-    routes;
+    React, testUtils;
 
   /**
    * OMG this sux. I'm disappointed in this development. :-(
@@ -45,6 +47,12 @@ describe('application component', () => {
     // Now proceed to load modules that might use React
     createMockComponentContext =
       require('fluxible/utils').createMockComponentContext;
+    createMockActionContext =
+      require('fluxible/utils').createMockActionContext;
+    MockService =
+      require('fluxible-plugin-fetchr/utils/MockServiceManager');
+    serviceMail =
+      require('test/mocks/service-mail');
     ContentStore =
       require('application/stores/ContentStore').ContentStore;
     RouteStore =
@@ -53,34 +61,20 @@ describe('application component', () => {
       require('application/stores/ContactStore').ContactStore;
     BackgroundStore =
       require('application/stores/BackgroundStore').BackgroundStore;
-    ModalStore = require('application/stores/ModalStore').ModalStore;
-    serviceData = require('test/mocks/service-data');
-    routesResponse = require('test/fixtures/routes-response');
-    fluxibleRoutes = jsonToFluxible(routesResponse);
-    fluxibleApp = require('application/app').default;
-    React = require('react');
-    testUtils = require('react-addons-test-utils');
-
-    routes = {
-      home: Object.assign({}, fluxibleRoutes.home, {
-        url: '/',
-        name: 'home',
-        params: {},
-        query: {}
-      }),
-      about: Object.assign({}, fluxibleRoutes.about, {
-        url: '/about',
-        name: 'about',
-        params: {},
-        query: {}
-      }),
-      contact: Object.assign({}, fluxibleRoutes.contact, {
-        url: '/contact',
-        name: 'contact',
-        params: {},
-        query: {}
-      })
-    };
+    ModalStore =
+      require('application/stores/ModalStore').ModalStore;
+    serviceData =
+      require('test/mocks/service-data');
+    routesResponse =
+      require('test/fixtures/routes-response');
+    fluxibleRoutes =
+      jsonToFluxible(routesResponse);
+    fluxibleApp =
+      require('application/app').default;
+    React =
+      require('react');
+    testUtils =
+      require('react-addons-test-utils');
 
     settle(250, done);
   });
@@ -90,7 +84,11 @@ describe('application component', () => {
   });
 
   function createContextAndApp (routeName, content, makePath) {
-    context = createMockComponentContext({
+    const navigate = Object.assign({}, fluxibleRoutes[routeName], {
+      url: fluxibleRoutes[routeName].path
+    });
+
+    componentContext = createMockComponentContext({
       stores: [
         ContentStore,
         RouteStore,
@@ -99,18 +97,18 @@ describe('application component', () => {
         ModalStore
       ]
     });
-    context.makePath = makePath;
+    componentContext.makePath = makePath;
 
-    const routeStore = context.getStore(RouteStore);
-    const contentStore = context.getStore(ContentStore);
+    const routeStore = componentContext.getStore(RouteStore);
+    const contentStore = componentContext.getStore(ContentStore);
 
     routeStore._handleReceiveRoutes(fluxibleRoutes);
-    routeStore._handleNavigateStart(routes[routeName]);
-    routeStore._handleNavigateSuccess(routes[routeName]);
+    routeStore._handleNavigateStart(navigate);
+    routeStore._handleNavigateSuccess(navigate);
     contentStore.receivePageContent(content);
 
     appElement = React.createElement(fluxibleApp.getComponent(), {
-      context: context
+      context: componentContext
     });
   }
 
@@ -121,7 +119,7 @@ describe('application component', () => {
       return '/';
     }
 
-    before('home', () => {
+    before('home', (done) => {
       homePage = {
         resource: routesResponse.home.action.params.resource
       };
@@ -131,6 +129,7 @@ describe('application component', () => {
           throw err;
         }
         homePage.data = data;
+        done();
       });
     });
 
@@ -173,7 +172,7 @@ describe('application component', () => {
       return '/contact';
     }
 
-    before('contact', () => {
+    before('contact', (done) => {
       contactPage = {
         resource: routesResponse.contact.action.params.resource
       };
@@ -183,12 +182,62 @@ describe('application component', () => {
           throw err;
         }
         contactPage.data = data;
+        done();
       });
     });
 
     beforeEach(() => {
       createContextAndApp('contact', contactPage, makeContactPath);
+
+      // Monkey Patch executeAction to inject MockActionContext with service.
+      componentContext.executeAction = function (action, payload) {
+        componentContext.executeActionCalls.push({
+          action: action,
+          payload: payload
+        });
+        const actionContext = createMockActionContext({
+          dispatcherContext: componentContext.dispatcherContext
+        });
+
+        actionContext.service = new MockService();
+        actionContext.service.setService('contact',
+        (method, params, ...args) => {
+          const callback = args[args.length - 1];
+
+          expect(method).to.equal('create');
+          expect(params).to.be.an('object').that.is.not.empty;
+          expect(callback).to.be.a('function');
+
+          serviceMail.send(params, callback);
+        });
+
+        action(actionContext, payload, ()=>{});
+      }
     });
+
+    function submitForm (app, inputId, reExpectedCurrent) {
+      const form =
+        testUtils.findRenderedDOMComponentWithClass(app, 'contact-form');
+
+      const formInput =
+        testUtils.scryRenderedDOMComponentsWithClass(app, 'form-value-element')
+        .filter((component) => {
+          return component.id === inputId;
+        })[0];
+
+      formInput.value = 'testvalue';
+      testUtils.Simulate.change(formInput);
+
+      testUtils.Simulate.submit(form);
+
+      if (reExpectedCurrent) {
+        const listItem =
+          testUtils.findRenderedDOMComponentWithClass(
+            app, 'current'
+          );
+        expect(listItem.textContent).to.match(reExpectedCurrent);
+      }
+    }
 
     it('should render contact content', (done) => {
       const app =
@@ -202,27 +251,66 @@ describe('application component', () => {
       settle(250, done);
     });
 
-    it.skip('should respond to enter', (done) => {
+    it('should respond to submit', (done) => {
       const app =
         testUtils.renderIntoDocument(appElement);
 
-      const formInput =
-        testUtils.findRenderedDOMComponentWithClass(app, 'form-value-element');
+      submitForm(app, 'name-input', /email/i);
 
-      formInput.value = 'test';
+      settle(250, done);
+    });
 
-      testUtils.simulate.change(formInput);
-      testUtils.simulate.keyDown(formInput, {
-        key: 'Enter',
-        keyCode: 13,
-        which: 13
-      });
+    it('should move back with previous', (done) => {
+      const app =
+        testUtils.renderIntoDocument(appElement);
+
+      submitForm(app, 'name-input', /email/i);
+
+      const previous =
+        testUtils.scryRenderedDOMComponentsWithTag(app, 'button')
+        .filter((button) => {
+          return button.id === 'previous';
+        })[0];
+
+      testUtils.Simulate.click(previous);
 
       const listItem =
         testUtils.findRenderedDOMComponentWithClass(
-          app, 'contact-steps current'
+          app, 'current'
         );
-      expect(listItem.textContent).to.match(/email/i);
+      expect(listItem.textContent).to.match(/name/i);
+
+      settle(250, done);
+    });
+
+    it('should. go. all. the. way.', (done) => {
+      let fields;
+
+      const app =
+        testUtils.renderIntoDocument(appElement);
+
+      const contactStore =
+        componentContext.getStore('ContactStore');
+
+      submitForm(app, 'name-input', /email/i);
+      fields = contactStore.getContactFields();
+      expect(fields.name).to.not.be.empty;
+      expect(fields.email).to.be.empty;
+      expect(fields.message).to.be.empty;
+
+      submitForm(app, 'email-input', /message/i);
+      fields = contactStore.getContactFields();
+      expect(fields.name).to.not.be.empty;
+      expect(fields.email).to.not.be.empty;
+      expect(fields.message).to.be.empty;
+
+      submitForm(app, 'message-input');
+      fields = contactStore.getContactFields();
+      let failure = contactStore.getContactFailure();
+      expect(failure).to.be.false;
+      expect(fields.name).to.be.empty;
+      expect(fields.email).to.be.empty;
+      expect(fields.message).to.be.empty;
 
       settle(250, done);
     });
