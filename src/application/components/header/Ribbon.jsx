@@ -2,9 +2,11 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
+/* global window */
 import React from 'react';
 import { NavLink } from 'fluxible-router';
 import ModalLink from './ModalLink';
+import cx from 'classnames';
 
 const Ribbon = React.createClass({
   propTypes: {
@@ -15,14 +17,8 @@ const Ribbon = React.createClass({
   },
 
   render: function () {
+    const serverRender = typeof window === 'undefined';
     const uriTel = `tel:+1-${this.props.business.telephone}`;
-    const modalLink = this.props.hasServiceWorker ?
-      <ModalLink className="glyph" data={this.props.settings}>
-        <svg className="icon icon-cog">
-          <use xlinkHref="#icon-cog"></use>
-        </svg>
-      </ModalLink>
-      : null;
 
     return (
       <div className="grid-row-spaced ribbon">
@@ -46,7 +42,15 @@ const Ribbon = React.createClass({
             <use xlinkHref="#icon-github"></use>
           </svg>
         </a>
-        {modalLink}
+        <ModalLink className={cx({
+          glyph: true,
+          // Only add this cost if client doesn't support sw
+          hide: !serverRender && !this.props.hasServiceWorker
+        })} data={this.props.settings}>
+          <svg className="icon icon-cog">
+            <use xlinkHref="#icon-cog"></use>
+          </svg>
+        </ModalLink>
       </div>
     );
   }
