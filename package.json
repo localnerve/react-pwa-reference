@@ -116,7 +116,7 @@
     "connect-modrewrite": "0.9.0",
     "cookie-parser": "1.4.1",
     "csurf": "1.8.3",
-    "debug": "localnerve/debug#worker-support",
+    "debug": "github:localnerve/debug#worker-support",
     "diff": "2.2.1",
     "es6-promise": "3.2.1",
     "express": "4.13.4",
