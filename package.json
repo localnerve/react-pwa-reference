@@ -105,7 +105,7 @@
     "rimraf": "2.5.2",
     "sw-precache": "3.1.1",
     "wd": "0.4.0",
-    "webpack": "1.13.0",
+    "webpack": "1.13.1",
     "webpack-bundle-size-analyzer": "2.0.1"
   },
   "dependencies": {
