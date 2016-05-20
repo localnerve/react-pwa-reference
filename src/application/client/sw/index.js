@@ -79,6 +79,5 @@ function defaultHandler (request) {
     }
 
     debug('defaultHandler could not handle ', request);
-    throw new Error(`defaultHandler could not handle ${request.url}`);
   });
 };
