@@ -10,11 +10,19 @@ const Ribbon = React.createClass({
   propTypes: {
     social: React.PropTypes.object.isRequired,
     business: React.PropTypes.object.isRequired,
-    settings: React.PropTypes.object.isRequired
+    settings: React.PropTypes.object.isRequired,
+    hasServiceWorker: React.PropTypes.bool.isRequired
   },
 
   render: function () {
     const uriTel = `tel:+1-${this.props.business.telephone}`;
+    const modalLink = this.props.hasServiceWorker ?
+      <ModalLink className="glyph" data={this.props.settings}>
+        <svg className="icon icon-cog">
+          <use xlinkHref="#icon-cog"></use>
+        </svg>
+      </ModalLink>
+      : null;
 
     return (
       <div className="grid-row-spaced ribbon">
@@ -38,11 +46,7 @@ const Ribbon = React.createClass({
             <use xlinkHref="#icon-github"></use>
           </svg>
         </a>
-        <ModalLink className="glyph" data={this.props.settings}>
-          <svg className="icon icon-cog">
-            <use xlinkHref="#icon-cog"></use>
-          </svg>
-        </ModalLink>
+        {modalLink}
       </div>
     );
   }

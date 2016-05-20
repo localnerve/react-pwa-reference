@@ -11,7 +11,8 @@ const Header = React.createClass({
   propTypes: {
     selected: React.PropTypes.string.isRequired,
     links: React.PropTypes.array.isRequired,
-    models: React.PropTypes.object.isRequired
+    models: React.PropTypes.object.isRequired,
+    hasServiceWorker: React.PropTypes.bool.isRequired
   },
 
   render: function () {
@@ -22,6 +23,7 @@ const Header = React.createClass({
             business={this.props.models.LocalBusiness}
             social={this.props.models.SiteInfo.social}
             settings={this.props.models.Settings}
+            hasServiceWorker={this.props.hasServiceWorker}
           />
           <Logo site={this.props.models.SiteInfo.site} />
         </div>

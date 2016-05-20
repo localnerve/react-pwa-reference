@@ -19,6 +19,7 @@ const debug = debugLib('application');
 
 let Application = React.createClass({
   propTypes: {
+    hasServiceWorker: React.PropTypes.bool.isRequired,
     navigateComplete: React.PropTypes.bool.isRequired,
     currentNavigateError: React.PropTypes.object,
     pageTitle: React.PropTypes.string.isRequired,
@@ -80,11 +81,12 @@ let Application = React.createClass({
     return (
       <div className="app-block">
         {pageModal}
-        <Background prefetch={false} />
+        <Background prefetch={!this.props.hasServiceWorker} />
         <Header
           selected={navPages[routeOrdinal].page}
           links={navPages}
           models={this.props.pageModels}
+          hasServiceWorker={this.props.hasServiceWorker}
         />
         <PageContainer>
           <ReactSwipe
@@ -104,7 +106,7 @@ let Application = React.createClass({
   },
 
   componentDidMount: function () {
-    if ('serviceWorker' in window.navigator) {
+    if (this.props.hasServiceWorker) {
       window.navigator.serviceWorker.addEventListener(
         'message', this.handleMessage
       );
@@ -112,7 +114,7 @@ let Application = React.createClass({
   },
 
   componentWillUnmount: function () {
-    if ('serviceWorker' in window.navigator) {
+    if (this.props.hasServiceWorker) {
       window.navigator.serviceWorker.removeEventListener(
         'message', this.handleMessage
       );
@@ -148,16 +150,26 @@ let Application = React.createClass({
 
 Application = connectToStores(
   Application, ['ContentStore', 'RouteStore', 'ModalStore'], (context) => {
-    const routeStore = context.getStore('RouteStore'),
-      contentStore = context.getStore('ContentStore'),
-      modalStore = context.getStore('ModalStore'),
-      currentRoute = routeStore.getCurrentRoute(),
-      pageName = (currentRoute && currentRoute.page) ||
-        contentStore.getDefaultResource(),
-      pageTitle = (currentRoute && currentRoute.pageTitle) ||
-        contentStore.getDefaultResource();
+    const
+      routeStore =
+        context.getStore('RouteStore'),
+      contentStore =
+        context.getStore('ContentStore'),
+      modalStore =
+        context.getStore('ModalStore'),
+      currentRoute =
+        routeStore.getCurrentRoute(),
+      pageName =
+        (currentRoute && currentRoute.page) ||
+          contentStore.getDefaultResource(),
+      pageTitle =
+        (currentRoute && currentRoute.pageTitle) ||
+          contentStore.getDefaultResource(),
+      hasServiceWorker =
+        typeof window !== 'undefined' && 'serviceWorker' in window.navigator;
 
     return {
+      hasServiceWorker: hasServiceWorker,
       navigateComplete: routeStore.isNavigateComplete(),
       pageName: pageName,
       pageTitle: pageTitle,
