@@ -133,7 +133,7 @@
     "object-assign": "4.1.0",
     "react": "15.0.2",
     "react-addons-css-transition-group": "15.0.2",
-    "react-dom": "15.0.2",
+    "react-dom": "15.1.0",
     "react-element-size-reporter": "0.2.2",
     "react-modal": "1.2.1",
     "react-spinner": "0.2.6",
