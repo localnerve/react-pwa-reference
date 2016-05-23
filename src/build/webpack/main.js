@@ -3,6 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import webpack from 'webpack';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import uglifyPluginFactory from './plugins/uglify';
 import { statsPlugin, statsPluginOptions } from './plugins/stats';
 
@@ -42,6 +43,7 @@ export default function mainConfig (settings, type) {
       ]
     },
     plugins: [
+      new LodashModuleReplacementPlugin,
       new webpack.DefinePlugin(definitions),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
