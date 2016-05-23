@@ -63,7 +63,7 @@
   "devDependencies": {
     "async-lock": "0.3.8",
     "autoprefixer": "6.3.6",
-    "babel-cli": "6.8.0",
+    "babel-cli": "6.9.0",
     "babel-core": "6.9.0",
     "babel-eslint": "6.0.4",
     "babel-loader": "6.2.4",
