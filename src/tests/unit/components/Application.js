@@ -314,5 +314,69 @@ describe('application component', () => {
 
       settle(250, done);
     });
+
+    describe('settings', () => {
+      let savedExecuteAction;
+
+      before('settings', () => {
+        savedExecuteAction = componentContext.executeAction;
+      });
+
+      after('settings', () => {
+        componentContext.executeAction = savedExecuteAction;
+      });
+
+      beforeEach('settings', () => {
+        // Monkey Patch executeAction to inject MockActionContext with service.
+        componentContext.executeAction = function (action, payload) {
+          componentContext.executeActionCalls.push({
+            action: action,
+            payload: payload
+          });
+          const actionContext = createMockActionContext({
+            dispatcherContext: componentContext.dispatcherContext
+          });
+
+          actionContext.service = new MockService();
+          actionContext.service.setService('page',
+          (method, params, ...args) => {
+            const callback = args[args.length - 1];
+
+            expect(method).to.equal('read');
+            expect(params).to.be.an('object').that.is.not.empty;
+            expect(callback).to.be.a('function');
+
+            serviceData.fetch(params, callback);
+          });
+
+          action(actionContext, payload, ()=>{});
+        }
+      });
+
+      it.skip('should open settings dialog', (done) => {
+        const app =
+          testUtils.renderIntoDocument(appElement);
+
+        const settingsLink =
+          testUtils.scryRenderedDOMComponentsWithClass(
+            app, 'settingsLink'
+          ).filter((settingElement) => {
+            return settingElement.tagName &&
+              settingElement.tagName.toLowerCase() === 'a';
+          })[0];
+
+        expect(settingsLink).to.exist;
+
+        testUtils.Simulate.click(settingsLink);
+
+        const settingsControls = testUtils.scryRenderedDOMComponentsWithClass(
+          app, 'control-section'
+        );
+
+        expect(settingsControls.length).to.be.at.least(1);
+
+        settle(250, done);
+      });
+    });
   });
 });

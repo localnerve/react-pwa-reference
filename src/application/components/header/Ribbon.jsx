@@ -44,6 +44,7 @@ const Ribbon = React.createClass({
         </a>
         <ModalLink className={cx({
           glyph: true,
+          settingsLink: true,
           // Only add this cost if client doesn't support sw
           hide: !serverRender && !this.props.hasServiceWorker
         })} data={this.props.settings}>
