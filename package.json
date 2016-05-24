@@ -96,7 +96,7 @@
     "jsdom": "9.2.0",
     "json-loader": "0.5.4",
     "mkdirp": "0.5.1",
-    "mocha": "2.5.1",
+    "mocha": "2.5.2",
     "mockery": "1.7.0",
     "node-sass-asset-functions": "0.0.9",
     "nyc": "6.4.4",
