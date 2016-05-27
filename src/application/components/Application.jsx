@@ -76,11 +76,11 @@ let Application = React.createClass({
       navPages, this.context.getStore('ContentStore')
     );
 
-    const pageModal = pages.createModal(this.props.modal, this.modalClose);
+    const modalElement = pages.createModal(this.props.modal, this.modalClose);
 
     return (
-      <div className="app-block">
-        {pageModal}
+      <div id="app-element" className="app-block">
+        {modalElement}
         <Background prefetch={!this.props.hasServiceWorker} />
         <Header
           selected={navPages[routeOrdinal].page}
@@ -111,6 +111,7 @@ let Application = React.createClass({
         'message', this.handleMessage
       );
     }
+    pages.assignAppElementToModal(document.getElementById('app-element'));
   },
 
   componentWillUnmount: function () {
