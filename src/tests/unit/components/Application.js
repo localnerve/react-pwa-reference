@@ -2,28 +2,35 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-/* global require, after, describe, it, before, beforeEach */
+/* global Promise, require, after, describe, it, before, beforeEach */
 import { expect } from 'chai';
 import testDom from 'test/utils/testdom';
 import { createFluxibleRouteTransformer } from 'utils';
+import { getActions } from 'application/actions/interface';
 
 const jsonToFluxible = createFluxibleRouteTransformer({
-  actions: require('application/actions/interface').getActions()
+  actions: getActions()
 }).jsonToFluxible;
 
 describe('application component', () => {
   let componentContext, appElement,
     createMockActionContext, createMockComponentContext, MockService,
-    serviceMail,
+    serviceMail, serviceData,
     ContentStore, RouteStore, ContactStore, BackgroundStore, ModalStore,
-    serviceData, routesResponse, fluxibleRoutes, fluxibleApp,
+    SettingsStore,
+    routesResponse, fluxibleRoutes, fluxibleApp,
     React, testUtils;
+
+  const unexpectedFlowError = new Error('unexpected execution flow');
 
   /**
    * OMG this sux. I'm disappointed in this development. :-(
    * This became required during the React 0.14 / Fluxible 1.0 update.
    * This could just mean the app is faster, but harder to test.
    * This could mean the mocks are now not "mocky" enough. (not fake/deep enough)
+   * This definitely means that the React Test Utils need to be used with async
+   * code in mind -
+   * It's not exactly clear to me yet which async thing needs waiting for.
    *
    * NOTE: if timeout param approaches ~1500, then you have to this.timeout(),
    * a similar amount in the test. I'm not bumping it automagically in here.
@@ -63,6 +70,8 @@ describe('application component', () => {
       require('application/stores/BackgroundStore').BackgroundStore;
     ModalStore =
       require('application/stores/ModalStore').ModalStore;
+    SettingsStore =
+      require('application/stores/SettingsStore').SettingsStore;
     serviceData =
       require('test/mocks/service-data');
     routesResponse =
@@ -83,7 +92,7 @@ describe('application component', () => {
     testDom.stop();
   });
 
-  function createContextAndApp (routeName, content, makePath) {
+  function createContextAndApp (routeName, content, path) {
     const navigate = Object.assign({}, fluxibleRoutes[routeName], {
       url: fluxibleRoutes[routeName].path
     });
@@ -94,10 +103,13 @@ describe('application component', () => {
         RouteStore,
         ContactStore,
         BackgroundStore,
-        ModalStore
+        ModalStore,
+        SettingsStore // this is NOT how this gets set in the real code
       ]
     });
-    componentContext.makePath = makePath;
+    componentContext.makePath = () => {
+      return path;
+    };
 
     const routeStore = componentContext.getStore(RouteStore);
     const contentStore = componentContext.getStore(ContentStore);
@@ -112,29 +124,38 @@ describe('application component', () => {
     });
   }
 
+  function createPageContent (page) {
+    const pageContent = {
+      resource: routesResponse[page].action.params.resource
+    };
+
+    return new Promise((resolve, reject) => {
+      serviceData.fetch(pageContent, (err, data) => {
+        if (err) {
+          return reject(err);
+        }
+        pageContent.data = data;
+        resolve(pageContent);
+      });
+    });
+  }
+
   describe('home', () => {
     let homePage;
 
-    function makeHomePath () {
-      return '/';
-    }
-
     before('home', (done) => {
-      homePage = {
-        resource: routesResponse.home.action.params.resource
-      };
-
-      serviceData.fetch(homePage, (err, data) => {
-        if (err) {
-          throw err;
-        }
-        homePage.data = data;
+      createPageContent('home')
+      .then((pageContent) => {
+        homePage = pageContent;
         done();
+      })
+      .catch((error) => {
+        done(error || unexpectedFlowError);
       });
     });
 
     beforeEach(() => {
-      createContextAndApp('home', homePage, makeHomePath);
+      createContextAndApp('home', homePage, '/');
     });
 
     it('should render home content', (done) => {
@@ -145,7 +166,7 @@ describe('application component', () => {
       const components =
         testUtils.scryRenderedDOMComponentsWithClass(app, 'page-content');
 
-      // 'Home' content comes from service-data
+      // first page-content component should be home
       expect(components[0].textContent).to.match(/Welcome/i);
 
       settle(250, done);
@@ -168,26 +189,19 @@ describe('application component', () => {
   describe('contact', () => {
     let contactPage;
 
-    function makeContactPath () {
-      return '/contact';
-    }
-
     before('contact', (done) => {
-      contactPage = {
-        resource: routesResponse.contact.action.params.resource
-      };
-
-      serviceData.fetch(contactPage, (err, data) => {
-        if (err) {
-          throw err;
-        }
-        contactPage.data = data;
+      createPageContent('contact')
+      .then((pageContent) => {
+        contactPage = pageContent;
         done();
+      })
+      .catch((error) => {
+        done(error || unexpectedFlowError);
       });
     });
 
     beforeEach(() => {
-      createContextAndApp('contact', contactPage, makeContactPath);
+      createContextAndApp('contact', contactPage, '/contact');
 
       // Monkey Patch executeAction to inject MockActionContext with service.
       componentContext.executeAction = function (action, payload) {
@@ -316,10 +330,11 @@ describe('application component', () => {
     });
 
     describe('settings', () => {
-      let savedExecuteAction;
+      let savedExecuteAction, ReactModal;
 
       before('settings', () => {
         savedExecuteAction = componentContext.executeAction;
+        ReactModal = require('react-modal');
       });
 
       after('settings', () => {
@@ -353,13 +368,20 @@ describe('application component', () => {
         }
       });
 
-      it.skip('should open settings dialog', (done) => {
+      it('should open settings dialog', function (done) {
         const app =
           testUtils.renderIntoDocument(appElement);
 
+        // Set ReactModal appElement here, componentDidMount will not be called.
+        // This will throw if not exactly 1 app-block.
+        const appEl = testUtils.findRenderedDOMComponentWithClass(
+          app, 'app-block'
+        );
+        ReactModal.setAppElement(appEl);
+
         const settingsLink =
           testUtils.scryRenderedDOMComponentsWithClass(
-            app, 'settingsLink'
+            app, 'settings-link'
           ).filter((settingElement) => {
             return settingElement.tagName &&
               settingElement.tagName.toLowerCase() === 'a';
@@ -369,13 +391,17 @@ describe('application component', () => {
 
         testUtils.Simulate.click(settingsLink);
 
-        const settingsControls = testUtils.scryRenderedDOMComponentsWithClass(
-          app, 'control-section'
-        );
-
-        expect(settingsControls.length).to.be.at.least(1);
-
-        settle(250, done);
+        settle(250, () => {
+          // This is the best we can do for now.
+          // Would rather test for .settings, but ReactModal doesn't do it
+          // in a render method.
+          // TODO: look at packaging bootstrap/overlays for modal.
+          const modalBodyEl = global.document.querySelector(
+            '.ReactModal__Body--open'
+          );
+          expect(modalBodyEl).to.exist;
+          done();
+        });
       });
     });
   });
