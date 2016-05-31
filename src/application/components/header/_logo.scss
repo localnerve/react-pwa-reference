@@ -27,7 +27,7 @@
   font-size: 1.8em;
 
   // png fallback
-  background: image-url("logo.png") no-repeat 100% 50% / 35%;
+  background: image-url("logo.png") no-repeat 100% 50% / 2em;
   background: none, inline-image("logo.svg", "image/svg+xml") no-repeat 100% 80%;
 
   @include breakpoint(medium) {
