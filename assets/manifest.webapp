@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "name": "LocalNerve Example App",
+  "name": "Contactor",
   "launch_path": "/",
-  "description": "An isomorphic, data driven flux/react/service-worker example",
+  "description": "A universal, data driven example PWA",
   "icons": {
     "128": "/public/images/icon-128x128.png",
     "16": "/public/images/favicon-16x16.png",
@@ -21,8 +21,8 @@
   },
   "locales": {
     "en": {
-      "name": "LocalNerve Example App",
-      "description": "An isomorphic, data driven flux/react/service-worker example."
+      "name": "Contactor",
+      "description": "A universal, data driven example PWA"
     }
   }
 }

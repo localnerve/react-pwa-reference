@@ -1,7 +1,7 @@
 {
 	"lang": "en-US",
-	"short_name": "LocalNerve Example App",
-	"name": "flux-react-example-sw",
+	"short_name": "Contactor",
+	"name": "Contactor Example PWA",
 	"icons": [
 		{
 			"src": "/public/images/android-chrome-36x36.png",
