@@ -85,12 +85,13 @@ function sendResponse (event, response) {
 self.addEventListener('message', (event) => {
   const commandName = event.data.command,
     payload = event.data.payload,
-    command = commands[commandName] || unknownCommand,
-    handler = 'waitUntil' in event ? event.waitUntil : () => {};
+    command = commands[commandName] || unknownCommand;
 
   debug(`"${commandName}" command received`, payload);
 
-  handler(
-    command(payload, sendResponse.bind(null, event))
-  );
+  const result = command(payload, sendResponse.bind(null, event));
+
+  if ('waitUntil' in event) {
+    event.waitUntil(result);
+  }
 });
