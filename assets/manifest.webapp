@@ -4,10 +4,10 @@
   "launch_path": "/",
   "description": "A universal, data driven example PWA",
   "icons": {
-    "128": "/public/images/icon-128x128.png",
-    "16": "/public/images/favicon-16x16.png",
-    "32": "/public/images/favicon-32x32.png",
-    "48": "/public/images/android-chrome-48x48.png"
+    "128": "/public/images/icon-128x128.png?v=gAA6rKkkBo",
+    "16": "/public/images/favicon-16x16.png?v=gAA6rKkkBo",
+    "32": "/public/images/favicon-32x32.png?v=gAA6rKkkBo",
+    "48": "/public/images/android-chrome-48x48.png?v=gAA6rKkkBo"
   },
   "developer": {
     "name": "localnerve",

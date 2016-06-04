@@ -31,6 +31,7 @@ $button-prev-color: $app-primary-light-color;
   transform: TranslateZ(0);
 
   button {
+    outline-color: $app-accent-light-bgcolor;
     display: inline-block;
     border: 0;
     background: transparent;

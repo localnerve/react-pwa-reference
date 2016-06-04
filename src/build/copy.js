@@ -20,6 +20,8 @@ export default function copyTaskFactory (settings) {
       '!**/styles/**',
       // svg is processed by svg task
       '!images/*.svg',
+      // skip image designer source files
+      '!images/*.xcf',
       // scripts are processed by webpack
       '!scripts/**'
     ], {

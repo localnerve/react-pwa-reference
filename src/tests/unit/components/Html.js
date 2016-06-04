@@ -110,7 +110,7 @@ describe('html component', function () {
     });
 
     expect(manifestLink.length).to.equal(1);
-    expect(manifestLink[0].getAttribute('href')).to.equal(testProps.appManifest);
+    expect(manifestLink[0].getAttribute('href')).to.contain(testProps.appManifest);
   });
 
   it('should render css meta holders for external stylesheet loads',

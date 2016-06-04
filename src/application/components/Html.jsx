@@ -48,24 +48,26 @@ let Html = React.createClass({
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="apple-mobile-web-app-status-bar-style" content="black" />
           <meta name="apple-mobile-web-app-title" content="Flux React Example SW" />
-          <link rel="apple-touch-icon" sizes="57x57" href={this.props.images + '/apple-touch-icon-57x57.png'} />
-          <link rel="apple-touch-icon" sizes="60x60" href={this.props.images + '/apple-touch-icon-60x60.png'} />
-          <link rel="apple-touch-icon" sizes="72x72" href={this.props.images + '/apple-touch-icon-72x72.png'} />
-          <link rel="apple-touch-icon" sizes="76x76" href={this.props.images + '/apple-touch-icon-76x76.png'} />
-          <link rel="apple-touch-icon" sizes="114x114" href={this.props.images + '/apple-touch-icon-114x114.png'} />
-          <link rel="apple-touch-icon" sizes="120x120" href={this.props.images + '/apple-touch-icon-120x120.png'} />
-          <link rel="apple-touch-icon" sizes="144x144" href={this.props.images + '/apple-touch-icon-144x144.png'} />
-          <link rel="apple-touch-icon" sizes="152x152" href={this.props.images + '/apple-touch-icon-152x152.png'} />
-          <link rel="apple-touch-icon" sizes="180x180" href={this.props.images + '/apple-touch-icon-180x180.png'} />
-          <link rel="icon" type="image/png" href={this.props.images + '/favicon-32x32.png'} sizes="32x32" />
-          <link rel="icon" type="image/png" href={this.props.images + '/android-chrome-192x192.png'} sizes="192x192" />
-          <link rel="icon" type="image/png" href={this.props.images + '/favicon-96x96.png'} sizes="96x96" />
-          <link rel="icon" type="image/png" href={this.props.images + '/favicon-16x16.png'} sizes="16x16" />
-          <link rel="manifest" href={this.props.appManifest} />
-          <meta name="msapplication-config" content={this.props.browserConfig} />
-          <meta name="msapplication-TileColor" content="#1B5E20" />
-          <meta name="msapplication-TileImage" content={this.props.images + '/mstile-144x144.png'} />
-          <meta name="theme-color" content="#1B5E20" />
+          <link rel="apple-touch-icon" sizes="57x57" href={`${this.props.images}/apple-touch-icon-57x57.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="60x60" href={`${this.props.images}/apple-touch-icon-60x60.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="72x72" href={`${this.props.images}/apple-touch-icon-72x72.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="76x76" href={`${this.props.images}/apple-touch-icon-76x76.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="114x114" href={`${this.props.images}/apple-touch-icon-114x114.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="120x120" href={`${this.props.images}/apple-touch-icon-120x120.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="144x144" href={`${this.props.images}/apple-touch-icon-144x144.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="152x152" href={`${this.props.images}/apple-touch-icon-152x152.png?v=gAA6rKkkBo`} />
+          <link rel="apple-touch-icon" sizes="180x180" href={`${this.props.images}/apple-touch-icon-180x180.png?v=gAA6rKkkBo`} />
+          <link rel="icon" type="image/png" href={`${this.props.images}/favicon-16x16.png?v=gAA6rKkkBo`} sizes="16x16" />
+          <link rel="icon" type="image/png" href={`${this.props.images}/favicon-32x32.png?v=gAA6rKkkBo`} sizes="32x32" />
+          <link rel="icon" type="image/png" href={`${this.props.images}/favicon-96x96.png?v=gAA6rKkkBo`} sizes="96x96" />
+          <link rel="icon" type="image/png" href={`${this.props.images}/android-chrome-192x192.png?v=gAA6rKkkBo`} sizes="192x192" />
+          <link rel="mask-icon" href={`${this.props.images}/safari-pinned-tab.svg?v=gAA6rKkkBo`} color="#6A1B9A" />
+          <link rel="shortcut icon" href={`${this.props.images}/favicon.ico?v=gAA6rKkkBo`} />
+          <link rel="manifest" href={`${this.props.appManifest}?v=gAA6rKkkBo`} />
+          <meta name="msapplication-config" content={`${this.props.browserConfig}?v=gAA6rKkkBo`} />
+          <meta name="msapplication-TileColor" content="#6A1B9A" />
+          <meta name="msapplication-TileImage" content={`${this.props.images}/mstile-144x144.png?v=gAA6rKkkBo`} />
+          <meta name="theme-color" content="#6A1B9A" />
           {asyncStyleImports}
           <style dangerouslySetInnerHTML={{__html: this.props.inlineStyles}}></style>
           <script dangerouslySetInnerHTML={{__html: this.props.trackingSnippet}}></script>

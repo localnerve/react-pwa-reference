@@ -4,40 +4,46 @@
 	"name": "Contactor Example PWA",
 	"icons": [
 		{
-			"src": "/public/images/android-chrome-36x36.png",
+			"src": "/public/images/android-chrome-36x36.png?v=gAA6rKkkBo",
 			"sizes": "36x36",
-			"type": "image/png"
+			"type": "image/png",
+			"density": 0.75
 		},
 		{
-			"src": "/public/images/android-chrome-48x48.png",
+			"src": "/public/images/android-chrome-48x48.png?v=gAA6rKkkBo",
 			"sizes": "48x48",
-			"type": "image/png"
+			"type": "image/png",
+			"density": 1
 		},
 		{
-			"src": "/public/images/android-chrome-72x72.png",
+			"src": "/public/images/android-chrome-72x72.png?v=gAA6rKkkBo",
 			"sizes": "72x72",
-			"type": "image/png"
+			"type": "image/png",
+			"density": 1.5
 		},
 		{
-			"src": "/public/images/android-chrome-96x96.png",
+			"src": "/public/images/android-chrome-96x96.png?v=gAA6rKkkBo",
 			"sizes": "96x96",
-			"type": "image/png"
+			"type": "image/png",
+			"density": 2
 		},
 		{
-			"src": "/public/images/android-chrome-144x144.png",
+			"src": "/public/images/android-chrome-144x144.png?v=gAA6rKkkBo",
 			"sizes": "144x144",
-			"type": "image/png"
+			"type": "image/png",
+			"density": 3
 		},
 		{
-			"src": "/public/images/android-chrome-192x192.png",
+			"src": "/public/images/android-chrome-192x192.png?v=gAA6rKkkBo",
 			"sizes": "192x192",
-			"type": "image/png"
+			"type": "image/png",
+			"density": 4
 		}
 	],
 	"start_url": "/?homescreen=1",
 	"display": "standalone",
 	"orientation": "portrait",
-	"background_color": "#43A047",
-	"theme_color": "#1B5E20",
+	"background_color": "#9C27B0",
+	"theme_color": "#6A1B9A",
 	"gcm_sender_id": "54583389178"
 }
