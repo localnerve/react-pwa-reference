@@ -46,6 +46,12 @@ export default function mainConfig (settings, type) {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
       new webpack.NormalModuleReplacementPlugin(
+        /for\-each/, require.resolve('lodash/forEach')
+      ),
+      new webpack.NormalModuleReplacementPlugin(
+        /is\-function/, require.resolve('lodash/isFunction')
+      ),
+      new webpack.NormalModuleReplacementPlugin(
         /lodash\.assign/, require.resolve('object-assign')
       ),
       new webpack.NormalModuleReplacementPlugin(
