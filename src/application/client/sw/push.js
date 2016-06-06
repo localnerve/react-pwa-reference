@@ -57,7 +57,7 @@ function getPayloadAndShowNotification (timestamp) {
 
       return self.registration.showNotification('An error occurred', {
         body: 'Failed to get push payload from ' + payloadUrl,
-        icon: '/public/images/android-chrome-192x192.png',
+        icon: '/public/images/android-chrome-192x192.png?v=gAA6rKkkBo',
         tag: 'notification-error'
       });
     });

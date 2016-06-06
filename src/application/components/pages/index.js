@@ -1,6 +1,9 @@
 /***
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
- * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+ * Copyrights licensed under the BSD License. See the accompanying LICENSE file
+ * for terms.
+ *
+ * A collection of supportive methods for rendering the application.
  */
 import React from 'react';
 import ReactModal from 'react-modal';
@@ -11,7 +14,12 @@ import ContentPage from './ContentPage';
 import Contact from './contact';
 
 /***
- * Component to class map
+ * Page type name to ReactClass map ("name" => ReactClass).
+ *
+ * These are the page types available to be referenced by the data service.
+ * Names are referenced by the data service, and turn into ReactClasses here
+ * by lookup.
+ * Prefer additions. Don't mutate without making data service changes.
  */
 const pageTypes = {
   ContentPage,
@@ -20,6 +28,8 @@ const pageTypes = {
 
 /**
  * Exchange a component string for a React class.
+ *
+ * @private
  *
  * @param {String} component - The name of a page component.
  * @returns {Object} A React class named by the component parameter.
@@ -30,6 +40,8 @@ function getClass (component) {
 
 /**
  * Form a props object given content and models.
+ *
+ * @private
  *
  * @param {String|Object} content - page html or json content.
  * @param {Object} models - Json containing models for the page.
@@ -57,13 +69,16 @@ function getProps (content, models) {
 /**
  * Return the main navigable pages for the app as an ordered array.
  * These are routes that have mainNav === 'true'.
- * If there is an error, the page at the ordinal will be the required error page.
+ * If there is an error, the page at the ordinal will be the required error
+ * page.
  *
  * @param {Object} error - A fluxible routes navigationError.
  * @param {Number} error.statusCode - The error status code.
  * @param {Object} pages - A routes object from RouteStore.
- * @param {Number} ordinal - A zero based order for the current page in the routes Object.
- * @returns {Array} An ordered array of the main navigable pages of the application.
+ * @param {Number} ordinal - A zero based order for the current page in the
+ * routes Object.
+ * @returns {Array} An ordered array of the main navigable pages of the
+ * application.
  */
 export function getMainNavPages (error, pages, ordinal) {
   const mainPages = Object.keys(pages)
@@ -86,7 +101,8 @@ export function getMainNavPages (error, pages, ordinal) {
 
 /**
  * Create React elements for the given navigable pages.
- * Unfortunately, the key and id have to always be the same for each slot for swipe.
+ * Unfortunately, the key and id have to always be the same for each slot for
+ * swipe.
  *
  * @param {Array} navPages - An ordered array of the main navigable pages.
  * @param {Object} contentStore - A reference to the ContentStore.
@@ -114,10 +130,12 @@ export function createElements (navPages, contentStore) {
 /**
  * Create a React element for a modal dialog given component and props.
  *
+ * @private
+ *
  * @param {String} component - The name of the component for the modal.
  * @param {Object} props - The props for the component.
  * @param {Boolean} failure - Modal creation failure.
- * @returns {Object} A React Element.
+ * @returns {Object} A React Element to use as the content of the modal.
  */
 function createModalElement (component, props, failure) {
   if (component) {
@@ -132,14 +150,14 @@ function createModalElement (component, props, failure) {
 /*eslint-enable react/prop-types */
 
 /**
- * If open, render the app modal container and internal component.
+ * If open, create the app modal container and internal component.
  *
  * @param {Object} modalProps - modal creation properties.
  * @param {Boolean} modalProps.open - True if show.
  * @param {String} modalProps.component - The name of the modal component.
  * @param {Object} modalProps.props - The props for the component.
  * @param {Boolean} modalProps.failure - True if component creation failure.
- * @return {Object} The React Modal.
+ * @return {Object} The modal React element.
  */
 export function createModal (modalProps, close) {
   if (modalProps.open) {
@@ -165,11 +183,17 @@ export function createModal (modalProps, close) {
       modalProps.component, modalProps.props, modalProps.failure
     ));
   }
+
   return null;
+}
+
+export function assignAppElementToModal (appElement) {
+  ReactModal.setAppElement(appElement);
 }
 
 export default {
   createElements,
   getMainNavPages,
-  createModal
-}
+  createModal,
+  assignAppElementToModal
+};
