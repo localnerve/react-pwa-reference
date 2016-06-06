@@ -43,7 +43,9 @@ export default function mainConfig (settings, type) {
       ]
     },
     plugins: [
-      new LodashModuleReplacementPlugin,
+      new LodashModuleReplacementPlugin({
+        collections: true
+      }),
       new webpack.DefinePlugin(definitions),
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurenceOrderPlugin(),
