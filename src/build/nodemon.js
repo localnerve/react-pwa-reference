@@ -10,7 +10,7 @@ import gulpNodemon from 'gulp-nodemon';
  * Factory for the nodemon task.
  *
  * @param {Object} settings - The project settings.
- * @param {String} target - True for production, false otherwise.
+ * @param {String} target - One of ['dev', 'debug', 'perf', 'prod'].
  * @returns {Function} The nodemon task.
  */
 export default function nodemonTaskFactory (settings, target) {
@@ -23,6 +23,7 @@ export default function nodemonTaskFactory (settings, target) {
       settings.src.assetsJson
     ],
     ext: 'js jsx',
+    watch: settings.src.baseDir,
     tasks: (changedFiles) => {
       const buildTarget = target === 'debug' ? 'dev' : target;
       const tasks = new Set();
