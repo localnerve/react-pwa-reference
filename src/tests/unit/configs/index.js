@@ -3,13 +3,14 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /*eslint no-console:0 */
-/* global describe, it, before, beforeEach, afterEach, require */
+/* global Promise, describe, it, before, beforeEach, afterEach, require */
 'use strict';
 
 var expect = require('chai').expect;
 var assert = require('chai').assert;
 var path = require('path');
 var configLib = require('configs');
+var utils = require('utils/node');
 var localEnv = require('configs/local.env.json');
 
 describe('configs', function () {
@@ -51,6 +52,70 @@ describe('configs', function () {
     var fs = require('fs');
     var config;
 
+    /**
+     * Make sure the assets build output files are available.
+     */
+    function ensureAssetFiles (done) {
+      var
+        assetsJsonFile = path.join(
+          path.dirname(require.resolve('configs/settings/index.js')),
+          'assets.json'
+        ),
+        assetsJsonData = JSON.stringify({
+          assets: {
+            main: [
+              'main.js',
+              'main.js.map'
+            ],
+            sw: [
+              'sw.js',
+              'sw.js.map'
+            ],
+            swReg: [
+              'swReg.js',
+              'swReg.js.map'
+            ]
+          }
+        }),
+        revManifestFile = path.join(
+          path.dirname(require.resolve('configs/settings/index.js')),
+          'assets-rev-manifest.json'
+        ),
+        revManifestData = JSON.stringify({
+          'images/android-chrome-144x144.png':
+            'images/android-chrome-144x144-aa104ff74a.png',
+          'images/android-chrome-192x192.png':
+            'images/android-chrome-192x192-3f837d5a9e.png'
+        });
+
+      Promise.all([
+        utils.nodeCall(fs.stat, assetsJsonFile)
+        .catch(function (err) {
+          if (err.code === 'ENOENT') {
+            console.log('assets json did not exist');
+            return utils.nodeCall(
+              fs.writeFile, assetsJsonFile, assetsJsonData
+            );
+          }
+          throw err;
+        }),
+        utils.nodeCall(fs.stat, revManifestFile)
+        .catch(function (err) {
+          if (err.code === 'ENOENT') {
+            console.log('assets rev manifest did not exist');
+            return utils.nodeCall(
+              fs.writeFile, revManifestFile, revManifestData
+            );
+          }
+          throw err;
+        })
+      ])
+      .then(function () {
+        done();
+      })
+      .catch(done);
+    }
+
     beforeEach(function () {
       config = configLib.create();
     });
@@ -75,27 +140,6 @@ describe('configs', function () {
     });
 
     it('loads script asset dynamically as expected', function (done) {
-      var
-        assetsJsonFile = require.resolve('configs/settings/index.js'),
-        assetsJsonData = JSON.stringify({
-          assets: {
-            main: [
-              'main.js',
-              'main.js.map'
-            ],
-            sw: [
-              'sw.js',
-              'sw.js.map'
-            ],
-            swReg: [
-              'swReg.js',
-              'swReg.js.map'
-            ]
-          }
-        });
-
-      assetsJsonFile = path.join(path.dirname(assetsJsonFile), 'assets.json');
-
       function testAssetScript (script, map) {
         expect(script).to.be.a('string').that.is.not.empty;
         expect(script).to.contain(config.settings.web.scripts);
@@ -126,34 +170,15 @@ describe('configs', function () {
         done();
       }
 
-      if (!fs.existsSync(assetsJsonFile)) {
-        console.log('assets json did not exist');
-        fs.writeFile(assetsJsonFile, assetsJsonData, function (err) {
-          if (err) {
-            return done(err);
-          }
-          testAssetScripts();
-        });
-      } else {
-        console.log('assets json pre-existed');
+      ensureAssetFiles(function (err) {
+        if (err) {
+          return done(err);
+        }
         testAssetScripts();
-      }
+      });
     });
 
     it('loads revved assets dynamically as expected', function (done) {
-      var
-        revManifestFile = require.resolve('configs/settings/index.js'),
-        revManifestData = JSON.stringify({
-          'images/android-chrome-144x144.png':
-            'images/android-chrome-144x144-aa104ff74a.png',
-          'images/android-chrome-192x192.png':
-            'images/android-chrome-192x192-3f837d5a9e.png'
-        });
-
-      revManifestFile = path.join(
-        path.dirname(revManifestFile), 'assets-rev-manifest.json'
-      );
-
       function testAssetRevScripts () {
         var asset144 =
           config.settings.web.assets.revAsset('android-chrome-144x144.png');
@@ -170,18 +195,12 @@ describe('configs', function () {
         done();
       }
 
-      if (!fs.existsSync(revManifestFile)) {
-        console.log('assets-rev-manifest.json did not exist');
-        fs.writeFile(revManifestFile, revManifestData, function (err) {
-          if (err) {
-            return done(err);
-          }
-          testAssetRevScripts();
-        });
-      } else {
-        console.log('assets-rev-manifest json pre-existed');
+      ensureAssetFiles(function (err) {
+        if (err) {
+          return done(err);
+        }
         testAssetRevScripts();
-      }
+      });
     });
   });
 
