@@ -63,10 +63,12 @@ export function create (req, resource, params, body, config, callback) {
  * @param {Function} callback - called upon completion with push payload.
  */
 export function read (req, resource, params, config, callback) {
+  const settings = configs.create().settings;
+
   return callback(null, {
     title: 'Contactor Demo Message',
     message: 'Try out the contact page!',
-    icon: '/public/images/android-chrome-192x192.png',
+    icon: `${settings.web.assets.revAsset('android-chrome-192x192.png')}`,
     tag: 'contactor-push-notification-payload',
     url: '/contact'
   });

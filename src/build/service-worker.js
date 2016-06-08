@@ -3,7 +3,6 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /*eslint no-console:0 */
-import fs from 'fs';
 import swPrecache from 'sw-precache';
 import cannibalizr from 'cannibalizr';
 
@@ -13,21 +12,15 @@ import cannibalizr from 'cannibalizr';
  *
  * @param {Object} settings - The project settings.
  * @param {Boolean} prod - True for production, false otherwise.
- * @param {Boolean} debug - True to include debuggin info, false otherwise.
+ * @param {Boolean} debug - True to include debug info, false otherwise.
  * @returns {Function} The serviceWorker task.
  */
 export default function serviceWorkerTaskFactory (settings, prod, debug) {
-  const pkgJson = 'package.json';
-
   return function serviceWorker (done) {
-    fs.readFile(pkgJson, {
-      encoding: 'utf8'
-    }, (err, data) => {
+    settings.pkgInfo((err, pkg) => {
       if (err) {
-        return done(new Error(`Task failed to read ${pkgJson}: ${err}`));
+        return done(err);
       }
-
-      const pkg = JSON.parse(data);
 
       // Ugh. Use source code as a data source for service worker.
       cannibalizr({
@@ -36,6 +29,8 @@ export default function serviceWorkerTaskFactory (settings, prod, debug) {
           manifest: {
             cacheId: pkg.name,
             version: pkg.version,
+            pushNotificationIcon:
+              settings.web.assets.revAsset('android-chrome-192x192.png'),
             debug: debug
           }
         },

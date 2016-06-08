@@ -28,7 +28,7 @@ reports/
 output/
 .nyc_output/
 /src/node_modules/application
-/src/node_modules/configs/settings/assets.json
+/src/node_modules/configs/settings/*.json
 /src/application/client/sw/precache.js
 /src/application/client/sw/node_modules/sw/data.json
 /webpack-stats*

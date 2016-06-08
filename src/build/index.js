@@ -17,6 +17,7 @@ import fixturesTaskFactory from './fixtures';
 import serviceWorkerTaskFactory from './service-worker';
 import perfbudgetTaskFactory from './perfbudget';
 import symlinkTaskFactory from './symlink';
+import revTaskFactory from './rev';
 
 /**
  * Setup the build process environment.
@@ -57,6 +58,7 @@ function buildTaskCompFactory (interactive, target) {
       tasks.copy = copyTaskFactory(settings);
       tasks.imagemin = imageminTaskFactory(settings);
       tasks.ccss = ccssTaskFactory(settings, prod);
+      tasks.rev = revTaskFactory(settings);
       tasks.mainBundles = webpackTaskFactory('main', settings, target);
       tasks.serviceWorkerGenerate =
         serviceWorkerTaskFactory(settings, prod, target !== 'prod');
@@ -86,6 +88,9 @@ function buildTaskCompFactory (interactive, target) {
         return tasks.mainBundles(done);
       }
     ),
+    function rev (done) {
+      return tasks.rev(done);
+    },
     function serviceWorkerGenerate (done) {
       return tasks.serviceWorkerGenerate(done);
     },

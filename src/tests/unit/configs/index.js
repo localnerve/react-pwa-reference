@@ -48,6 +48,7 @@ describe('configs', function () {
   });
 
   describe('settings', function () {
+    var fs = require('fs');
     var config;
 
     beforeEach(function () {
@@ -74,7 +75,7 @@ describe('configs', function () {
     });
 
     it('loads script asset dynamically as expected', function (done) {
-      var fs = require('fs'),
+      var
         assetsJsonFile = require.resolve('configs/settings/index.js'),
         assetsJsonData = JSON.stringify({
           assets: {
@@ -136,6 +137,50 @@ describe('configs', function () {
       } else {
         console.log('assets json pre-existed');
         testAssetScripts();
+      }
+    });
+
+    it('loads revved assets dynamically as expected', function (done) {
+      var
+        revManifestFile = require.resolve('configs/settings/index.js'),
+        revManifestData = JSON.stringify({
+          'images/android-chrome-144x144.png':
+            'images/android-chrome-144x144-aa104ff74a.png',
+          'images/android-chrome-192x192.png':
+            'images/android-chrome-192x192-3f837d5a9e.png'
+        });
+
+      revManifestFile = path.join(
+        path.dirname(revManifestFile), 'assets-rev-manifest.json'
+      );
+
+      function testAssetRevScripts () {
+        var asset144 =
+          config.settings.web.assets.revAsset('android-chrome-144x144.png');
+        var asset192 =
+          config.settings.web.assets.revAsset('android-chrome-192x192.png');
+
+        [asset144, asset192].forEach(function (asset) {
+          expect(asset).to.exist;
+          expect(asset).to.be.a('string').that.is.not.empty;
+          expect(asset).to.contain(config.settings.web.images);
+          expect(asset).to.match(/\.png$/);
+        });
+
+        done();
+      }
+
+      if (!fs.existsSync(revManifestFile)) {
+        console.log('assets-rev-manifest.json did not exist');
+        fs.writeFile(revManifestFile, revManifestData, function (err) {
+          if (err) {
+            return done(err);
+          }
+          testAssetRevScripts();
+        });
+      } else {
+        console.log('assets-rev-manifest json pre-existed');
+        testAssetRevScripts();
       }
     });
   });

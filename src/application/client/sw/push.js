@@ -9,6 +9,7 @@ import pushUtil from 'utils/push';
 import debugLib from 'sw/utils/debug';
 import { addOrReplaceUrlSearchParameter } from 'sw/utils/requests';
 import { synchronize as pushSync } from './sync/push';
+import swData from 'sw/data';
 
 const debug = debugLib('push');
 const pushUrl = '/_api/push';
@@ -34,7 +35,9 @@ function getPayloadAndShowNotification (timestamp) {
       debug('Received push payload response', response);
 
       if (response.status !== 200) {
-        throw new Error('Push payload response error, status' + response.status);
+        throw new Error(
+          `Push payload response error, status ${response.status}`
+        );
       }
 
       return response.json().then((data) => {
@@ -56,8 +59,8 @@ function getPayloadAndShowNotification (timestamp) {
       debug('Failed to get push payload', error);
 
       return self.registration.showNotification('An error occurred', {
-        body: 'Failed to get push payload from ' + payloadUrl,
-        icon: '/public/images/android-chrome-192x192.png?v=gAA6rKkkBo',
+        body: `Failed to get push payload from ${payloadUrl}`,
+        icon: swData.manifest && swData.manifest.pushNotificationIcon || null,
         tag: 'notification-error'
       });
     });

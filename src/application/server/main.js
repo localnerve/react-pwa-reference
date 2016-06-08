@@ -37,7 +37,7 @@ function renderApp (req, res, context, app, props) {
   let state;
 
   props.mainScript = settings.web.assets.mainScript();
-  props.images = settings.web.images;
+  props.revAsset = settings.web.assets.revAsset.bind(settings.web.assets);
   props.trackingSnippet = config.analytics.snippet;
   props.browserConfig = settings.web.browserConfig;
   props.appManifest = settings.web.appManifest;
@@ -156,15 +156,15 @@ export default function bootstrap (app) {
       });
     })
     .then((inlineStyles) => {
-      debug(`Reading the inline scripts from ${settings.dist.inlineScript}`);
       renderProps.inlineStyles = inlineStyles;
+      debug(`Reading the inline scripts from ${settings.dist.inlineScript}`);
       return nodeUtils.nodeCall(fs.readFile, settings.dist.inlineScript, {
         encoding: 'utf8'
       });
     })
     .then((inlineScript) => {
-      debug('Rendering the application');
       renderProps.inlineScript = inlineScript;
+      debug('Rendering the application');
       renderApp(req, res, context, app, renderProps);
     })
     .catch((err) => {

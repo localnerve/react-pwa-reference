@@ -44,7 +44,9 @@ const rewriteRules = [
 const app = express();
 const server = protocol.createServer(app);
 
-app.use(favicon(settings.dist.favicon));
+app.use(favicon(settings.dist.favicon, {
+  maxAge: settings.web.assetAge
+}));
 app.use(logger(settings.loggerFormat));
 app.use(compress());
 app.use(errorHandler.maintenance());

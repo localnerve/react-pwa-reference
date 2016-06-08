@@ -1,28 +1,28 @@
 /**
- * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
+ * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it, before */
-'use strict';
 
-var _ = require('lodash');
-var expect = require('chai').expect;
-var utils = require('configs/settings/utils');
+import _ from 'lodash';
+import { expect } from 'chai';
+import utils from 'configs/settings/utils';
 
-describe('settings/utils', function () {
-  describe('prependPathToObject', function () {
-    var strToken = 'astring',
+describe('settings/utils', () => {
+  describe('prependPathToObject', () => {
+    const strToken = 'astring',
       lastToken = 'dobeedo',
-      prePath = 'dobee/'+lastToken;
-
-    var testObj, testTerminalCount, terminals = {
+      prePath = 'dobee/'+lastToken,
+      terminals = {
         str: strToken,
         num: 10,
         bool: false,
         nope: null
       };
 
-    before(function () {
+    let testObj, testTerminalCount;
+
+    before(() => {
       // The number of times terminals appears below
       testTerminalCount = 6;
 
@@ -59,10 +59,10 @@ describe('settings/utils', function () {
       }
     }
 
-    it('should prepend all occurences of string with valid path', function () {
-      var result = utils.prependPathToObject(testObj, prePath);
+    it('should prepend all occurences of string with valid path', () => {
+      const result = utils.prependPathToObject(testObj, prePath);
+      const strings = [];
 
-      var strings = [];
       collectStrings(result, strings);
 
       expect(strings).length.to.be(testTerminalCount);
@@ -72,5 +72,24 @@ describe('settings/utils', function () {
         expect(aString).to.contain(lastToken+'/');
       });
     });
+  });
+
+  describe('pkgInfo', () => {
+    it('should fail properly', (done) => {
+      utils.pkgInfo('baddir', function (err) {
+        expect(err).to.exist;
+        expect(err).to.be.an('Error');
+        done();
+      });
+    });
+
+    it('should read package.json', (done) => {
+      utils.pkgInfo('.', function (err, data) {
+        expect(err).to.not.exist;
+        expect(data).to.be.an('object');
+        expect(data.version).to.exist;
+        done();
+      });
+    })
   });
 });
