@@ -88,7 +88,7 @@
     "gulp-cssmin": "0.1.7",
     "gulp-if": "2.0.1",
     "gulp-imagemin": "2.4.0",
-    "gulp-nodemon": "2.0.7",
+    "gulp-nodemon": "2.1.0",
     "gulp-postcss": "6.1.1",
     "gulp-rev": "^7.0.0",
     "gulp-sass": "2.3.1",
@@ -147,7 +147,7 @@
     "serve-favicon": "2.3.0",
     "sitemap-xml": "localnerve/sitemap-xml",
     "superagent": "2.0.0",
-    "sw-toolbox": "3.1.1",
+    "sw-toolbox": "3.2.1",
     "treo": "0.5.1",
     "web-push": "0.0.11"
   },
