@@ -100,7 +100,7 @@ export default function revTaskFactory (settings) {
               if (Object.prototype.toString.call(item) === '[object Object]') {
                 const baseName = getBasenameWithoutVersion(item.$.src);
                 if (revBaseNames[baseName]) {
-                  item.$.src = `${settings.web.images}/${revBaseNames[baseName]}`;
+                  item.$.src = `${settings.web.baseDir}/${revBaseNames[baseName]}`;
                 }
               }
             });
@@ -122,7 +122,7 @@ export default function revTaskFactory (settings) {
           jsData.icons.forEach((icon) => {
             const baseName = getBasenameWithoutVersion(icon.src);
             if (revBaseNames[baseName]) {
-              icon.src = `${settings.web.images}/${revBaseNames[baseName]}`;
+              icon.src = `${settings.web.baseDir}/${revBaseNames[baseName]}`;
             }
           });
           return utils.nodeCall(fs.writeFile,
@@ -140,7 +140,7 @@ export default function revTaskFactory (settings) {
             const baseName = getBasenameWithoutVersion(jsData.icons[key]);
             if (revBaseNames[baseName]) {
               jsData.icons[key] =
-                `${settings.web.images}/${revBaseNames[baseName]}`;
+                `${settings.web.baseDir}/${revBaseNames[baseName]}`;
             }
           });
           return utils.nodeCall(fs.writeFile,
