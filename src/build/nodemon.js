@@ -16,11 +16,15 @@ import gulpNodemon from 'gulp-nodemon';
 export default function nodemonTaskFactory (settings, target) {
   const options = {
     ignore: [
-      'gulp*',
-      `${settings.distbase}/**`,
       settings.src.serviceWorker.data,
       settings.src.serviceWorker.precache,
-      settings.src.assetsJson
+      settings.src.assetsJson,
+      settings.src.assetsRevManifest
+    ],
+    ignoreRoot: [
+      'build',
+      'tests',
+      'node_modules/application/'
     ],
     ext: 'js jsx scss',
     watch: settings.src.baseDir,
@@ -29,8 +33,8 @@ export default function nodemonTaskFactory (settings, target) {
       const tasks = new Set();
 
       changedFiles.forEach((file) => {
-        if (path.extname(file).includes('js')) {
-          if (/\/sw\/?$/.test(path.dirname(file))) {
+        if (/\.js.?$/.test(file)) {
+          if (/\/sw\/?/.test(path.dirname(file))) {
             tasks.add(`bundlesSw_${buildTarget}`);
           } else {
             tasks.add(`bundlesMain_${buildTarget}`);
