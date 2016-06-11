@@ -6,12 +6,17 @@ import React from 'react';
 import ReactSpinner from 'react-spinner';
 
 const Spinner = React.createClass({
+  propTypes: {
+    contained: React.PropTypes.bool
+  },
+
   render: function () {
-    return (
-      <div style={{width: '100%', marginTop: '40%'}} key="spinner">
-        <ReactSpinner className="react-spinner-custom" />
-      </div>
-    );
+    const spinner = <ReactSpinner className="react-spinner-custom" />;
+    const element = this.props.contained
+      ? React.createElement('div', { style: { marginTop: '50%' } }, spinner)
+      : spinner;
+
+    return element;
   }
 });
 

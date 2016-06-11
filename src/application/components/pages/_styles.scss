@@ -9,7 +9,8 @@
 
   // set a layout boundary
   // height: 22rem;
-  // width: 100%;
+  height: 20rem;
+  width: 100%;
   // let content dictate, get perf elsewhere
 
   @include breakpoint(medium) {

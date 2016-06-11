@@ -145,7 +145,10 @@ function createModalElement (component, props, failure) {
 
     return React.createElement(component, props);
   }
-  return React.createElement(Spinner);
+
+  return React.createElement(Spinner, {
+    contained: true
+  });
 }
 /*eslint-enable react/prop-types */
 
