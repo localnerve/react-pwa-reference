@@ -22,17 +22,22 @@ export default function nodemonTaskFactory (settings, target) {
       settings.src.serviceWorker.precache,
       settings.src.assetsJson
     ],
-    ext: 'js jsx',
+    ext: 'js jsx scss',
     watch: settings.src.baseDir,
     tasks: (changedFiles) => {
       const buildTarget = target === 'debug' ? 'dev' : target;
       const tasks = new Set();
 
       changedFiles.forEach((file) => {
-        if (/\/sw\/?$/.test(path.dirname(file))) {
-          tasks.add(`bundlesSw_${buildTarget}`);
+        if (path.extname(file).includes('js')) {
+          if (/\/sw\/?$/.test(path.dirname(file))) {
+            tasks.add(`bundlesSw_${buildTarget}`);
+          } else {
+            tasks.add(`bundlesMain_${buildTarget}`);
+          }
         } else {
-          tasks.add(`bundlesMain_${buildTarget}`);
+          // Must be scss
+          tasks.add(`ccss_${buildTarget}`);
         }
       });
 

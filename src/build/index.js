@@ -187,15 +187,16 @@ function symlinkTaskCompFactory (output) {
 /**
  * Factory for standalone css development task composition.
  *
+ * @param {Boolean} prod - true for production. Defaults to false.
  * @returns The development css task composition.
  */
-function ccssTaskCompFactory () {
+function ccssTaskCompFactory (prod = false) {
   const tasks = {};
 
   return gulp.series(
     function setup (done) {
-      setupEnvironment(false);
-      tasks.ccss = ccssTaskFactory(configCreate().settings, false);
+      setupEnvironment(prod);
+      tasks.ccss = ccssTaskFactory(configCreate().settings, prod);
       done();
     },
     function ccssTask (done) {
@@ -256,6 +257,9 @@ const bundlesMain_prod = bundleCompFactory.bind(this, 'main', 'prod');
 const bundlesSw_dev = bundleCompFactory.bind(this, 'sw', 'dev');
 const bundlesSw_perf = bundleCompFactory.bind(this, 'sw', 'perf');
 const bundlesSw_prod = bundleCompFactory.bind(this, 'sw', 'prod');
+const ccss_dev = ccssTaskCompFactory.bind(this, false);
+const ccss_perf = ccssTaskCompFactory.bind(this, true);
+const ccss_prod = ccssTaskCompFactory.bind(this, true);
 
 export default {
   build,
@@ -266,6 +270,9 @@ export default {
   bundlesSw_perf,
   bundlesSw_prod,
   ccss,
+  ccss_dev,
+  ccss_perf,
+  ccss_prod,
   debug,
   dev,
   dumpconfigDev,
