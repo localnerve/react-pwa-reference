@@ -79,8 +79,6 @@ export default function mainConfig (settings, type) {
   if (type === 'dev') {
     config.output.filename = '[name].js';
     config.output.chunkFilename = '[name].js';
-    config.keepalive = true;
-    config.watch = true;
   } else {
     config.output.filename = '[name].[chunkhash].min.js';
     config.output.chunkFilename = '[name].[chunkhash].min.js';

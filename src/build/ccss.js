@@ -74,7 +74,7 @@ function sass (settings, prod) {
 }
 
 /**
- * Prep assets, compile css, and watch if not prod.
+ * Prep assets and compile css.
  *
  * @param {Object} settings - The project config settings.
  * @param {Boolean} prod - True if production, false otherwise.
@@ -85,14 +85,6 @@ export default function ccssTaskFactory (settings, prod) {
       svg2png.bind(null, settings),
       svgmin.bind(null, settings)
     ),
-    sass.bind(null, settings, prod),
-    function watchSass (done) {
-      if (!prod) {
-        gulp.watch('*.scss', {
-          cwd: settings.src.styles
-        }, sass.bind(null, settings, prod));
-      }
-      done();
-    }
+    sass.bind(null, settings, prod)
   );
 }
