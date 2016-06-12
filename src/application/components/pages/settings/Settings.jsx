@@ -51,7 +51,9 @@ let Settings = React.createClass({
     if (!this.props.failure &&
         this.props.spinner ||
         Object.keys(this.props.transition).length > 0) {
-      return React.createElement(Spinner);
+      return React.createElement(Spinner, {
+        contained: true
+      });
     }
 
     return this.renderSettings();
