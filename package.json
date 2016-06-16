@@ -121,7 +121,7 @@
     "cookie-parser": "1.4.3",
     "csurf": "1.9.0",
     "debug": "github:localnerve/debug#worker-support",
-    "diff": "2.2.1",
+    "diff": "2.2.3",
     "es6-promise": "3.2.1",
     "express": "4.13.4",
     "express-error-handler": "localnerve/express-error-handler",
