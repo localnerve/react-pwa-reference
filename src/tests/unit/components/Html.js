@@ -1,6 +1,7 @@
 /**
  * Copyright (c) 2015, 2016 Alex Grant (@localnerve), LocalNerve LLC
- * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+ * Copyrights licensed under the BSD License. See the accompanying LICENSE file
+ * for terms.
  */
 /* global afterEach, describe, it, beforeEach */
 'use strict';
@@ -64,7 +65,10 @@ describe('html component', function () {
     iframe.contentWindow.document.open();
     iframe.contentWindow.document.write(ReactDOMServer.renderToString(el));
     iframe.contentWindow.document.close();
+
+    /* eslint-disable react/no-render-return-value */
     return ReactDOM.render(el, iframe.contentWindow.document);
+    /* eslint-enable react/no-render-return-value */
   }
 
   beforeEach(function () {
@@ -112,7 +116,8 @@ describe('html component', function () {
     });
 
     expect(manifestLink.length).to.equal(1);
-    expect(testProps.appManifest).to.contain(manifestLink[0].getAttribute('href'));
+    expect(testProps.appManifest)
+      .to.contain(manifestLink[0].getAttribute('href'));
   });
 
   it('should render css meta holders for external stylesheet loads',
