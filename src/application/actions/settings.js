@@ -6,12 +6,10 @@
  */
 /* global window, Promise */
 import debugLib from 'debug';
-import pushUtil from 'utils/push';
-import pushAction from './push';
+import { getSubscriptionId } from 'utils/push';
+import { getTopics } from './push';
 
 const debug = debugLib('actions:settings');
-const getSubscriptionId = pushUtil.getSubscriptionId;
-const getTopics = pushAction.getTopics;
 
 /**
  * Get the background sync permissions.
