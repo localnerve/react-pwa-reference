@@ -1,6 +1,6 @@
 # Client Styles Explanation
 
-All styles here are complied and produce public styles resources. Styles breakdown into three groups:
+All styles here are complied and produce public styles resources. Styles breakdown into two groups:
 
 * Inline styles
 
@@ -30,3 +30,6 @@ See:
 2. [Server-side Main Render](https://github.com/localnerve/react-pwa-reference/blob/master/src/application/server/main.js) - Search for the otherStyles prop.
 
 3. [Html Component](https://github.com/localnerve/react-pwa-reference/blob/master/src/application/components/Html.jsx) - Search for the otherStyles prop.
+
+### Notes
+otherStyles are also being used to deliver and parse component styles (e.g. settings.scss). This is being done here, rather than from the component bundle itself, to prevent any FOUC that might result from injecting styles just in time.
