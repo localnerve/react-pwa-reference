@@ -8,8 +8,11 @@
 
 > A project boilerplate and reference example for ~~isomorphic~~ universal reactiflux progressive web applications.
 
+## Summary
+This project is an evolution of [flux-react-example](https://github.com/localnerve/flux-react-example) and [flux-react-example-sw](https://github.com/localnerve/flux-react-example-sw) that adds evolved tooling and organization. It's a rather complete, performance minded reference PWA that uses data-driven routes and content from an attached service.
+
 ## Environment Prerequisites
-Node >= 4 LTS, recommend [nvm](https://github.com/creationix/nvm)
+Just Node. Node >= 4 LTS, recommend 6, [nvm](https://github.com/creationix/nvm)
 
 ## Stack
 * **N**ode
@@ -17,7 +20,7 @@ Node >= 4 LTS, recommend [nvm](https://github.com/creationix/nvm)
 * **R**eact (Facebook)
 * **F**luxible (Yahoo)
 * sw-toolbox, sw-precache (Google)
-* babel6, gulp4, eslint, mocha, chai, sass
+* babel6, gulp4, webpack, eslint, mocha/chai, sass
 
 ## Setup
 1. `git clone https://github.com/localnerve/react-pwa-reference`
