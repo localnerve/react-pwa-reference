@@ -143,6 +143,7 @@ describe('sw/utils/customHelpers', function () {
           return Promise.resolve(subResponse);
         }
       }, 'POST').then(function (response) {
+        expect(calledSuccessHandler).to.equal(1);
         expect(response).to.eql(subResponse);
         done();
       }).catch(function (error) {
