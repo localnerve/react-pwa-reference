@@ -22,7 +22,9 @@ export default function swMainConfig (settings, type) {
     },
     output: {
       path: settings.dist.scripts,
-      publicPath: settings.web.scripts
+      publicPath: settings.web.scripts,
+      // One name to rule them all
+      filename: '[name].js'
     },
     module: {
       loaders: [
@@ -43,12 +45,6 @@ export default function swMainConfig (settings, type) {
       new webpack.optimize.OccurenceOrderPlugin()
     ]
   });
-
-  if (type === 'dev') {
-    config.output.filename = '[name].js';
-  } else {
-    config.output.filename = '[name].[chunkhash].min.js';
-  }
 
   if (type !== 'prod') {
     config.devtool = 'source-map';
