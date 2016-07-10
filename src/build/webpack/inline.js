@@ -20,6 +20,15 @@ export default function inlineConfig (settings, type) {
       path: settings.dist.scripts,
       filename: path.basename(settings.dist.inlineScript)
     },
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /^\/node_modules/,
+          loader: 'babel-loader'
+        }
+      ]
+    },
     stats: {
       colors: true
     }

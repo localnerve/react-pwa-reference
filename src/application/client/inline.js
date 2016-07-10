@@ -2,35 +2,48 @@
  * Copyright (c) 2016 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  *
- * All custom header javascript.
+ * The inline javascript, small, run first.
+ *
  * This is the source of the built asset, not the asset itself.
  * This is an entry module, so there are no global concerns here.
+ * You might save a couple bytes by reverting this to es5 (should that arise).
  */
-/*eslint no-console:0 */
-/* global document, window */
+/*eslint-disable no-console */
+/* global document, Promise */
+
+import FontFaceObserver from 'fontfaceobserver';
+import { loadCSS } from 'fg-loadcss';
+
+const docEl = document.documentElement;
+
+// --------------------------------------------------
+// js happens
+//
+docEl.className = docEl.className.replace('no-js', '');
 
 // --------------------------------------------------
 // Fontface observer to quickly load fonts.
-// Relies on Promise polyfill.
+// Relies on Promise.
 //
+if (Promise) {
+  const font = new FontFaceObserver('Source Sans Pro', {});
 
-require('fontfaceobserver/fontfaceobserver');
-
-new window.FontFaceObserver('Source Sans Pro', {})
-.check()
-.then(function() {
-  window.document.documentElement.className += 'fonts-loaded';
-})
-.catch(function (error) {
-  console.error('font failed to load: ', error);
-});
+  font.load().then(() => {
+    docEl.className += ' fonts-loaded';
+  })
+  .catch((error) => {
+    console.error('font failed to load: ', error);
+  });
+} else {
+  // Just let font-face work normally.
+  docEl.className += ' fonts-loaded';
+}
 
 // --------------------------------------------------
 // Load non-critical stylesheets
 //
-var i, loadCss = require('fg-loadcss').loadCSS,
-  cssHrefs = document.querySelectorAll('meta[content$=".css"]');
+const cssHrefs = document.querySelectorAll('meta[content$=".css"]');
 
-for (i = 0; i < cssHrefs.length; i++) {
-  loadCss(cssHrefs[i].content);
+for (let i = 0; i < cssHrefs.length; i++) {
+  loadCSS(cssHrefs[i].content);
 }

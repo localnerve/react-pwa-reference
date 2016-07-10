@@ -43,7 +43,7 @@ let Html = React.createClass({
     });
 
     return (
-      <html>
+      <html className="no-js">
         <head>
           <meta charSet="utf-8" />
           <title>{this.props.currentPageTitle}</title>
