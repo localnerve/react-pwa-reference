@@ -76,7 +76,7 @@
     "chai": "3.5.0",
     "chai-as-promised": "5.3.0",
     "colors": "1.1.2",
-    "coveralls": "2.11.9",
+    "coveralls": "2.11.10",
     "cross-env": "1.0.8",
     "del": "2.2.1",
     "eslint": "3.0.1",
