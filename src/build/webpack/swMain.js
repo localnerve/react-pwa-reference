@@ -42,7 +42,7 @@ export default function swMainConfig (settings, type) {
     target: 'webworker',
     plugins: [
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurenceOrderPlugin()
+      new webpack.optimize.OccurrenceOrderPlugin()
     ]
   });
 

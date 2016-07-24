@@ -35,7 +35,7 @@ export default function swRegConfig (settings, type) {
     },
     plugins: [
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurenceOrderPlugin()
+      new webpack.optimize.OccurrenceOrderPlugin()
     ]
   });
 

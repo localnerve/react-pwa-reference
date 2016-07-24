@@ -48,7 +48,7 @@ export default function mainConfig (settings, type) {
       }),
       new webpack.DefinePlugin(definitions),
       new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurenceOrderPlugin(),
+      new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.NormalModuleReplacementPlugin(
         /for\-each/, require.resolve('lodash/forEach')
       ),
