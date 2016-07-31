@@ -44,14 +44,15 @@ describe('sw/utils/debug', function () {
     });
 
     it('should call idb get', function (done) {
-      debugLib.load().then(function (namespace) {
-        expect(namespace).to.equal(mockValue);
-        expect(calledGet).to.equal(1);
-        done();
-      })
-      .catch(function (error) {
-        done (error || unexpectedFlowError);
-      });
+      debugLib.load()
+        .then(function (namespace) {
+          expect(namespace).to.equal(mockValue);
+          expect(calledGet).to.equal(1);
+          done();
+        })
+        .catch(function (error) {
+          done (error || unexpectedFlowError);
+        });
     });
   });
 
@@ -71,25 +72,27 @@ describe('sw/utils/debug', function () {
     });
 
     it('should call del if input undefined', function (done) {
-      debugLib.save().then(function () {
-        expect(calledDel).to.equal(1);
-        expect(calledPut).to.equal(0);
-        done();
-      })
-      .catch(function (error) {
-        done(error || unexpectedFlowError);
-      });
+      debugLib.save()
+        .then(function () {
+          expect(calledDel).to.equal(1);
+          expect(calledPut).to.equal(0);
+          done();
+        })
+        .catch(function (error) {
+          done(error || unexpectedFlowError);
+        });
     });
 
     it('should call put if input non-null', function (done) {
-      debugLib.save('*').then(function () {
-        expect(calledPut).to.equal(1);
-        expect(calledDel).to.equal(0);
-        done();
-      })
-      .catch(function (error) {
-        done(error || unexpectedFlowError);
-      });
+      debugLib.save('*')
+        .then(function () {
+          expect(calledPut).to.equal(1);
+          expect(calledDel).to.equal(0);
+          done();
+        })
+        .catch(function (error) {
+          done(error || unexpectedFlowError);
+        });
     });
   });
 });

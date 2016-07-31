@@ -86,7 +86,7 @@ app.use(bodyParser.json());
 app.use(csrf({ cookie: true }));
 
 // Register services, handle service requests
-var fetchrPlugin = fluxibleApp.getPlugin('FetchrPlugin');
+const fetchrPlugin = fluxibleApp.getPlugin('FetchrPlugin');
 fetchrPlugin.registerService(servicesRoutes);
 fetchrPlugin.registerService(servicesPage);
 fetchrPlugin.registerService(servicesContact);

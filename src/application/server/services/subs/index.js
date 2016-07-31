@@ -19,7 +19,7 @@ const debug = debugLib('services:subs');
 // Subscription storage should not be in this process in a real application.
 // This is particularly fatal for subs, because browser sub state will be out
 // of sync with the server.
-var subscriptions = {};
+const subscriptions = {};
 
 /**
  * Create a new push notification subscription.
@@ -105,7 +105,7 @@ export function read (subscriptionId, callback) {
  * @param {Function} callback - Called on completion.
  */
 export function update (subscriptionId, updateTopics, endpoint, newId, callback) {
-  var subscription = subscriptions[subscriptionId];
+  const subscription = subscriptions[subscriptionId];
 
   if (!subscription) {
     debug(`update: No subscription found for ${subscriptionId}`);

@@ -27,6 +27,8 @@ export default function copyTaskFactory (settings) {
     ], {
       cwd: settings.assets.baseDir
     })
-    .pipe(gulp.dest(settings.dist.baseDir));
+      .pipe(
+        gulp.dest(settings.dist.baseDir)
+      );
   }
 }

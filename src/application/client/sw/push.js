@@ -23,48 +23,48 @@ const pushUrl = '/_api/push';
  */
 function getPayloadAndShowNotification (timestamp) {
   return self.registration.pushManager.getSubscription()
-  .then((subscription) => {
-    let payloadUrl = addOrReplaceUrlSearchParameter(
-      pushUrl, 'subscriptionId', pushUtil.getSubscriptionId(subscription)
-    );
-    payloadUrl = addOrReplaceUrlSearchParameter(
-      payloadUrl, 'timestamp', timestamp
-    );
+    .then((subscription) => {
+      let payloadUrl = addOrReplaceUrlSearchParameter(
+        pushUrl, 'subscriptionId', pushUtil.getSubscriptionId(subscription)
+      );
+      payloadUrl = addOrReplaceUrlSearchParameter(
+        payloadUrl, 'timestamp', timestamp
+      );
 
-    return fetch(payloadUrl).then((response) => {
-      debug('Received push payload response', response);
+      return fetch(payloadUrl).then((response) => {
+        debug('Received push payload response', response);
 
-      if (response.status !== 200) {
-        throw new Error(
-          `Push payload response error, status ${response.status}`
-        );
-      }
+        if (response.status !== 200) {
+          throw new Error(
+            `Push payload response error, status ${response.status}`
+          );
+        }
 
-      return response.json().then((data) => {
-        debug('Received push payload data', data);
+        return response.json().then((data) => {
+          debug('Received push payload data', data);
 
-        const title = data.title;
-        const options = {
-          body: data.message,
-          icon: data.icon,
-          tag: data.tag,
-          data: {
-            url: data.url
-          }
-        };
+          const title = data.title;
+          const options = {
+            body: data.message,
+            icon: data.icon,
+            tag: data.tag,
+            data: {
+              url: data.url
+            }
+          };
 
-        return self.registration.showNotification(title, options);
-      });
-    }).catch((error) => {
-      debug('Failed to get push payload', error);
+          return self.registration.showNotification(title, options);
+        });
+      }).catch((error) => {
+        debug('Failed to get push payload', error);
 
-      return self.registration.showNotification('An error occurred', {
-        body: `Failed to get push payload from ${payloadUrl}`,
-        icon: swData.manifest && swData.manifest.pushNotificationIcon || null,
-        tag: 'notification-error'
+        return self.registration.showNotification('An error occurred', {
+          body: `Failed to get push payload from ${payloadUrl}`,
+          icon: swData.manifest && swData.manifest.pushNotificationIcon || null,
+          tag: 'notification-error'
+        });
       });
     });
-  });
 }
 
 /**
@@ -112,16 +112,16 @@ self.addEventListener('notificationclick', (event) => {
 self.addEventListener('pushsubscriptionchange', (event) => {
   event.waitUntil(
     self.registration.pushManager.getSubscription()
-    .then((subscription) => {
-      const subscriptionId = pushUtil.getSubscriptionId(subscription);
-      if (subscriptionId) {
-        return pushSync(subscriptionId);
-      }
-      throw new Error('could not getSubscriptionId');
-    })
-    .catch((error) => {
-      // catch here and just log for now
-      debug('pushsubscriptionchange failed: ', error);
-    })
+      .then((subscription) => {
+        const subscriptionId = pushUtil.getSubscriptionId(subscription);
+        if (subscriptionId) {
+          return pushSync(subscriptionId);
+        }
+        throw new Error('could not getSubscriptionId');
+      })
+      .catch((error) => {
+        // catch here and just log for now
+        debug('pushsubscriptionchange failed: ', error);
+      })
   );
 });

@@ -88,6 +88,16 @@ export function openModal (context, payload, done) {
       });
 
       executeCustomAction(context, payload)
+        .then(() => {
+          done();
+        })
+        .catch((error) => {
+          context.dispatch('MODAL_FAILURE', error);
+          done(error);
+        });
+    });
+  } else {
+    executeCustomAction(context, payload)
       .then(() => {
         done();
       })
@@ -95,16 +105,6 @@ export function openModal (context, payload, done) {
         context.dispatch('MODAL_FAILURE', error);
         done(error);
       });
-    });
-  } else {
-    executeCustomAction(context, payload)
-    .then(() => {
-      done();
-    })
-    .catch((error) => {
-      context.dispatch('MODAL_FAILURE', error);
-      done(error);
-    });
   }
 }
 

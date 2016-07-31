@@ -32,48 +32,49 @@ const settings = config.settings;
 export default function robots (req, res, next) {
   debug('Read routes and robots template ', settings.dist.robotsTemplate);
 
-  Promise.all([
-    utils.nodeCall(serviceData.fetch, {
-      resource: config.data.FRED.mainResource
-    }),
+  Promise
+    .all([
+      utils.nodeCall(serviceData.fetch, {
+        resource: config.data.FRED.mainResource
+      }),
 
-    utils.nodeCall(fs.readFile, settings.dist.robotsTemplate, {
-      encoding: 'utf8'
-    })
-  ])
-  .then((results) => {
-    const robotsTemplate = results[1],
-      routes = results[0].content;
-
-    debug('Got template', robotsTemplate);
-
-    const robotsContent = robotsTemplate
-      .replace(/(SITEMAPURL)/i, () => {
-        var ssl = settings.web.sslRemote || settings.web.ssl;
-
-        return urlLib.format({
-          protocol: ssl ? 'https' : 'http',
-          hostname: settings.web.appHostname,
-          pathname: settings.web.sitemap
-        });
+      utils.nodeCall(fs.readFile, settings.dist.robotsTemplate, {
+        encoding: 'utf8'
       })
-      .replace(/(ALLOWURLS)/i, () => {
-        return Object.keys(routes)
-          .filter((key) => {
-            return routes[key].mainNav;
-          })
-          .map((key) => {
-            return 'Allow: ' + routes[key].path;
-          })
-          .join('\n');
-      });
+    ])
+    .then((results) => {
+      const robotsTemplate = results[1],
+        routes = results[0].content;
 
-    res.header('Content-Type', 'text/plain');
-    res.send(robotsContent);
-  })
-  .catch((err) => {
-    debug('Request failed: ', err);
-    err.status = err.statusCode = (err.statusCode || err.status || 500);
-    next(err);
-  });
+      debug('Got template', robotsTemplate);
+
+      const robotsContent = robotsTemplate
+        .replace(/(SITEMAPURL)/i, () => {
+          const ssl = settings.web.sslRemote || settings.web.ssl;
+
+          return urlLib.format({
+            protocol: ssl ? 'https' : 'http',
+            hostname: settings.web.appHostname,
+            pathname: settings.web.sitemap
+          });
+        })
+        .replace(/(ALLOWURLS)/i, () => {
+          return Object.keys(routes)
+            .filter((key) => {
+              return routes[key].mainNav;
+            })
+            .map((key) => {
+              return 'Allow: ' + routes[key].path;
+            })
+            .join('\n');
+        });
+
+      res.header('Content-Type', 'text/plain');
+      res.send(robotsContent);
+    })
+    .catch((err) => {
+      debug('Request failed: ', err);
+      err.status = err.statusCode = (err.statusCode || err.status || 500);
+      next(err);
+    });
 }

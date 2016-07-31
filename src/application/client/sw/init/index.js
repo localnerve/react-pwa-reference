@@ -34,8 +34,7 @@ function startRequestSync (payload) {
   if (shouldRun) {
     debug('running request sync');
 
-    return serviceAllRequests(payload.apis)
-    .catch((error) => {
+    return serviceAllRequests(payload.apis).catch((error) => {
       debug('serviceAllRequests failed ', error);
     });
   } else {
@@ -63,12 +62,12 @@ function updateAndSetup (payload) {
       debug('running setup');
 
       return backgrounds(payload.stores)
-      .then(() => {
-        return apiRequests(payload.apis);
-      })
-      .then(() => {
-        return routes(payload.stores);
-      });
+        .then(() => {
+          return apiRequests(payload.apis);
+        })
+        .then(() => {
+          return routes(payload.stores);
+        });
     } else {
       debug('setup skipped');
     }
@@ -100,20 +99,20 @@ export function initCommand (payload, responder) {
   debug('Running init, payload:', payload);
 
   return updateAndSetup(payload)
-  .then(() => {
-    return startRequestSync(payload);
-  })
-  .then(() => {
-    return responder({
-      error: null
+    .then(() => {
+      return startRequestSync(payload);
+    })
+    .then(() => {
+      return responder({
+        error: null
+      });
+    })
+    .catch((error) => {
+      debug('init failed', error);
+      return responder({
+        error: error.toString()
+      });
     });
-  })
-  .catch((error) => {
-    debug('init failed', error);
-    return responder({
-      error: error.toString()
-    });
-  });
 }
 
 /**
@@ -122,16 +121,17 @@ export function initCommand (payload, responder) {
  * @return {Promise} A Promise that resolves to a Object with the init payload.
  */
 export function initData () {
-  return Promise.all([
-    stores.read(),
-    apis.read(),
-    timestamp.read()
-  ])
-  .then((data) => {
-    return {
-      stores: data[0],
-      apis: data[1],
-      timestamp: data[2]
-    };
-  });
+  return Promise
+    .all([
+      stores.read(),
+      apis.read(),
+      timestamp.read()
+    ])
+    .then((data) => {
+      return {
+        stores: data[0],
+        apis: data[1],
+        timestamp: data[2]
+      };
+    });
 }

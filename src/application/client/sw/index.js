@@ -41,22 +41,22 @@ setupAssetRequests();
 // If all initData exists (and service-worker is starting), run the init command.
 // The init message may never come if service-worker was restarted by the system.
 const initPromise = initData()
-.then((payload) => {
-  payload.startup = true;
-  return initCommand(payload, (res) => {
-    if (res.error) {
-      console.error('startup init command failed', res.error);
-    }
+  .then((payload) => {
+    payload.startup = true;
+    return initCommand(payload, (res) => {
+      if (res.error) {
+        console.error('startup init command failed', res.error);
+      }
+    });
+  })
+  .catch((error) => {
+    debug('startup not running init command', error);
+  })
+  .then(() => {
+    // Successful or not, we're done and don't want to impede other fetch
+    // handlers.
+    toolbox.router.default = null;
   });
-})
-.catch((error) => {
-  debug('startup not running init command', error);
-})
-.then(() => {
-  // Successful or not, we're done and don't want to impede other fetch
-  // handlers.
-  toolbox.router.default = null;
-});
 
 // #43, Setup a temporary default handler for async startup needs.
 toolbox.router.default =

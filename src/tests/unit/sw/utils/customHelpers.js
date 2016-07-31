@@ -317,20 +317,20 @@ describe('sw/utils/customHelpers', function () {
       options = options || {};
 
       return promise
-      .then(function (response) {
-        if (!options.ignoreCacheResponse) {
-          expect(response).to.eql(cacheResponse);
-        }
-        return global.caches.open(toolbox.options.cache.name);
-      })
-      .then(function (cache) {
-        return cache.match(requestCacheUrl);
-      })
-      .then(function (response) {
-        if (!options.ignoreNetworkResponse) {
-          expect(response).to.eql(networkResponse);
-        }
-      });
+        .then(function (response) {
+          if (!options.ignoreCacheResponse) {
+            expect(response).to.eql(cacheResponse);
+          }
+          return global.caches.open(toolbox.options.cache.name);
+        })
+        .then(function (cache) {
+          return cache.match(requestCacheUrl);
+        })
+        .then(function (response) {
+          if (!options.ignoreNetworkResponse) {
+            expect(response).to.eql(networkResponse);
+          }
+        });
     }
 
     it('should respond from cache and update cache with new response',
@@ -338,14 +338,14 @@ describe('sw/utils/customHelpers', function () {
       testCacheAndNetwork(
         customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache)
       )
-      .then(function () {
-        // b/c the difference was greater than 1%
-        expect(calledPostMessage).to.equal(1);
-        done();
-      })
-      .catch(function (error) {
-        done(error || unexpectedFlowError);
-      });
+        .then(function () {
+          // b/c the difference was greater than 1%
+          expect(calledPostMessage).to.equal(1);
+          done();
+        })
+        .catch(function (error) {
+          done(error || unexpectedFlowError);
+        });
     });
 
     it('should call updateHandler as specified', function (done) {
@@ -361,41 +361,41 @@ describe('sw/utils/customHelpers', function () {
           calledUpdateHandler++;
         })
       )
-      .then(function () {
-        expect(calledPostMessage).to.equal(0);
-        expect(calledUpdateHandler).to.equal(1);
-        done();
-      })
-      .catch(function (error) {
-        done(error || unexpectedFlowError);
-      });
+        .then(function () {
+          expect(calledPostMessage).to.equal(0);
+          expect(calledUpdateHandler).to.equal(1);
+          done();
+        })
+        .catch(function (error) {
+          done(error || unexpectedFlowError);
+        });
     });
 
     it('should not call updateHandler if no difference', function (done) {
       var calledUpdateHandler = 0;
 
       global.caches.open(toolbox.options.cache.name)
-      .then(function (cache) {
-        // Make previously cached response identical to networkResponse.
-        return cache.put(requestCacheUrl, cacheResponseIdentical);
-      })
-      .then(function () {
-        return testCacheAndNetwork(
-          customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache,
-          function () {
-            calledUpdateHandler++;
-          }), {
-            ignoreCacheResponse: true
-          }
-        );
-      })
-      .then(function () {
-        expect(calledUpdateHandler).to.equal(0);
-        done();
-      })
-      .catch(function (error) {
-        done(error || unexpectedFlowError);
-      });
+        .then(function (cache) {
+          // Make previously cached response identical to networkResponse.
+          return cache.put(requestCacheUrl, cacheResponseIdentical);
+        })
+        .then(function () {
+          return testCacheAndNetwork(
+            customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache,
+            function () {
+              calledUpdateHandler++;
+            }), {
+              ignoreCacheResponse: true
+            }
+          );
+        })
+        .then(function () {
+          expect(calledUpdateHandler).to.equal(0);
+          done();
+        })
+        .catch(function (error) {
+          done(error || unexpectedFlowError);
+        });
     });
 
     it('should handle no previous cached response, not call updateHandler',
@@ -403,27 +403,27 @@ describe('sw/utils/customHelpers', function () {
       var calledUpdateHandler = 0;
 
       global.caches.open(toolbox.options.cache.name)
-      .then(function (cache) {
-        // Remove previously cached response.
-        return cache.put(requestCacheUrl, undefined);
-      })
-      .then(function () {
-        return testCacheAndNetwork(
-          customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache,
-          function () {
-            calledUpdateHandler++;
-          }), {
-            ignoreCacheResponse: true
-          }
-        );
-      })
-      .then(function () {
-        expect(calledUpdateHandler).to.equal(0);
-        done();
-      })
-      .catch(function (error) {
-        done(error || unexpectedFlowError);
-      });
+        .then(function (cache) {
+          // Remove previously cached response.
+          return cache.put(requestCacheUrl, undefined);
+        })
+        .then(function () {
+          return testCacheAndNetwork(
+            customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache,
+            function () {
+              calledUpdateHandler++;
+            }), {
+              ignoreCacheResponse: true
+            }
+          );
+        })
+        .then(function () {
+          expect(calledUpdateHandler).to.equal(0);
+          done();
+        })
+        .catch(function (error) {
+          done(error || unexpectedFlowError);
+        });
     });
 
     it('should handle both no cached response AND bad network response',
@@ -435,24 +435,24 @@ describe('sw/utils/customHelpers', function () {
       }));
 
       global.caches.open(toolbox.options.cache.name)
-      .then(function (cache) {
-        // Remove previously cached response.
-        return cache.put(requestCacheUrl, undefined);
-      })
-      .then(function () {
-        return testCacheAndNetwork(
-          customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache), {
-            ignoreCacheResponse: true,
-            ignoreNetworkResponse: true
-          }
-        );
-      })
-      .then(function () {
-        done(unexpectedFlowError);
-      })
-      .catch(function () {
-        done();
-      });
+        .then(function (cache) {
+          // Remove previously cached response.
+          return cache.put(requestCacheUrl, undefined);
+        })
+        .then(function () {
+          return testCacheAndNetwork(
+            customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache), {
+              ignoreCacheResponse: true,
+              ignoreNetworkResponse: true
+            }
+          );
+        })
+        .then(function () {
+          done(unexpectedFlowError);
+        })
+        .catch(function () {
+          done();
+        });
     });
   });
 });

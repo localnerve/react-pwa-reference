@@ -50,8 +50,7 @@ export { OPERATIONS as _ops }
 export function deferRequest (apiPath, request) {
   const hasSync = !!self.registration.sync;
 
-  return dehydrateRequest(request, 'json')
-  .then((dehydratedRequest) => {
+  return dehydrateRequest(request, 'json').then((dehydratedRequest) => {
     // This is THE source of the deferred request timestamp.
     const timestamp = Date.now().toString(),
       fallback = filters.getFallback(dehydratedRequest.body, true) || {};
@@ -68,43 +67,43 @@ export function deferRequest (apiPath, request) {
 
     // Add it to IndexedDB.
     return idb.put(idb.stores.requests, timestamp, dehydratedRequest)
-    .then(() => {
-      // If no sync and user replayable, show user a failure.
-      const shouldSucceed = hasSync || !fallback.userReplayable,
-        status = {
-          code: 400,
-          text: 'failed'
-        };
+      .then(() => {
+        // If no sync and user replayable, show user a failure.
+        const shouldSucceed = hasSync || !fallback.userReplayable,
+          status = {
+            code: 400,
+            text: 'failed'
+          };
 
-      // Otherwise, it should succeed.
-      // So, defer and register for a one-off background-sync if possible.
-      if (shouldSucceed) {
-        status.code = 203;
-        status.text = 'deferred';
+        // Otherwise, it should succeed.
+        // So, defer and register for a one-off background-sync if possible.
+        if (shouldSucceed) {
+          status.code = 203;
+          status.text = 'deferred';
 
-        if (hasSync) {
-          return self.registration.sync.register([
-            OPERATIONS.deferredRequests,
-            apiPath
-          ].join(OPERATIONS.delimiter))
-          .catch((error) => {
-            debug('sync register failed ', error);
-          })
-          // Always succeed.
-          .then(() => {
-            return status;
-          });
+          if (hasSync) {
+            return self.registration.sync.register([
+              OPERATIONS.deferredRequests,
+              apiPath
+            ].join(OPERATIONS.delimiter))
+              .catch((error) => {
+                debug('sync register failed ', error);
+              })
+              // Always succeed.
+              .then(() => {
+                return status;
+              });
+          }
         }
-      }
 
-      return status;
-    })
-    .then((status) => {
-      return new Response(null, {
-        status: status.code,
-        statusText: status.text
+        return status;
+      })
+      .then((status) => {
+        return new Response(null, {
+          status: status.code,
+          statusText: status.text
+        });
       });
-    });
   });
 }
 
@@ -219,43 +218,43 @@ function serviceOneRequest (dehydratedRequest, apis, options = {}) {
 
     // Make the network request, delete the stored request on success.
     return fetch(req)
-    .then((response) => {
-      if (successResponses.test(response.status)) {
-        debug('successful request sync', req);
-        return idb.del(idb.stores.requests, timestamp);
-      }
-      throw response;
-    })
-    .catch((error) => {
-      if (options.noManage) {
-        return Promise.reject(error);
-      }
-
-      debug('network failure', error);
-
-      // Abandonment case, 1 based failureCount - but inc'd after this
-      // so count >= MAX_FAILURES (first is undef).
-      if (dehydratedRequest.failureCount &&
-          dehydratedRequest.failureCount >= MAX_FAILURES) {
-        debug('request ABANDONED after MAX_FAILURES', dehydratedRequest);
-
-        return manageAbandonedRequest(dehydratedRequest)
-        .then(() => {
+      .then((response) => {
+        if (successResponses.test(response.status)) {
+          debug('successful request sync', req);
           return idb.del(idb.stores.requests, timestamp);
-        })
-        .then(() => {
-          // Resolve to the abandoned dehydratedRequest.
-          return dehydratedRequest;
-        });
-      }
+        }
+        throw response;
+      })
+      .catch((error) => {
+        if (options.noManage) {
+          return Promise.reject(error);
+        }
 
-      // Maintain failure count.
-      dehydratedRequest.failureCount =
-        (dehydratedRequest.failureCount || 0) + 1;
+        debug('network failure', error);
 
-      // Update the stored dehydratedRequest (continue deferral)
-      return idb.put(idb.stores.requests, timestamp, dehydratedRequest);
-    });
+        // Abandonment case, 1 based failureCount - but inc'd after this
+        // so count >= MAX_FAILURES (first is undef).
+        if (dehydratedRequest.failureCount &&
+            dehydratedRequest.failureCount >= MAX_FAILURES) {
+          debug('request ABANDONED after MAX_FAILURES', dehydratedRequest);
+
+          return manageAbandonedRequest(dehydratedRequest)
+            .then(() => {
+              return idb.del(idb.stores.requests, timestamp);
+            })
+            .then(() => {
+              // Resolve to the abandoned dehydratedRequest.
+              return dehydratedRequest;
+            });
+        }
+
+        // Maintain failure count.
+        dehydratedRequest.failureCount =
+          (dehydratedRequest.failureCount || 0) + 1;
+
+        // Update the stored dehydratedRequest (continue deferral)
+        return idb.put(idb.stores.requests, timestamp, dehydratedRequest);
+      });
   }
 
   // No apiInfo found for dehydratedRequest.apiPath
@@ -283,22 +282,22 @@ function serviceOneRequest (dehydratedRequest, apis, options = {}) {
  */
 export function serviceAllRequests (apis, options = {}) {
   return idb.all(idb.stores.requests)
-  .then((allRequests) => {
-    return serviceable.getRequests(allRequests)
+    .then((allRequests) => {
+      return serviceable.getRequests(allRequests)
+        .then((serviceableRequests) => {
+          return serviceable.pruneRequests(allRequests, serviceableRequests)
+            .then(() => {
+              return serviceableRequests;
+            });
+        });
+    })
     .then((serviceableRequests) => {
-      return serviceable.pruneRequests(allRequests, serviceableRequests)
-      .then(() => {
-        return serviceableRequests;
-      });
+      return Promise.all(
+        serviceableRequests.map((dehydratedRequest) => {
+          return serviceOneRequest(dehydratedRequest, apis, options);
+        })
+      );
     });
-  })
-  .then((serviceableRequests) => {
-    return Promise.all(
-      serviceableRequests.map((dehydratedRequest) => {
-        return serviceOneRequest(dehydratedRequest, apis, options);
-      })
-    );
-  });
 }
 
 /**
@@ -327,33 +326,34 @@ self.addEventListener('sync', (event) => {
 
   if (eventOperation === OPERATIONS.deferredRequests) {
     const apiPath = eventDetail;
+    const apiPathTest = apiPath
+      ? Promise.resolve()
+      : Promise.reject(new Error('bad apiPath supplied'));
 
     event.waitUntil(
-      ( apiPath ? Promise.resolve() :
-        Promise.reject(new Error('bad apiPath supplied')) )
-      .then(() => {
-        return fetch('/?render=0', {
-          credentials: 'include'
-        });
-      })
-      .then((response) => {
-        if (response.ok) {
-          return response.text();
-        }
-
-        throw new Error('sync event bad GET response');
-      })
-      .then((text) => {
-        var apis = {
-          [apiPath]: {
-            xhrContext: createXHRContextFromText(text)
+      apiPathTest
+        .then(() => {
+          return fetch('/?render=0', {
+            credentials: 'include'
+          });
+        })
+        .then((response) => {
+          if (response.ok) {
+            return response.text();
           }
-        };
+          throw new Error('sync event bad GET response');
+        })
+        .then((text) => {
+          const apis = {
+            [apiPath]: {
+              xhrContext: createXHRContextFromText(text)
+            }
+          };
 
-        return serviceAllRequests(apis, {
-          noManage: true
-        });
-      })
+          return serviceAllRequests(apis, {
+            noManage: true
+          });
+        })
     );
   }
 });

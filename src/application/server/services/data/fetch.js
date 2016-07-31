@@ -30,40 +30,40 @@ export function fetchOne (params, callback) {
   }
 
   request.get(params.url)
-  .set('User-Agent', 'superagent')
-  .set('Accept', config.FRED.mediaType())
-  .end((err, res) => {
-    if (err) {
-      debug(`GET failed for ${params.url}: ${err}`);
-      return callback(err);
-    }
-
-    let resource;
-    const content = res.body && res.body.content;
-
-    if (content) {
-      debug(`Content successfully retrieved for ${params.url}`);
-
-      cache.put(
-        params, new Buffer(content, config.FRED.contentEncoding()).toString()
-      );
-
-      resource = cache.get(params.resource);
-
-      if (resource) {
-        return callback(null, resource);
+    .set('User-Agent', 'superagent')
+    .set('Accept', config.FRED.mediaType())
+    .end((err, res) => {
+      if (err) {
+        debug(`GET failed for ${params.url}: ${err}`);
+        return callback(err);
       }
 
-      return callback(
-        new Error(
-          `Requested resource ${params.resource} not found for ${params.url}`
-        )
-      );
-    }
+      let resource;
+      const content = res.body && res.body.content;
 
-    debug(`Content not found for ${params.url}`, res.body);
-    return callback(new Error(`Content not found for ${params.url}`));
-  });
+      if (content) {
+        debug(`Content successfully retrieved for ${params.url}`);
+
+        cache.put(
+          params, new Buffer(content, config.FRED.contentEncoding()).toString()
+        );
+
+        resource = cache.get(params.resource);
+
+        if (resource) {
+          return callback(null, resource);
+        }
+
+        return callback(
+          new Error(
+            `Requested resource ${params.resource} not found for ${params.url}`
+          )
+        );
+      }
+
+      debug(`Content not found for ${params.url}`, res.body);
+      return callback(new Error(`Content not found for ${params.url}`));
+    });
 }
 
 /**
@@ -93,8 +93,8 @@ export function fetchAll (callback) {
       return callback(err);
     }
 
-    Promise.all(
-      Object.keys(routes).map((route) => {
+    Promise
+      .all(Object.keys(routes).map((route) => {
         return new Promise((resolve, reject) => {
           fetchOne(routes[route].action.params, (err, res) => {
             if (err) {
@@ -103,11 +103,8 @@ export function fetchAll (callback) {
             return resolve(res);
           });
         });
-      })
-    )
-    .then((result) => {
-      callback(null, result);
-    }, callback);
+      }))
+      .then((result) => callback(null, result), callback);
   });
 }
 

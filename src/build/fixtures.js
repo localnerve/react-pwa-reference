@@ -22,20 +22,19 @@ export default function fixturesTaskFactory (settings) {
   };
 
   return function fixtures () {
-    return utils.nodeCall(fs.readdir, generatorsDir)
-    .then((generators) => {
-      return Promise.all(generators.map((generatorScript) => {
-        const generator = path.resolve('.', generatorsDir, generatorScript);
-        return utils.nodeCall(
-          require(generator).run,
-          options[generatorScript]
-        );
-      }))
-      .catch((error) => {
-        throw new Error(`fixtures task failed: ${error}`);
-      })
-    })
-    .catch((error) => {
+    return utils.nodeCall(fs.readdir, generatorsDir).then((generators) => {
+      return Promise
+        .all(generators.map((generatorScript) => {
+          const generator = path.resolve('.', generatorsDir, generatorScript);
+          return utils.nodeCall(
+            require(generator).run,
+            options[generatorScript]
+          );
+        }))
+        .catch((error) => {
+          throw new Error(`fixtures task failed: ${error}`);
+        })
+    }).catch((error) => {
       throw new Error(`fixtures task failed: ${error}`);
     });
   };

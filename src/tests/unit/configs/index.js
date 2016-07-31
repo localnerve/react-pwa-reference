@@ -90,30 +90,30 @@ describe('configs', function () {
 
       Promise.all([
         utils.nodeCall(fs.stat, assetsJsonFile)
-        .catch(function (err) {
-          if (err.code === 'ENOENT') {
-            console.log('assets json did not exist');
-            return utils.nodeCall(
-              fs.writeFile, assetsJsonFile, assetsJsonData
-            );
-          }
-          throw err;
-        }),
+          .catch(function (err) {
+            if (err.code === 'ENOENT') {
+              console.log('assets json did not exist');
+              return utils.nodeCall(
+                fs.writeFile, assetsJsonFile, assetsJsonData
+              );
+            }
+            throw err;
+          }),
         utils.nodeCall(fs.stat, revManifestFile)
-        .catch(function (err) {
-          if (err.code === 'ENOENT') {
-            console.log('assets rev manifest did not exist');
-            return utils.nodeCall(
-              fs.writeFile, revManifestFile, revManifestData
-            );
-          }
-          throw err;
-        })
+          .catch(function (err) {
+            if (err.code === 'ENOENT') {
+              console.log('assets rev manifest did not exist');
+              return utils.nodeCall(
+                fs.writeFile, revManifestFile, revManifestData
+              );
+            }
+            throw err;
+          })
       ])
-      .then(function () {
-        done();
-      })
-      .catch(done);
+        .then(function () {
+          done();
+        })
+        .catch(done);
     }
 
     beforeEach(function () {

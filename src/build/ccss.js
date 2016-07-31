@@ -21,8 +21,12 @@ function svg2png (settings) {
   return gulp.src('**/*.svg', {
     cwd: settings.assets.images
   })
-  .pipe(gulpSvg2png())
-  .pipe(gulp.dest(settings.dist.images));
+    .pipe(
+      gulpSvg2png()
+    )
+    .pipe(
+      gulp.dest(settings.dist.images)
+    );
 }
 
 /**
@@ -34,8 +38,12 @@ function svgmin (settings) {
   return gulp.src('**/*.svg', {
     cwd: settings.assets.images
   })
-  .pipe(gulpSvgmin())
-  .pipe(gulp.dest(settings.dist.images));
+    .pipe(
+      gulpSvgmin()
+    )
+    .pipe(
+      gulp.dest(settings.dist.images)
+    );
 }
 
 /**
@@ -50,27 +58,33 @@ function sass (settings, prod) {
   return gulp.src('*.scss', {
     cwd: settings.src.styles
   })
-  .pipe(gulpSass({
-    functions: assetFunctions({
-      images_path: settings.dist.images,
-      http_images_path: settings.web.images,
-      fonts_path: settings.dist.fonts,
-      http_fonts_path: settings.web.fonts
-    }),
-    includePaths: [
-      settings.vendor.css,
-      settings.src.components,
-      'node_modules/react-spinner'
-    ],
-    outputStyle: prod ? 'compressed' : 'nested'
-  }).on('error', gulpSass.logError))
-  .pipe(gulpPostcss([
-    autoprefixer({
-      browsers: ['last 2 versions', '> 2% in US']
-    })
-  ]))
-  .pipe(gulpIf(prod, gulpCssmin()))
-  .pipe(gulp.dest(settings.dist.styles));
+    .pipe(gulpSass({
+      functions: assetFunctions({
+        images_path: settings.dist.images,
+        http_images_path: settings.web.images,
+        fonts_path: settings.dist.fonts,
+        http_fonts_path: settings.web.fonts
+      }),
+      includePaths: [
+        settings.vendor.css,
+        settings.src.components,
+        'node_modules/react-spinner'
+      ],
+      outputStyle: prod ? 'compressed' : 'nested'
+    }).on('error', gulpSass.logError))
+    .pipe(
+      gulpPostcss([
+        autoprefixer({
+          browsers: ['last 2 versions', '> 2% in US']
+        })
+      ])
+    )
+    .pipe(
+      gulpIf(prod, gulpCssmin())
+    )
+    .pipe(
+      gulp.dest(settings.dist.styles)
+    );
 }
 
 /**

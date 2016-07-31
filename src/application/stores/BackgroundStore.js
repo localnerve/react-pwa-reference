@@ -72,7 +72,7 @@ export const BackgroundStore = createStore({
    * @param {Object} payload.backgrounds.serviceOptions - service specific options.
    */
   initBackgrounds: function (payload) {
-    var init = payload.backgrounds;
+    const init = payload.backgrounds;
     if (init) {
       this.imageServiceUrl = init.serviceUrl;
       this.imageServiceOptions = init.serviceOptions || {};

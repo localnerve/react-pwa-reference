@@ -99,13 +99,14 @@ describe('sw/push', function () {
 
       selfMock.events.push({
         waitUntil: function (promise) {
-          promise.then(function () {
-            done(unexpectedFlowError);
-          })
-          .catch(function (error) {
-            expect(error).to.not.be.undefined;
-            done();
-          });
+          promise
+            .then(function () {
+              done(unexpectedFlowError);
+            })
+            .catch(function (error) {
+              expect(error).to.not.be.undefined;
+              done();
+            });
         }
       });
     });
@@ -119,13 +120,14 @@ describe('sw/push', function () {
 
       selfMock.events.push({
         waitUntil: function (promise) {
-          promise.then(function () {
-            expect(errorNotification).to.be.true;
-            done();
-          })
-          .catch(function (error) {
-            done(error || unexpectedFlowError);
-          });
+          promise
+            .then(function () {
+              expect(errorNotification).to.be.true;
+              done();
+            })
+            .catch(function (error) {
+              done(error || unexpectedFlowError);
+            });
         }
       });
     });
@@ -143,13 +145,14 @@ describe('sw/push', function () {
 
       selfMock.events.push({
         waitUntil: function (promise) {
-          promise.then(function () {
-            expect(errorNotification).to.be.true;
-            done();
-          })
-          .catch(function (error) {
-            done(error || unexpectedFlowError);
-          });
+          promise
+            .then(function () {
+              expect(errorNotification).to.be.true;
+              done();
+            })
+            .catch(function (error) {
+              done(error || unexpectedFlowError);
+            });
         }
       });
     });
@@ -170,13 +173,14 @@ describe('sw/push', function () {
 
       selfMock.events.push({
         waitUntil: function (promise) {
-          promise.then(function () {
-            expect(gotTitle).to.be.true;
-            done();
-          })
-          .catch(function (error) {
-            done(error || unexpectedFlowError);
-          });
+          promise
+            .then(function () {
+              expect(gotTitle).to.be.true;
+              done();
+            })
+            .catch(function (error) {
+              done(error || unexpectedFlowError);
+            });
         }
       });
     });
@@ -193,13 +197,14 @@ describe('sw/push', function () {
           close: function () {}
         },
         waitUntil: function (promise) {
-          promise.then(function () {
-            successHandler();
-            done();
-          })
-          .catch(function (error) {
-            done(error || unexpectedFlowError);
-          });
+          promise
+            .then(function () {
+              successHandler();
+              done();
+            })
+            .catch(function (error) {
+              done(error || unexpectedFlowError);
+            });
         }
       };
     }
@@ -263,13 +268,14 @@ describe('sw/push', function () {
     function createPushSubChangeEvent (successHandler, done) {
       return {
         waitUntil: function (promise) {
-          promise.then(function (value) {
-            successHandler(value);
-            done();
-          })
-          .catch(function (error) {
-            done(error || unexpectedFlowError);
-          });
+          promise
+            .then(function (value) {
+              successHandler(value);
+              done();
+            })
+            .catch(function (error) {
+              done(error || unexpectedFlowError);
+            });
         }
       };
     }

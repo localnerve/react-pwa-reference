@@ -29,40 +29,41 @@ const settings = config.settings;
 export default function sitemap (req, res, next) {
   debug('Read routes');
 
-  utils.nodeCall(serviceData.fetch, {
-    resource: config.data.FRED.mainResource
-  })
-  .then((result) => {
-    const routes = result.content,
-      ssl = settings.web.ssl || settings.web.sslRemote,
-      stream = sitemapLib();
+  utils
+    .nodeCall(serviceData.fetch, {
+      resource: config.data.FRED.mainResource
+    })
+    .then((result) => {
+      const routes = result.content,
+        ssl = settings.web.ssl || settings.web.sslRemote,
+        stream = sitemapLib();
 
-    res.header('Content-Type', 'text/xml');
-    stream.pipe(res);
+      res.header('Content-Type', 'text/xml');
+      stream.pipe(res);
 
-    Object.keys(routes)
-      .filter((key) => {
-        return routes[key].mainNav;
-      })
-      .forEach((key) => {
-        stream.write({
-          loc: urlLib.format({
-            protocol: ssl ? 'https' : 'http',
-            hostname: settings.web.appHostname,
-            pathname: routes[key].path
-          }),
-          priority: routes[key].siteMeta ?
-            routes[key].siteMeta.priority : 1.0,
-          changefreq: routes[key].siteMeta ?
-            routes[key].siteMeta.changefreq : 'monthly'
+      Object.keys(routes)
+        .filter((key) => {
+          return routes[key].mainNav;
+        })
+        .forEach((key) => {
+          stream.write({
+            loc: urlLib.format({
+              protocol: ssl ? 'https' : 'http',
+              hostname: settings.web.appHostname,
+              pathname: routes[key].path
+            }),
+            priority: routes[key].siteMeta ?
+              routes[key].siteMeta.priority : 1.0,
+            changefreq: routes[key].siteMeta ?
+              routes[key].siteMeta.changefreq : 'monthly'
+          });
         });
-      });
 
-    stream.end();
-  })
-  .catch((err) => {
-    debug('Request failed: ', err);
-    err.status = err.statusCode = (err.statusCode || err.status || 500);
-    next(err);
-  });
+      stream.end();
+    })
+    .catch((err) => {
+      debug('Request failed: ', err);
+      err.status = err.statusCode = (err.statusCode || err.status || 500);
+      next(err);
+    });
 }

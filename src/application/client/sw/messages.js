@@ -30,17 +30,17 @@ const commands = {
    */
   pushSync: (payload, responder) => {
     return pushSync(payload.subscriptionId)
-    .then(() => {
-      return responder({
-        error: null
+      .then(() => {
+        return responder({
+          error: null
+        });
+      })
+      .catch((error) => {
+        debug('pushSync failed', error);
+        return responder({
+          error: error.toString()
+        });
       });
-    })
-    .catch((error) => {
-      debug('pushSync failed', error);
-      return responder({
-        error: error.toString()
-      });
-    });
   }
 };
 

@@ -54,56 +54,56 @@ export function run (params, done) {
           const resource = actionParams.resource;
 
           return utils.nodeCall(fetch.fetchOne, actionParams)
-          .then((data) => {
-            const outputFilePath = path.join(
-              path.dirname(require.resolve('test/fixtures/')),
-              `${resource}-response.js`
-            );
+            .then((data) => {
+              const outputFilePath = path.join(
+                path.dirname(require.resolve('test/fixtures/')),
+                `${resource}-response.js`
+              );
 
-            const contents = template.replace(replacement, JSON.stringify(
-              data
-            ));
+              const contents = template.replace(replacement, JSON.stringify(
+                data
+              ));
 
-            _.filter(data.models, (o) => {
-              return o.url && o.resource;
-            })
-            .forEach((model) => {
-              modelsWithContent[model.resource] = model;
+              _.filter(data.models, (o) => {
+                return o.url && o.resource;
+              })
+                .forEach((model) => {
+                  modelsWithContent[model.resource] = model;
+                });
+
+              return utils.nodeCall(fs.writeFile, outputFilePath, contents);
             });
-
-            return utils.nodeCall(fs.writeFile, outputFilePath, contents);
-          });
         }
         return Promise.resolve();
       })
     )
-    .then(() => {
-      return Promise.all(
-        Object.keys(modelsWithContent).map((model) => {
-          const params = Object.assign({}, modelsWithContent[model]);
+      .then(() => {
+        return Promise.all(
+          Object.keys(modelsWithContent).map((model) => {
+            const params = Object.assign({}, modelsWithContent[model]);
 
-          return utils.nodeCall(fetch.fetchOne, params)
-          .then((data) => {
-            const outputFilePath = path.join(
-              path.dirname(require.resolve('test/fixtures/')),
-              `${modelsWithContent[model].resource}-response.js`
-            );
+            return utils.nodeCall(fetch.fetchOne, params)
+              .then((data) => {
+                const outputFilePath = path.join(
+                  path.dirname(require.resolve('test/fixtures/')),
+                  `${modelsWithContent[model].resource}-response.js`
+                );
 
-            const contents = template.replace(replacement, JSON.stringify(
-              data
-            ));
+                const contents = template.replace(replacement, JSON.stringify(
+                  data
+                ));
 
-            return utils.nodeCall(fs.writeFile, outputFilePath, contents);
-          });
-        })
-      );
-    })
-    .then(() => {
-      done();
-    })
-    .catch((error) => {
-      debug(error);
-      done(error);
-    });
+                return utils.nodeCall(fs.writeFile, outputFilePath, contents);
+              });
+          })
+        );
+      })
+      .then(() => {
+        done();
+      })
+      .catch((error) => {
+        debug(error);
+        done(error);
+      });
   });
 }

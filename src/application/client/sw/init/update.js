@@ -36,19 +36,19 @@ export default function update (payload) {
     if (shouldUpdate) {
       // Update the init.timestamp
       return timestamp.update(payload.timestamp)
-      .then(() => {
-        // Update init.stores
-        return stores.updateInitStores(payload.stores);
-      })
-      .then(() => {
-        // Update init.apis
-        return apis.update(payload.apis).then(() => {
-          return true;
+        .then(() => {
+          // Update init.stores
+          return stores.updateInitStores(payload.stores);
+        })
+        .then(() => {
+          // Update init.apis
+          return apis.update(payload.apis).then(() => {
+            return true;
+          });
+        }).catch((error) => {
+          debug('Failed to update', error);
+          throw error; // rethrow
         });
-      }).catch((error) => {
-        debug('Failed to update', error);
-        throw error; // rethrow
-      });
     } else {
       return false;
     }

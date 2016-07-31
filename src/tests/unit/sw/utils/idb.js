@@ -54,13 +54,14 @@ describe('sw/utils/idb', function () {
     });
 
     it('should fail successfully', function (done) {
-      idb[method](storeName, 'emulateError').then(function () {
-        done(new Error('expected failure'));
-      })
-      .catch(function (error) {
-        expect(error.message).to.be.an('string').that.is.not.empty;
-        done();
-      });
+      idb[method](storeName, 'emulateError')
+        .then(function () {
+          done(new Error('expected failure'));
+        })
+        .catch(function (error) {
+          expect(error.message).to.be.an('string').that.is.not.empty;
+          done();
+        });
     });
   });
 });

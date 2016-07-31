@@ -44,8 +44,7 @@ function getPushRequests (dehydratedRequests) {
   let pushRequests = [];
 
   if ('pushManager' in self.registration) {
-    return self.registration.pushManager.getSubscription()
-    .then((subscribed) => {
+    return self.registration.pushManager.getSubscription().then((subscribed) => {
       const
         updateSubRequests = filters.latest(
           dehydratedRequests, syncable.types.push, [
@@ -203,15 +202,16 @@ const prunePolicies = {
         filters.match(
           dehydratedRequests,
           syncable.types.push,
-          Object.keys(syncable.ops)
-          .filter((key) => {
-            // Filter out 'push' type operations that cannot be redundant.
-            return (syncable.ops[key] !== syncable.ops.demo &&
-                    syncable.ops[key] !== syncable.ops.updateSubscription);
-          })
-          .map((key) => {
-            return syncable.ops[key];
-          })
+          Object
+            .keys(syncable.ops)
+            .filter((key) => {
+              // Filter out 'push' type operations that cannot be redundant.
+              return (syncable.ops[key] !== syncable.ops.demo &&
+                      syncable.ops[key] !== syncable.ops.updateSubscription);
+            })
+            .map((key) => {
+              return syncable.ops[key];
+            })
         )
       );
     }
@@ -291,8 +291,7 @@ export function pruneRequestsByPolicy (dehydratedRequests, fallback, body) {
  */
 export function updatePushSubscription (subscriptionId) {
   if (subscriptionId) {
-    return idb.all(idb.stores.requests)
-    .then((dehydratedRequests) => {
+    return idb.all(idb.stores.requests).then((dehydratedRequests) => {
       const allPushRequests = filters.match(
         dehydratedRequests,
         syncable.types.push, Object.keys(syncable.ops).map((key) => {
@@ -300,7 +299,7 @@ export function updatePushSubscription (subscriptionId) {
         }));
 
       return Promise.all(allPushRequests.map((request) => {
-        var params = filters.getPropertyByName('params', request);
+        const params = filters.getPropertyByName('params', request);
 
         if (params && params.subscriptionId) {
           params.subscriptionId = subscriptionId;

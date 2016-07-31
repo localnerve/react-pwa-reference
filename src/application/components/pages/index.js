@@ -82,15 +82,15 @@ function getProps (content, models) {
  */
 export function getMainNavPages (error, pages, ordinal) {
   const mainPages = Object.keys(pages)
-  .filter(function (page) {
-    return pages[page].mainNav;
-  })
-  .sort(function (a, b) {
-    return pages[a].order - pages[b].order;
-  })
-  .map(function (page) {
-    return pages[page];
-  });
+    .filter(function (page) {
+      return pages[page].mainNav;
+    })
+    .sort(function (a, b) {
+      return pages[a].order - pages[b].order;
+    })
+    .map(function (page) {
+      return pages[page];
+    });
 
   if (error) {
     mainPages[ordinal] = pages[conformErrorStatus(error.statusCode)];

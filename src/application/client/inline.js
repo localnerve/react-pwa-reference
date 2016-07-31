@@ -28,12 +28,13 @@ docEl.className = docEl.className.replace('no-js', '');
 if (Promise) {
   const font = new FontFaceObserver('Source Sans Pro', {});
 
-  font.load().then(() => {
-    docEl.className += ' fonts-loaded';
-  })
-  .catch((error) => {
-    console.error('font failed to load: ', error);
-  });
+  font.load()
+    .then(() => {
+      docEl.className += ' fonts-loaded';
+    })
+    .catch((error) => {
+      console.error('font failed to load: ', error);
+    });
 } else {
   // Just let font-face work normally.
   docEl.className += ' fonts-loaded';

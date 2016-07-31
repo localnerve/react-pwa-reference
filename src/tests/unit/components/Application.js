@@ -145,13 +145,13 @@ describe('application component', () => {
 
     before('home', (done) => {
       createPageContent('home')
-      .then((pageContent) => {
-        homePage = pageContent;
-        done();
-      })
-      .catch((error) => {
-        done(error || unexpectedFlowError);
-      });
+        .then((pageContent) => {
+          homePage = pageContent;
+          done();
+        })
+        .catch((error) => {
+          done(error || unexpectedFlowError);
+        });
     });
 
     beforeEach(() => {
@@ -191,13 +191,13 @@ describe('application component', () => {
 
     before('contact', (done) => {
       createPageContent('contact')
-      .then((pageContent) => {
-        contactPage = pageContent;
-        done();
-      })
-      .catch((error) => {
-        done(error || unexpectedFlowError);
-      });
+        .then((pageContent) => {
+          contactPage = pageContent;
+          done();
+        })
+        .catch((error) => {
+          done(error || unexpectedFlowError);
+        });
     });
 
     beforeEach(() => {
@@ -235,9 +235,9 @@ describe('application component', () => {
 
       const formInput =
         testUtils.scryRenderedDOMComponentsWithClass(app, 'form-value-element')
-        .filter((component) => {
-          return component.id === inputId;
-        })[0];
+          .filter((component) => {
+            return component.id === inputId;
+          })[0];
 
       formInput.value = 'testvalue';
       testUtils.Simulate.change(formInput);
@@ -282,9 +282,9 @@ describe('application component', () => {
 
       const previous =
         testUtils.scryRenderedDOMComponentsWithTag(app, 'button')
-        .filter((button) => {
-          return button.id === 'previous';
-        })[0];
+          .filter((button) => {
+            return button.id === 'previous';
+          })[0];
 
       testUtils.Simulate.click(previous);
 

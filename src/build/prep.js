@@ -21,7 +21,9 @@ export default function prepTaskFactory (settings) {
     },
     function json () {
       return gulp.src(`${settings.src.baseDir}/**/*.json`)
-      .pipe(gulp.dest(settings.output.baseDir));
+        .pipe(
+          gulp.dest(settings.output.baseDir)
+        );
     },
     symlinkTaskFactory(settings, true)
   );

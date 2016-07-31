@@ -18,9 +18,13 @@ export default function imageminTaskFactory (settings) {
     return gulp.src('**/*.{jpg,jpeg,png}', {
       cwd: settings.assets.images
     })
-    .pipe(gulpImagemin({
-      progressive: true
-    }))
-    .pipe(gulp.dest(settings.dist.images));
+      .pipe(
+        gulpImagemin({
+          progressive: true
+        })
+      )
+      .pipe(
+        gulp.dest(settings.dist.images)
+      );
   };
 }

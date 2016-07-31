@@ -29,14 +29,16 @@ function syncPermission (state) {
 function getPushSubscription (state) {
   if (state.hasPushMessaging) {
     return window.navigator.serviceWorker.ready.then((registration) => {
-      return registration.pushManager.getSubscription()
-      .then((subscription) => {
-        state.pushSubscription = subscription;
-      })
-      .catch((error) => {
-        debug('error getting push subscription', error);
-        state.pushSubscription = null;
-      });
+      return registration
+        .pushManager
+        .getSubscription()
+        .then((subscription) => {
+          state.pushSubscription = subscription;
+        })
+        .catch((error) => {
+          debug('error getting push subscription', error);
+          state.pushSubscription = null;
+        });
     });
     // No need to handle reject, because this will only execute in a secure context.
     // https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#navigator-service-worker-ready
@@ -106,29 +108,33 @@ export function settingsState (context, payload, done) {
   };
 
   if (state.hasServiceWorker) {
-    (state.hasPermissions ? pushPermission(state, context)
-      : notificationPermission(state))
-    .then(() => {
-      return getPushSubscription(state);
-    })
-    .then(() => {
-      if (state.pushSubscription) {
-        const settingsStore = context.getStore('SettingsStore'),
-          pushTopics = settingsStore.getPushTopics();
-        if (!pushTopics) {
-          return context.executeAction(getTopics, {
-            subscriptionId: getSubscriptionId(state.pushSubscription)
-          });
+    (
+      state.hasPermissions
+        ? pushPermission(state, context)
+        : notificationPermission(state)
+    )
+      .then(() => {
+        return getPushSubscription(state);
+      })
+      .then(() => {
+        if (state.pushSubscription) {
+          const settingsStore = context.getStore('SettingsStore'),
+            pushTopics = settingsStore.getPushTopics();
+
+          if (!pushTopics) {
+            return context.executeAction(getTopics, {
+              subscriptionId: getSubscriptionId(state.pushSubscription)
+            });
+          }
         }
-      }
-    })
-    .then(() => {
-      return syncPermission(state);
-    })
-    .then(() => {
-      context.dispatch('SETTINGS_STATE', state);
-      done();
-    });
+      })
+      .then(() => {
+        return syncPermission(state);
+      })
+      .then(() => {
+        context.dispatch('SETTINGS_STATE', state);
+        done();
+      });
   } else {
     context.dispatch('SETTINGS_STATE', state);
     done();

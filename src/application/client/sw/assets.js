@@ -23,22 +23,22 @@ export function setupAssetRequests () {
 
   toolbox.precache(
     data.assets
-    .sort()
-    .map(function (asset) {
-      const next = urlm.getHostname(asset);
+      .sort()
+      .map(function (asset) {
+        const next = urlm.getHostname(asset);
 
-      if (hostname !== next) {
-        hostname = next;
-        // New hostname, so install GET handler for that host
-        toolbox.router.get('*', toolbox.networkFirst, {
-          origin: hostname,
-          // any/all CDNs get 3 seconds max
-          networkTimeoutSeconds: 3
-        });
-      }
+        if (hostname !== next) {
+          hostname = next;
+          // New hostname, so install GET handler for that host
+          toolbox.router.get('*', toolbox.networkFirst, {
+            origin: hostname,
+            // any/all CDNs get 3 seconds max
+            networkTimeoutSeconds: 3
+          });
+        }
 
-      // Precache the asset in 'install'
-      return asset;
-    })
+        // Precache the asset in 'install'
+        return asset;
+      })
   );
 }

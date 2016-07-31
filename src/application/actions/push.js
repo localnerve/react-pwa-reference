@@ -67,8 +67,9 @@ export function subscribe (context, payload, done) {
   }
 
   window.navigator.serviceWorker.ready.then((registration) => {
-    registration.pushManager.subscribe({ userVisibleOnly: true })
-    .then((subscription) => {
+    registration.pushManager.subscribe({
+      userVisibleOnly: true
+    }).then((subscription) => {
       debug('browser subscribed', subscription);
 
       const params = {
@@ -85,8 +86,7 @@ export function subscribe (context, payload, done) {
         payload: {
           subscriptionId: params.subscriptionId
         }
-      })
-      .then(() => {
+      }).then(() => {
         context.service.create('subscription', syncable.push(
           params, params.subscriptionId, syncable.ops.subscribe
         ), {}, {}, (err, data) => {
@@ -100,13 +100,11 @@ export function subscribe (context, payload, done) {
           }
           complete(err, subscription, data);
         });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         debug('pushSync message failed ', error);
         complete(error, null, null);
       });
-    })
-    .catch((error) => {
+    }).catch((error) => {
       const settingsStore = context.getStore('SettingsStore'),
         hasPermissions = settingsStore.getHasPermissions();
 
@@ -115,29 +113,35 @@ export function subscribe (context, payload, done) {
           name: 'push',
           userVisibleOnly: true
         })
-        .then((permissionState) => {
-          debug(
-            'subscribe error', error, ' push permissions state ', permissionState
-          );
-          if (permissionState.state === 'prompt') {
-            error = new Error('Must accept the permission prompt');
-          } else if (permissionState.state === 'denied') {
-            error = new Error('User blocked notifications');
-          }
-        })
-        .catch((error2) => {
-          debug('subscribe error', error, ' permissions error ', error2);
-        })
-        .then(() => {
-          complete(error, null, null);
-        });
+          .then((permissionState) => {
+            debug(
+              'subscribe error',
+              error,
+              ' push permissions state ',
+              permissionState
+            );
+            if (permissionState.state === 'prompt') {
+              error = new Error('Must accept the permission prompt');
+            } else if (permissionState.state === 'denied') {
+              error = new Error('User blocked notifications');
+            }
+          })
+          .catch((error2) => {
+            debug('subscribe error', error, ' permissions error ', error2);
+          })
+          .then(() => {
+            complete(error, null, null);
+          });
       } else {
         debug('subscribe error', error);
         debug('hasNotifications', settingsStore.getHasNotifications());
 
         if (settingsStore.getHasNotifications()) {
           debug(
-            'subscribe error', error, ' Notification permission ', window.Notification.permission
+            'subscribe error',
+            error,
+            ' Notification permission ',
+            window.Notification.permission
           );
         }
 
@@ -213,8 +217,7 @@ export function unsubscribe (context, payload, done) {
           payload: {
             subscriptionId: false
           }
-        })
-        .then(() => {
+        }).then(() => {
           context.service.delete('subscription',
             syncable.push(
               params,
@@ -233,19 +236,16 @@ export function unsubscribe (context, payload, done) {
               complete(err);
             }
           );
-        })
-        .catch((error) => {
+        }).catch((error) => {
           debug('pushSync message failed ', error);
           error.message = 'pushSync message failed: ' + error.message;
           complete(error);
         });
-      })
-      .catch((error) => {
+      }).catch((error) => {
         error.message = 'Unsubscribe failed: ' + error.message;
         complete(error);
       });
-    })
-    .catch((error) => {
+    }).catch((error) => {
       error.message = 'getSubscription failed: ' + error.message;
       complete(error);
     });

@@ -36,23 +36,23 @@ function getSubscriptionInfo (subscriptionId) {
   const result = {};
 
   return idb.get(idb.stores.state, 'subscriptionId')
-  .then((existingId) => {
-    result.existingId = existingId;
+    .then((existingId) => {
+      result.existingId = existingId;
 
-    if (existingId && subscriptionId !== existingId) {
-      debug('reading init.apis');
-      return idb.get(idb.stores.init, 'apis');
-    }
-  })
-  .then((apis) => {
-    if (apis) {
-      result.apiInfo = apis[subscriptionService];
-      if (!result.apiInfo) {
-        throw new Error('subscription service api info not found');
+      if (existingId && subscriptionId !== existingId) {
+        debug('reading init.apis');
+        return idb.get(idb.stores.init, 'apis');
       }
-    }
-    return result;
-  });
+    })
+    .then((apis) => {
+      if (apis) {
+        result.apiInfo = apis[subscriptionService];
+        if (!result.apiInfo) {
+          throw new Error('subscription service api info not found');
+        }
+      }
+      return result;
+    });
 }
 
 /**
@@ -78,61 +78,62 @@ function synchronizePushSubscription (subscriptionId) {
   }
 
   return getSubscriptionInfo(subscriptionId)
-  .then((result) => {
-    apiInfo = result.apiInfo;
-    existingId = result.existingId;
+    .then((result) => {
+      apiInfo = result.apiInfo;
+      existingId = result.existingId;
 
-    if (apiInfo) {
-      requestState = {
-        url: apiInfo.xhrPath,
-        method: 'POST',
-        bodyType: 'json',
-        body: createRequestBody(apiInfo.xhrContext, {
-          body: {},
-          operation: 'update',
-          params: {
-            subscriptionId: existingId,
-            newId: subscriptionId
-          },
-          resource: 'subscription'
-        })
-      };
+      if (apiInfo) {
+        requestState = {
+          url: apiInfo.xhrPath,
+          method: 'POST',
+          bodyType: 'json',
+          body: createRequestBody(apiInfo.xhrContext, {
+            body: {},
+            operation: 'update',
+            params: {
+              subscriptionId: existingId,
+              newId: subscriptionId
+            },
+            resource: 'subscription'
+          })
+        };
 
-      return fetch(rehydrateRequest(requestState, apiInfo));
-    }
-  })
-  .then((resp) => {
-    const response = resp || {};
-    const updateSubscriptionId = !existingId || response.ok;
+        return fetch(rehydrateRequest(requestState, apiInfo));
+      }
+    })
+    .then((resp) => {
+      const response = resp || {};
+      const updateSubscriptionId = !existingId || response.ok;
 
-    // If subscription not found or service successfully updated, update
-    // subscriptionId in IndexedDB.
-    if (updateSubscriptionId) {
-      return Promise.all([
-        serviceable.updatePushSubscription(response.ok && subscriptionId),
-        idb.put(idb.stores.state, 'subscriptionId', subscriptionId)
-      ])
-      .then(() => {
-        debug('successfully updated subscriptionId');
-        return resp ? response : false;
-      });
-    }
+      // If subscription not found or service successfully updated, update
+      // subscriptionId in IndexedDB.
+      if (updateSubscriptionId) {
+        return Promise
+          .all([
+            serviceable.updatePushSubscription(response.ok && subscriptionId),
+            idb.put(idb.stores.state, 'subscriptionId', subscriptionId)
+          ])
+          .then(() => {
+            debug('successfully updated subscriptionId');
+            return resp ? response : false;
+          });
+      }
 
-    if (response.ok === false) {
-      debug(`fetch failed (${response.status}), ${response.statusText}`);
+      if (response.ok === false) {
+        debug(`fetch failed (${response.status}), ${response.statusText}`);
 
-      // Add syncable property to body
-      requestState.body = syncable.push(
-        requestState.body,
-        subscriptionId,
-        syncable.ops.updateSubscription
-      );
+        // Add syncable property to body
+        requestState.body = syncable.push(
+          requestState.body,
+          subscriptionId,
+          syncable.ops.updateSubscription
+        );
 
-      return sync.deferRequest(
-        subscriptionService,
-        rehydrateRequest(requestState, apiInfo)
-      );
-    }
-  });
+        return sync.deferRequest(
+          subscriptionService,
+          rehydrateRequest(requestState, apiInfo)
+        );
+      }
+    });
 }
 export { synchronizePushSubscription as synchronize }

@@ -83,17 +83,17 @@ describe('sw/init/backgrounds', function () {
     runTest(response);
 
     toolbox.mockFetch(backgroundUrls[keys[0]], 'GET')
-    .then(function (res) {
-      expect(res).to.eql(response);
-    })
-    .then(function () {
-      // keys[1] should have been cached as a side-effect.
-      toolbox.uncache(backgroundUrls[keys[1]]).then(function (deleted) {
-        done(deleted ? null : new Error('notCurrent request was not cached'));
+      .then(function (res) {
+        expect(res).to.eql(response);
+      })
+      .then(function () {
+        // keys[1] should have been cached as a side-effect.
+        toolbox.uncache(backgroundUrls[keys[1]]).then(function (deleted) {
+          done(deleted ? null : new Error('notCurrent request was not cached'));
+        });
+      })
+      .catch(function (error) {
+        done(error || mockFetchUnexpected);
       });
-    })
-    .catch(function (error) {
-      done(error || mockFetchUnexpected);
-    });
   });
 });

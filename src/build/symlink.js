@@ -20,6 +20,8 @@ export default function symlinkTaskFactory (settings, output) {
     mkdirp(`./${settings[target].application}`);
 
     return gulp.src(`./${settings[target].application}`)
-    .pipe(gulp.symlink(`./${settings[target].baseDir}/node_modules`));
+      .pipe(
+        gulp.symlink(`./${settings[target].baseDir}/node_modules`)
+      );
   }
 }

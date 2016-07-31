@@ -68,13 +68,13 @@ describe('sw/sync/push', function () {
 
       it('should delete id', function (done) {
         push.synchronize()
-        .then(function () {
-          expect(calledDel).to.equal(1);
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function () {
+            expect(calledDel).to.equal(1);
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       });
     });
 
@@ -97,16 +97,16 @@ describe('sw/sync/push', function () {
 
       it('should update idb if no subscriptionId', function (done) {
         push.synchronize(subscriptionId)
-        .then(function () {
-          expect(calledGetId).to.equal(1);
-          expect(calledPutId).to.equal(1);
-          expect(putIdValue).to.exist.and.equal(subscriptionId);
-          expect(calledOther).to.equal(0);
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function () {
+            expect(calledGetId).to.equal(1);
+            expect(calledPutId).to.equal(1);
+            expect(putIdValue).to.exist.and.equal(subscriptionId);
+            expect(calledOther).to.equal(0);
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       });
     });
 
@@ -126,14 +126,14 @@ describe('sw/sync/push', function () {
 
       it('should do nothing', function (done) {
         push.synchronize(subscriptionId)
-        .then(function () {
-          expect(calledGetId).to.equal(1);
-          expect(calledOther).to.equal(0);
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function () {
+            expect(calledGetId).to.equal(1);
+            expect(calledOther).to.equal(0);
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       });
     });
 
@@ -193,41 +193,41 @@ describe('sw/sync/push', function () {
         });
 
         push.synchronize(subscriptionId)
-        .then(function () {
-          done(unexpectedFlowError);
-        })
-        .catch(function (error) {
-          expect(error).to.be.an('Error');
-          done();
-        });
+          .then(function () {
+            done(unexpectedFlowError);
+          })
+          .catch(function (error) {
+            expect(error).to.be.an('Error');
+            done();
+          });
       });
 
       it('should update subscription service', function (done) {
         push.synchronize(subscriptionId)
-        .then(function () {
-          expect(calledGetId).to.equal(1);
-          expect(calledGetApis).to.equal(1);
-          expect(calledPutId).to.equal(1);
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function () {
+            expect(calledGetId).to.equal(1);
+            expect(calledGetApis).to.equal(1);
+            expect(calledPutId).to.equal(1);
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       });
 
       it('should not update on failed response', function (done) {
         globalFetch.setEmulateError(true);
 
         push.synchronize(subscriptionId)
-        .then(function () {
-          done(unexpectedFlowError);
-        })
-        .catch(function () {
-          expect(calledGetId).to.equal(1);
-          expect(calledGetApis).to.equal(1);
-          expect(calledPutId).to.equal(0);
-          done();
-        });
+          .then(function () {
+            done(unexpectedFlowError);
+          })
+          .catch(function () {
+            expect(calledGetId).to.equal(1);
+            expect(calledGetApis).to.equal(1);
+            expect(calledPutId).to.equal(0);
+            done();
+          });
       });
 
       it('should defer request on bad response', function (done) {
@@ -237,14 +237,14 @@ describe('sw/sync/push', function () {
         }));
 
         push.synchronize(subscriptionId)
-        .then(function (response) {
-          expect(response.status).to.equal(203);
-          expect(response.statusText).to.equal('deferred');
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function (response) {
+            expect(response.status).to.equal(203);
+            expect(response.statusText).to.equal('deferred');
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       });
     });
   });

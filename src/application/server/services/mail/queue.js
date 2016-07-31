@@ -21,24 +21,25 @@ const contact = configs.create().contact;
 export function sendMail (input, callback) {
   const open = amqp.connect(contact.queue.url());
 
-  open.then((conn) => {
-    debug('AMQP connection open');
+  open
+    .then((conn) => {
+      debug('AMQP connection open');
 
-    return conn.createChannel().then((ch) => {
-      debug('AMQP channel created');
+      return conn.createChannel().then((ch) => {
+        debug('AMQP channel created');
 
-      const q = contact.queue.name();
+        const q = contact.queue.name();
 
-      return ch.assertQueue(q).then(() => {
-        ch.sendToQueue(q, new Buffer(JSON.stringify(input)));
-        debug('AMQP message sent', input);
+        return ch.assertQueue(q).then(() => {
+          ch.sendToQueue(q, new Buffer(JSON.stringify(input)));
+          debug('AMQP message sent', input);
+        });
       });
+    })
+    .then(callback, (err) => {
+      debug('AMQP message failure', err);
+      callback(err);
     });
-  })
-  .then(callback, (err) => {
-    debug('AMQP message failure', err);
-    callback(err);
-  });
 }
 
 /**

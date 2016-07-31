@@ -90,15 +90,15 @@ describe('sw/sync/serviceable', function () {
           tag: 'someTopic'
         }, subscriptionId, syncable.ops.updateTopics)
       ])
-      .then(function () {
-        return serviceable.getRequests(dehydratedRequests);
-      })
-      .then(function (serviceableRequests) {
-        var diff = _.xor(dehydratedRequests, serviceableRequests);
+        .then(function () {
+          return serviceable.getRequests(dehydratedRequests);
+        })
+        .then(function (serviceableRequests) {
+          var diff = _.xor(dehydratedRequests, serviceableRequests);
 
-        expect(diff.length).to.equal(0);
-        done();
-      });
+          expect(diff.length).to.equal(0);
+          done();
+        });
     });
 
     it('should get both contact and unsubscribe requests', function (done) {
@@ -110,15 +110,15 @@ describe('sw/sync/serviceable', function () {
           some2: 'body2'
         }, subscriptionId, syncable.ops.unsubscribe)
       ])
-      .then(function () {
-        return serviceable.getRequests(dehydratedRequests);
-      })
-      .then(function (serviceableRequests) {
-        var diff = _.xor(dehydratedRequests, serviceableRequests);
+        .then(function () {
+          return serviceable.getRequests(dehydratedRequests);
+        })
+        .then(function (serviceableRequests) {
+          var diff = _.xor(dehydratedRequests, serviceableRequests);
 
-        expect(diff.length).to.equal(0);
-        done();
-      });
+          expect(diff.length).to.equal(0);
+          done();
+        });
     });
 
     it('should get unsubscribe requests over topics requests', function (done) {
@@ -130,15 +130,15 @@ describe('sw/sync/serviceable', function () {
           some2: 'body2'
         }, subscriptionId, syncable.ops.unsubscribe)
       ])
-      .then(function () {
-        return serviceable.getRequests(dehydratedRequests);
-      })
-      .then(function (serviceableRequests) {
-        expect(serviceableRequests.length).to.equal(1);
-        expect(serviceableRequests[0].fallback.operation)
-          .to.equal(syncable.ops.unsubscribe);
-        done();
-      });
+        .then(function () {
+          return serviceable.getRequests(dehydratedRequests);
+        })
+        .then(function (serviceableRequests) {
+          expect(serviceableRequests.length).to.equal(1);
+          expect(serviceableRequests[0].fallback.operation)
+            .to.equal(syncable.ops.unsubscribe);
+          done();
+        });
     });
   });
 
@@ -156,26 +156,26 @@ describe('sw/sync/serviceable', function () {
           timestamp: updateTopicsTime + 1
         }, subscriptionId, syncable.ops.unsubscribe)
       ])
-      .then(function () {
-        return serviceable.getRequests(dehydratedRequests);
-      })
-      .then(function (serviceableRequests) {
-        // Replace previous reporter to listen for 'del'
-        treoMock.setReporter(function (method, key) {
-          if (method === 'del') {
-            // should've deleted updateTopics as unserviceable since it
-            // received unsubscribe later (updateTopicsTime + 1).
-            expect(key).to.equal(updateTopicsTime);
-            calledDel++;
-          }
-        });
+        .then(function () {
+          return serviceable.getRequests(dehydratedRequests);
+        })
+        .then(function (serviceableRequests) {
+          // Replace previous reporter to listen for 'del'
+          treoMock.setReporter(function (method, key) {
+            if (method === 'del') {
+              // should've deleted updateTopics as unserviceable since it
+              // received unsubscribe later (updateTopicsTime + 1).
+              expect(key).to.equal(updateTopicsTime);
+              calledDel++;
+            }
+          });
 
-        return serviceable.pruneRequests(dehydratedRequests, serviceableRequests);
-      })
-      .then(function () {
-        expect(calledDel).to.equal(1);
-        done();
-      });
+          return serviceable.pruneRequests(dehydratedRequests, serviceableRequests);
+        })
+        .then(function () {
+          expect(calledDel).to.equal(1);
+          done();
+        });
     });
   });
 
@@ -225,26 +225,26 @@ describe('sw/sync/serviceable', function () {
           timestamp: contactTime + 2 // 'successful'
         }, contactKey)
       ])
-      .then(function () {
-        return removeMatchingDehydratedRequest(contactTime + 2);
-      })
-      .then(function (reqContact) {
-        // Replace previous reporter to listen for 'del'
-        treoMock.setReporter(function (method, key) {
-          if (method === 'del') {
-            expect(contactTimesToDelete.indexOf(key) !== -1).to.be.true;
-            calledDel++;
-          }
-        });
+        .then(function () {
+          return removeMatchingDehydratedRequest(contactTime + 2);
+        })
+        .then(function (reqContact) {
+          // Replace previous reporter to listen for 'del'
+          treoMock.setReporter(function (method, key) {
+            if (method === 'del') {
+              expect(contactTimesToDelete.indexOf(key) !== -1).to.be.true;
+              calledDel++;
+            }
+          });
 
-        return serviceable.pruneRequestsByPolicy(
-          dehydratedRequests, reqContact.fallback
-        );
-      })
-      .then(function () {
-        expect(calledDel).to.equal(dehydratedRequests.length);
-        done();
-      });
+          return serviceable.pruneRequestsByPolicy(
+            dehydratedRequests, reqContact.fallback
+          );
+        })
+        .then(function () {
+          expect(calledDel).to.equal(dehydratedRequests.length);
+          done();
+        });
     });
 
     describe('push requests', function () {
@@ -295,13 +295,13 @@ describe('sw/sync/serviceable', function () {
         return serviceable.pruneRequestsByPolicy(
           dehydratedRequests, reqPush.fallback, reqPush
         )
-        .then(function () {
-          expect(calledDel).to.equal(deleted || dehydratedRequests.length);
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function () {
+            expect(calledDel).to.equal(deleted || dehydratedRequests.length);
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       }
 
       it('successful subscribe should remove all', function (done) {
@@ -338,9 +338,9 @@ describe('sw/sync/serviceable', function () {
             timestamp: pushTimeSuccess
           }, subscriptionId, syncable.ops.unsubscribe)
         ])
-        .then(function () {
-          shouldRemove(pushTimeSuccess, done);
-        });
+          .then(function () {
+            shouldRemove(pushTimeSuccess, done);
+          });
       });
 
       it('successful subscribe should remove all except updateSubscription',
@@ -358,9 +358,10 @@ describe('sw/sync/serviceable', function () {
             some3: 'body3',
             timestamp: pushTimeSuccess
           }, subscriptionId, syncable.ops.subscribe)
-        ]).then(function () {
-          shouldRemove(pushTimeSuccess, done, 1);
-        });
+        ])
+          .then(function () {
+            shouldRemove(pushTimeSuccess, done, 1);
+          });
       });
 
       it('successful updateTopics should remove unsub and updateTopics with same tag',
@@ -443,9 +444,10 @@ describe('sw/sync/serviceable', function () {
             },
             timestamp: pushTimeSuccess
           }, subscriptionId, syncable.ops.updateTopics)
-        ]).then(function () {
-          shouldRemove(pushTimeSuccess, done, 2);
-        });
+        ])
+          .then(function () {
+            shouldRemove(pushTimeSuccess, done, 2);
+          });
       });
     });
 
@@ -464,11 +466,11 @@ describe('sw/sync/serviceable', function () {
       serviceable.pruneRequestsByPolicy(null, {
         type: invalidType
       })
-      .then(function (result) {
-        expect(result).to.be.undefined;
-        expect(calledDel).to.equal(0);
-        done();
-      });
+        .then(function (result) {
+          expect(result).to.be.undefined;
+          expect(calledDel).to.equal(0);
+          done();
+        });
     });
   });
 
@@ -489,13 +491,13 @@ describe('sw/sync/serviceable', function () {
       });
 
       serviceable.updatePushSubscription(false)
-      .then(function () {
-        expect(calledAll).to.equal(0);
-        done();
-      })
-      .catch(function (error) {
-        done(error || unexpectedFlowError);
-      });
+        .then(function () {
+          expect(calledAll).to.equal(0);
+          done();
+        })
+        .catch(function (error) {
+          done(error || unexpectedFlowError);
+        });
     });
 
     it('should not update if params not found in request', function (done) {
@@ -516,13 +518,13 @@ describe('sw/sync/serviceable', function () {
         });
 
         serviceable.updatePushSubscription(subscriptionId)
-        .then(function () {
-          expect(calledPut).to.equal(0);
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function () {
+            expect(calledPut).to.equal(0);
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       });
     });
 
@@ -559,14 +561,14 @@ describe('sw/sync/serviceable', function () {
         expect(preParams).to.exist.and.not.eql(testObject.params);
 
         serviceable.updatePushSubscription(subscriptionId)
-        .then(function () {
-          expect(calledPut).to.equal(1);
-          expect(putParams).to.eql(testObject.params);
-          done();
-        })
-        .catch(function (error) {
-          done(error || unexpectedFlowError);
-        });
+          .then(function () {
+            expect(calledPut).to.equal(1);
+            expect(putParams).to.eql(testObject.params);
+            done();
+          })
+          .catch(function (error) {
+            done(error || unexpectedFlowError);
+          });
       });
     });
   });

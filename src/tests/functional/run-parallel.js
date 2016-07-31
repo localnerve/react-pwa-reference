@@ -18,7 +18,7 @@ var baseUrl = process.argv[3];
 var browsers = Object.keys(browserSpecs);
 
 // context specific log
-function log(config, data) {
+function log (config, data) {
   config = (config + '          ').slice(0, 10);
   ('' + data).split(/(\r?\n)/g).forEach(function(line) {
     if (line.replace(/\033\[[0-9;]*m/g,'').trim().length >0) {
@@ -28,7 +28,7 @@ function log(config, data) {
 }
 
 // Run a mocha test for a given browser
-function runMocha(browser, baseUrl, done) {
+function runMocha (browser, baseUrl, done) {
   var env = JSON.parse(JSON.stringify(process.env));
   env.TEST_BROWSER = browser;
   env.TEST_BASEURL = baseUrl;
@@ -41,16 +41,17 @@ function runMocha(browser, baseUrl, done) {
   mocha.stderr.on('data', log.bind(null, browser));
 }
 
-Promise.all(browsers.map(function(browser) {
-  return new Promise(function (resolve, reject) {
-    runMocha(browser, baseUrl, function (err) {
-      if (err) {
-        return reject(err);
-      }
-      resolve();
+Promise
+  .all(browsers.map(function (browser) {
+    return new Promise(function (resolve, reject) {
+      runMocha(browser, baseUrl, function (err) {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
     });
+  }))
+  .then(function() {
+    console.log('ALL TESTS SUCCESSFUL');
   });
-})).then(function() {
-  console.log('ALL TESTS SUCCESSFUL');
-})
-.done();

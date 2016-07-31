@@ -138,9 +138,9 @@ function cacheAndInstallRoute (url) {
   return contentRace(networkRequest(url), url, null, {
     successHandler: addRecentRoute
   })
-  .catch((error) => {
-    debug(`failed to precache ${url}`, error);
-  });
+    .catch((error) => {
+      debug(`failed to precache ${url}`, error);
+    });
 }
 
 /**

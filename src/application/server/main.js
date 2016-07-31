@@ -98,79 +98,80 @@ export default function bootstrap (app) {
     });
 
     debug('Executing routes action');
-    context.executeAction(routesAction, {
-      resource: config.data.FRED.mainResource
-    })
-    .then((routesResult) => {
-      routes = routesResult;
-      debug('Executing init action');
-      return context.executeAction(initAction, {
-        backgrounds: {
-          serviceUrl: config.images.service.url(),
-          serviceOptions: {
-            origin: {
-              host: settings.web.assetHost,
-              ssl: settings.web.ssl,
-              path: settings.web.images
+    context
+      .executeAction(routesAction, {
+        resource: config.data.FRED.mainResource
+      })
+      .then((routesResult) => {
+        routes = routesResult;
+        debug('Executing init action');
+        return context.executeAction(initAction, {
+          backgrounds: {
+            serviceUrl: config.images.service.url(),
+            serviceOptions: {
+              origin: {
+                host: settings.web.assetHost,
+                ssl: settings.web.ssl,
+                path: settings.web.images
+              },
+              cloudName: config.images.service.cloudName()
             },
-            cloudName: config.images.service.cloudName()
+            currentBackground: routes[config.data.defaults.pageName].background,
+            backgrounds: Object.keys(routes).map((route) => {
+              return routes[route].background;
+            })
           },
-          currentBackground: routes[config.data.defaults.pageName].background,
-          backgrounds: Object.keys(routes).map((route) => {
-            return routes[route].background;
-          })
-        },
-        page: {
-          defaultPageName: config.data.defaults.pageName
-        }
+          page: {
+            defaultPageName: config.data.defaults.pageName
+          }
+        });
+      })
+      .then(() => {
+        debug('Prefetching priority 0 route content');
+        return Promise.all(Object.keys(routes).map((route) => {
+          if (routes[route].priority === 0) {
+            debug('execute 0 route', routes[route]);
+            return context.executeAction(routes[route].action, {});
+          }
+          return Promise.resolve();
+        }));
+      })
+      .then(() => {
+        debug('Executing navigate action');
+        return context.executeAction(navigateAction, {
+          url: req.url
+        });
+      })
+      .then(null, (reason) => {
+        debug('Navigate failure reason: ' +
+          require('util').inspect(reason, { depth: null }));
+        res.status(reason.statusCode);
+        return context.executeAction(
+          routes[utils.conformErrorStatus(reason.statusCode)].action, {}
+        );
+      })
+      .then(() => {
+        debug(`Reading the inline styles from ${settings.dist.css.inline}`);
+        return nodeUtils.nodeCall(fs.readFile, settings.dist.css.inline, {
+          encoding: 'utf8'
+        });
+      })
+      .then((inlineStyles) => {
+        renderProps.inlineStyles = inlineStyles;
+        debug(`Reading the inline scripts from ${settings.dist.inlineScript}`);
+        return nodeUtils.nodeCall(fs.readFile, settings.dist.inlineScript, {
+          encoding: 'utf8'
+        });
+      })
+      .then((inlineScript) => {
+        renderProps.inlineScript = inlineScript;
+        debug('Rendering the application');
+        renderApp(req, res, context, app, renderProps);
+      })
+      .catch((err) => {
+        debug('bootstrap main route failed');
+        err.status = err.statusCode = 500;
+        next(err);
       });
-    })
-    .then(() => {
-      debug('Prefetching priority 0 route content');
-      return Promise.all(Object.keys(routes).map((route) => {
-        if (routes[route].priority === 0) {
-          debug('execute 0 route', routes[route]);
-          return context.executeAction(routes[route].action, {});
-        }
-        return Promise.resolve();
-      }));
-    })
-    .then(() => {
-      debug('Executing navigate action');
-      return context.executeAction(navigateAction, {
-        url: req.url
-      });
-    })
-    .then(null, (reason) => {
-      debug('Navigate failure reason: ' +
-        require('util').inspect(reason, { depth: null }));
-      res.status(reason.statusCode);
-      return context.executeAction(
-        routes[utils.conformErrorStatus(reason.statusCode)].action, {}
-      );
-    })
-    .then(() => {
-      debug(`Reading the inline styles from ${settings.dist.css.inline}`);
-      return nodeUtils.nodeCall(fs.readFile, settings.dist.css.inline, {
-        encoding: 'utf8'
-      });
-    })
-    .then((inlineStyles) => {
-      renderProps.inlineStyles = inlineStyles;
-      debug(`Reading the inline scripts from ${settings.dist.inlineScript}`);
-      return nodeUtils.nodeCall(fs.readFile, settings.dist.inlineScript, {
-        encoding: 'utf8'
-      });
-    })
-    .then((inlineScript) => {
-      renderProps.inlineScript = inlineScript;
-      debug('Rendering the application');
-      renderApp(req, res, context, app, renderProps);
-    })
-    .catch((err) => {
-      debug('bootstrap main route failed');
-      err.status = err.statusCode = 500;
-      next(err);
-    });
   };
 }

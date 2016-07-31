@@ -58,26 +58,26 @@ function latestTypeAndOperation (dehydratedRequests, type, operations, prop) {
     propFind = prop && property.find.bind(null, prop);
 
   return dehydratedRequests
-  .sort((a, b) => {
-    return (a.timestamp - b.timestamp) * -1; // descending order (latest first)
-  })
-  .filter((req) => {
-    const fallback = req.fallback;
-    const propVal = prop && propFind(req);
+    .sort((a, b) => {
+      return (a.timestamp - b.timestamp) * -1; // descending order (latest first)
+    })
+    .filter((req) => {
+      const fallback = req.fallback;
+      const propVal = prop && propFind(req);
 
-    // Match type and operation (operaion match is any one of given set).
-    // Then, unique key or unqiue custom prop val.
-    if (fallback.type === type &&
-        operations.indexOf(fallback.operation) !== -1 &&
-        (prop || keys.indexOf(fallback.key) === -1) &&
-        (!prop || (propVal && vals.indexOf(propVal) === -1))) {
-      keys.push(fallback.key);
-      propVal && vals.push(propVal);
-      return true;
-    }
+      // Match type and operation (operaion match is any one of given set).
+      // Then, unique key or unqiue custom prop val.
+      if (fallback.type === type &&
+          operations.indexOf(fallback.operation) !== -1 &&
+          (prop || keys.indexOf(fallback.key) === -1) &&
+          (!prop || (propVal && vals.indexOf(propVal) === -1))) {
+        keys.push(fallback.key);
+        propVal && vals.push(propVal);
+        return true;
+      }
 
-    return false;
-  });
+      return false;
+    });
 }
 export { latestTypeAndOperation as latest }
 

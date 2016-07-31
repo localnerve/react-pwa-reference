@@ -74,13 +74,13 @@ describe('sw/sync/index', function () {
   describe('removeFallback', function () {
     it('should remove fallback property', function (done) {
       index.removeFallback({}, requestReplayable)
-      .then(function (req) {
-        return req.json();
-      })
-      .then(function (body) {
-        expect(body[syncable.propertyName]).to.be.undefined;
-        done();
-      });
+        .then(function (req) {
+          return req.json();
+        })
+        .then(function (body) {
+          expect(body[syncable.propertyName]).to.be.undefined;
+          done();
+        });
     });
 
     it('should include options', function (done) {
@@ -102,10 +102,10 @@ describe('sw/sync/index', function () {
       };
 
       index.maintainRequests({}, response, requestReplayable)
-      .then(function (result) {
-        expect(result).to.eql(response);
-        done();
-      });
+        .then(function (result) {
+          expect(result).to.eql(response);
+          done();
+        });
     });
   });
 
@@ -136,18 +136,18 @@ describe('sw/sync/index', function () {
 
     it('should return a deferred response', function (done) {
       index.deferRequest(apiPath, requestNonReplayable)
-      .then(function (response) {
-        expect(response.statusText).to.equal('deferred');
-        done();
-      });
+        .then(function (response) {
+          expect(response.statusText).to.equal('deferred');
+          done();
+        });
     });
 
     it('should return a failed response', function (done) {
       index.deferRequest(apiPath, requestReplayable)
-      .then(function (response) {
-        expect(response.statusText).to.equal('failed');
-        done();
-      });
+        .then(function (response) {
+          expect(response.statusText).to.equal('failed');
+          done();
+        });
     });
 
     describe('sync.register', function () {
@@ -172,14 +172,14 @@ describe('sw/sync/index', function () {
 
       function testSyncRegister (request, done) {
         index.deferRequest(apiPath, request)
-        .then(function (response) {
-          expect(response.statusText).to.equal('deferred');
-          expect(calledSyncRegister).to.equal(1);
-          done();
-        })
-        .catch(function (err) {
-          done(err || unexpectedError);
-        });
+          .then(function (response) {
+            expect(response.statusText).to.equal('deferred');
+            expect(calledSyncRegister).to.equal(1);
+            done();
+          })
+          .catch(function (err) {
+            done(err || unexpectedError);
+          });
       }
 
       it('should register for replayable request', function (done) {
@@ -385,8 +385,8 @@ describe('sw/sync/index', function () {
         tag: testTag,
         waitUntil: function (promise) {
           promise
-          .then(success)
-          .catch(failure);
+            .then(success)
+            .catch(failure);
         }
       };
     }
