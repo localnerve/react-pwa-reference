@@ -127,7 +127,7 @@
     "express-error-handler": "localnerve/express-error-handler",
     "fluxible": "1.2.0",
     "fluxible-addons-react": "0.2.8",
-    "fluxible-plugin-fetchr": "0.3.10",
+    "fluxible-plugin-fetchr": "0.3.11",
     "fluxible-router": "0.4.16",
     "inherits": "2.0.1",
     "lodash": "4.14.1",
