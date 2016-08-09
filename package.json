@@ -97,7 +97,7 @@
     "gulp-webpagetest": "1.1.1",
     "jsdom": "9.4.1",
     "json-loader": "0.5.4",
-    "lodash-webpack-plugin": "0.9.3",
+    "lodash-webpack-plugin": "0.9.4",
     "mkdirp": "0.5.1",
     "mocha": "3.0.2",
     "mockery": "1.7.0",
