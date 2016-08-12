@@ -24,7 +24,8 @@ export default function perfbudgetTaskFactory () {
       budget: {
         // 3000 nominal + (2 * 300) ssl negotiation
         SpeedIndex: 3600
-      }
+      },
+      wptInstance: 'https://www.webpagetest.org'
     });
 
     return wpt(done);
