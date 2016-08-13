@@ -78,7 +78,7 @@
     "colors": "1.1.2",
     "coveralls": "2.11.12",
     "cross-env": "2.0.0",
-    "del": "2.2.1",
+    "del": "2.2.2",
     "eslint": "3.2.2",
     "eslint-plugin-react": "6.0.0",
     "fg-loadcss": "1.2.0",
