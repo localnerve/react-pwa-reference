@@ -15,8 +15,7 @@
     "cover": {
       "plugins": [
         [
-          "__coverage__", {
-            "ignore": "src/tests/"
+          "istanbul", {
           }
         ]
       ]
