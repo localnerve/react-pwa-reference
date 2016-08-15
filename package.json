@@ -82,7 +82,7 @@
     "cross-env": "2.0.0",
     "del": "2.2.2",
     "eslint": "3.3.0",
-    "eslint-plugin-react": "6.0.0",
+    "eslint-plugin-react": "6.1.0",
     "fg-loadcss": "1.2.0",
     "fontfaceobserver": "2.0.1",
     "foundation-apps": "localnerve/foundation-apps",
