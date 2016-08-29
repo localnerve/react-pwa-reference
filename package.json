@@ -84,7 +84,7 @@
     "eslint": "3.4.0",
     "eslint-plugin-react": "6.2.0",
     "fg-loadcss": "1.2.0",
-    "fontfaceobserver": "2.0.1",
+    "fontfaceobserver": "2.0.3",
     "foundation-apps": "localnerve/foundation-apps",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-cssmin": "0.1.7",
