@@ -97,7 +97,7 @@
     "gulp-svg2png": "1.0.2",
     "gulp-svgmin": "1.2.2",
     "gulp-webpagetest": "1.1.1",
-    "jsdom": "9.4.2",
+    "jsdom": "9.4.3",
     "json-loader": "0.5.4",
     "lodash-webpack-plugin": "0.10.0",
     "mkdirp": "0.5.1",
