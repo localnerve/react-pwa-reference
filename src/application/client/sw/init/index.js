@@ -66,7 +66,7 @@ function updateAndSetup (payload) {
           return apiRequests(payload.apis);
         })
         .then(() => {
-          return routes(payload.stores);
+          return routes(payload.stores, payload.startup);
         });
     } else {
       debug('setup skipped');

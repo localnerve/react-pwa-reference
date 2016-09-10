@@ -40,6 +40,21 @@ let Application = React.createClass({
       this.context.executeAction(navigateAction, {
         url: event.data.url
       });
+      return;
+    }
+
+    if (event.data.command === 'ping') {
+      debug('ping');
+      const respondTo = event.data.port || (event.ports && event.ports[0]) ||
+        event.source;
+
+      if (respondTo) {
+        debug('pong');
+        respondTo.postMessage({
+          message: 'pong'
+        });
+      }
+      return;
     }
   },
 

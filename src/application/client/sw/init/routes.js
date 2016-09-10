@@ -7,7 +7,8 @@
  * Uses a custom 'fastest' sw-toolbox route handler and a higher level TTL cache
  * to keep requests down and response as fast as possible.
  */
-/* global Promise, Request, URL, location */
+/* global Promise, Request, URL, location, clients, MessageChannel, setTimeout,
+   clearTimeout */
 import toolbox from 'sw-toolbox';
 import debugLib from 'sw/utils/debug';
 import { contentRace } from 'sw/utils/customHelpers';
@@ -23,6 +24,62 @@ const debug = debugLib('init:routes');
 // Recent Route Lifespan (after this, it is re-fetched and cached)
 const routeTTL = 1000 * 60 * 20;
 
+// Timeout for ping message to browser client.
+const pingTimeout = 250;
+
+/**
+ * Determine if server-side render should be requested.
+ * Server-side render should be requested if no browser present
+ * (and can't determine JS ability) OR if a browser does not respond to ping
+ * message (presumes a client has no-js).
+ *
+ * @param {Boolean} startup - True if called from startup, false otherwise.
+ * @returns {Promise} resolves to '1' if server-side render should happen,
+ * '0' otherwise.
+ */
+function determineServerSideRender (startup) {
+  if (!startup) {
+    // If not startup, then JS is happening, so SSR not needed.
+    return Promise.resolve(0);
+  }
+
+  return clients.matchAll({
+    type: 'window'
+  })
+    .then((windowClients) => {
+      if (windowClients.length > 0) {
+        return Promise.all(
+          windowClients.map((windowClient) => {
+            return new Promise((resolve) => {
+              const timeout = setTimeout(resolve, pingTimeout, 1),
+                messageChannel = new MessageChannel();
+
+              messageChannel.port1.onmessage = (event) => {
+                if (event.data.message === 'pong') {
+                  debug('Got ping response');
+                  clearTimeout(timeout);
+                  // Got ping response, so NO server side render req'd
+                  resolve(0);
+                }
+              };
+
+              windowClient.postMessage({
+                command: 'ping',
+                port: messageChannel.port2
+              }, [messageChannel.port2]);
+            });
+          })
+        ).then(function(results) {
+          // If there is any 1 result (a timeout), then render on server.
+          return results.indexOf(1) > -1 ? 1 : 0;
+        });
+      }
+
+      debug('no clients found to determine server side render');
+      return 1;
+    });
+}
+
 /**
  * Create a request for network use.
  * Adds a parameter to tell the server to skip rendering.
@@ -35,13 +92,16 @@ const routeTTL = 1000 * 60 * 20;
  *
  * @private
  *
- * @param {Object|String} request - The Request from sw-toolbox router, or a string.
+ * @param {Number} serverSideRender - [0 or 1], 1 means should render on server.
+ * @param {Object|String} request - The network Request or url string.
  * @returns String of the new request url.
  */
-function networkRequest (request) {
+function networkRequest (serverSideRender, request) {
   const url =
     addOrReplaceUrlSearchParameter(
-      (typeof request !== 'string') ? request.url : request, 'render', '0'
+      (typeof request !== 'string') ? request.url : request,
+      'render',
+      '' + serverSideRender
     );
 
   return new Request(url, {
@@ -125,17 +185,18 @@ function getRecentRoute (url) {
  *
  * @private
  *
+ * @param {Number} serverSideRender - The server side render value (1 for SSR).
  * @param {String} url - The url to cache and install.
  * @returns {Promise} A Promise resolving on success (no sig value).
  */
-function cacheAndInstallRoute (url) {
+function cacheAndInstallRoute (serverSideRender, url) {
   debug('cache route', url);
 
-  // This has to happen regardless of the precache outcome.
-  installRouteGetHandler(url);
+  // This has to happen regardless of the precache outcome, so don't wait.
+  installRouteGetHandler(serverSideRender, url);
 
   // Must handle errors here, precache error is irrelevant beyond here.
-  return contentRace(networkRequest(url), url, null, {
+  return contentRace(networkRequest(serverSideRender, url), url, null, {
     successHandler: addRecentRoute
   })
     .catch((error) => {
@@ -148,14 +209,15 @@ function cacheAndInstallRoute (url) {
  *
  * @private
  *
+ * @param {Number} serverSideRender - The server side render value (1 for SSR).
  * @param {String} url - The url to install route GET handler on.
  * @returns {Promise} Resolves to undefined when complete.
  */
-function installRouteGetHandler (url) {
+function installRouteGetHandler (serverSideRender, url) {
   debug('install route GET handler on', url);
 
   toolbox.router.get(url, routeHandlerFactory(
-    networkRequest, cacheRequest
+    networkRequest.bind(null, serverSideRender), cacheRequest
   ), {
     debug: toolbox.options.debug,
     successHandler: addRecentRoute
@@ -178,30 +240,34 @@ function installRouteGetHandler (url) {
  * (add/getRecentRoute) is used to keep track of routes recently
  * fetched and cached from the route GET handler.
  *
- * @param {Object} payload - The payload of the init message.
+ * @param {Object} payload - The stores container.
  * @param {Object} payload.RouteStore.routes - The routes of the application.
+ * @param {Boolean} startup - True if called from sw startup, false otherwise.
  * @returns {Promise} Resolves to array of all installed route promises.
  */
-export default function cacheRoutes (payload) {
+export default function cacheRoutes (payload, startup) {
   const routes = payload.RouteStore.routes;
 
   debug('received routes', routes);
 
-  return Promise.all(Object.keys(routes).map((route) => {
-    if (routes[route].mainNav) {
-      const url = routes[route].path;
+  return determineServerSideRender(startup)
+    .then((serverSideRender) => {
+      return Promise.all(Object.keys(routes).map((route) => {
+        if (routes[route].mainNav) {
+          const url = routes[route].path;
 
-      return getRecentRoute(url).then((skipCache) => {
-        if (skipCache) {
-          return installRouteGetHandler(url);
+          return getRecentRoute(url).then((skipCache) => {
+            if (skipCache) {
+              return installRouteGetHandler(serverSideRender, url);
+            }
+            return cacheAndInstallRoute(serverSideRender, url);
+          }).catch((error) => {
+            debug('failed to get recentRoute', error);
+            return cacheAndInstallRoute(serverSideRender, url);
+          });
         }
-        return cacheAndInstallRoute(url);
-      }).catch((error) => {
-        debug('failed to get recentRoute', error);
-        return cacheAndInstallRoute(url);
-      });
-    }
 
-    return Promise.resolve();
-  }));
+        return Promise.resolve();
+      }));
+    });
 }
