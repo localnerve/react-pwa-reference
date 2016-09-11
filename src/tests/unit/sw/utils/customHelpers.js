@@ -47,6 +47,7 @@ describe('sw/utils/customHelpers', function () {
   });
 
   afterEach(function () {
+    globalFetch.reset();
     globalFetch.setEmulateError(false);
     globalFetch.setMockResponse(undefined);
   });

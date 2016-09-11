@@ -61,6 +61,7 @@ describe('sw/utils/customNetworkFirst', function () {
   });
 
   afterEach(function () {
+    globalFetch.reset();
     globalFetch.setResponseDelay(0);
     globalFetch.setEmulateError(false);
     globalFetch.setMockResponse(undefined);
