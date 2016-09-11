@@ -56,8 +56,6 @@ describe('sw/init/routes', () => {
       }
     };
 
-    treoMock.setValue([]);
-
     routesModule = require('application/client/sw/init/routes').default;
   });
 
@@ -75,6 +73,7 @@ describe('sw/init/routes', () => {
   });
 
   beforeEach(() => {
+    treoMock.setValue([]);
     calledPostMessage = 0;
   });
 
@@ -211,7 +210,36 @@ describe('sw/init/routes', () => {
         })
     });
 
-    it.skip('should remove non-SSR routes from cache if SSR', () => {
+    it('should remove non-SSR routes from cache if SSR', (done) => {
+      const routes = payload.RouteStore.routes;
+
+      treoMock.setValue(Object.keys(routes)
+        .reduce((prev, curr) => {
+          prev[routes[curr].path] = {};
+          prev[routes[curr].path].timestamp = Date.now();
+          prev[routes[curr].path].ssr = false;
+          return prev;
+        }, {}));
+
+      prep(() => {
+        calledPostMessage++;
+      });
+
+      runTest(true)
+        .then(() => {
+          const dbRoutes = treoMock.getValue();
+          expect(Object.keys(dbRoutes).length).to.equal(2);
+          // They should all have been flipped to true
+          Object.keys(routes).forEach((route) => {
+            expect(dbRoutes[routes[route].path].ssr).to.be.true;
+          });
+          expect(calledPostMessage).to.equal(1);
+          checkFetchedUrls('render=1');
+          done();
+        })
+        .catch((error) => {
+          done(error || unexpectedFlowError);
+        });
     });
   });
 
@@ -297,7 +325,7 @@ describe('sw/init/routes', () => {
       runTest(false, dummyResponse)
         .then(() => {
           // nothing cached
-          expect(cache.size()).to.equal(0);
+          expect(cache._size()).to.equal(0);
           // nothing fetched
           expect(findFetchedTestUrls().length).to.equal(0);
           // routes installed
