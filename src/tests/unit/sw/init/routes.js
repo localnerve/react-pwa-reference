@@ -78,6 +78,30 @@ describe('sw/init/routes', () => {
     calledPostMessage = 0;
   });
 
+  function findFetchedTestUrls () {
+    return globalFetch.findUrls(
+      Object.keys(payload.RouteStore.routes).map((route) => {
+        return payload.RouteStore.routes[route].path;
+      })
+    );
+  }
+
+  function checkInstalledTestUrls () {
+    const methodMap = toolbox.router.routes.values().next().value;
+    const getRouteMap = methodMap.get('get');
+    const routeREs = getRouteMap.keys();
+
+    expect(getRouteMap.size).to.equal(
+      Object.keys(payload.RouteStore.routes).length
+    );
+
+    Object.keys(payload.RouteStore.routes).forEach((route) => {
+      expect((new RegExp(routeREs.next().value)).test(
+        payload.RouteStore.routes[route].path
+      )).to.be.true;
+    });
+  }
+
   function runTest (startup, response) {
     toolbox.mockSetup(response);
 
@@ -112,11 +136,7 @@ describe('sw/init/routes', () => {
     }
 
     function checkFetchedUrls (param) {
-      const urls = globalFetch.findUrls(
-        Object.keys(payload.RouteStore.routes).map((route) => {
-          return payload.RouteStore.routes[route].path;
-        })
-      );
+      const urls = findFetchedTestUrls();
 
       expect(urls.length).to.be.at.least(
         Object.keys(payload.RouteStore.routes).length
@@ -181,18 +201,7 @@ describe('sw/init/routes', () => {
     it('should install the given routes', (done) => {
       runTest()
         .then(() => {
-          const methodMap = toolbox.router.routes.values().next().value;
-          const getRouteMap = methodMap.get('get');
-          const routeREs = getRouteMap.keys();
-
-          expect(getRouteMap.size).to.equal(2);
-
-          Object.keys(payload.RouteStore.routes).forEach((route) => {
-            expect((new RegExp(routeREs.next().value)).test(
-              payload.RouteStore.routes[route].path
-            )).to.be.true;
-          });
-
+          checkInstalledTestUrls();
           done();
         })
         .catch((error) => {
@@ -202,6 +211,10 @@ describe('sw/init/routes', () => {
   });
 
   describe('cache behavior', () => {
+    beforeEach(() => {
+      globalFetch.reset();
+    });
+
     afterEach(function () {
       delete global.caches;
     });
@@ -247,8 +260,42 @@ describe('sw/init/routes', () => {
         });
     });
 
-    it.skip('should not fetch the routes if recent, but install handlers',
-    () => {
+    it('should not fetch routes if recent, but install handlers',
+    (done) => {
+      const routes = payload.RouteStore.routes;
+      const dummyResponse = new global.Response({
+        body: 'dummy'
+      });
+
+      // Set routes to "recent"
+      treoMock.setValue(Object.keys(routes).reduce((prev, curr) => {
+        prev[routes[curr].path] = Date.now();
+        return prev;
+      }, {}));
+
+      // For actual cache inspection (making sure it remains empty)
+      const cache = new globalCacheStorage.Cache();
+      setupCacheStorage({
+        cacheNames: {
+          [toolbox.options.cache.name]: cache
+        }
+      });
+
+      // Set a dummy response for recent cache hit
+      runTest(false, dummyResponse)
+        .then(() => {
+          // nothing cached
+          expect(cache.size()).to.equal(0);
+          // nothing fetched
+          expect(findFetchedTestUrls().length).to.equal(0);
+          // routes installed
+          checkInstalledTestUrls();
+
+          done();
+        })
+        .catch((error) => {
+          done(error || unexpectedFlowError);
+        });
     });
   });
 });
