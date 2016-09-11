@@ -8,7 +8,7 @@
  * to keep requests down and response as fast as possible.
  */
 /* global Promise, Request, URL, location, clients, MessageChannel, setTimeout,
-   clearTimeout */
+   clearTimeout, caches */
 import toolbox from 'sw-toolbox';
 import debugLib from 'sw/utils/debug';
 import { contentRace } from 'sw/utils/customHelpers';
@@ -28,10 +28,51 @@ const routeTTL = 1000 * 60 * 20;
 const pingTimeout = 250;
 
 /**
+ * Remove all non-SSR main nav routes from cache and state.
+ *
+ * @returns {Promise} resolves to array of booleans representing cache deletions.
+ */
+function removeAndInvalidateNonSSRRoutes () {
+  return idb.get(idb.stores.init, 'routes').then((routes = {}) => {
+    const nonSSRRouteUrls = Object.keys(routes).filter((url) => {
+      return !routes[url].ssr;
+    });
+
+    // Invalidate (will not skip fetchAndCache)
+    nonSSRRouteUrls.forEach((url) => {
+      routes[url].timestamp = 0;
+    });
+
+    if (nonSSRRouteUrls.length > 0) {
+      return idb.put(idb.stores.init, 'routes', routes)
+        .then(() => {
+          return caches.open(toolbox.options.cache.name);
+        })
+        .then((cache) => {
+          return Promise.all(
+            nonSSRRouteUrls.map((url) => {
+              return cache.delete(new Request(url), {
+                ignoreSearch: true, ignoreMethod: true, ignoreVary: true
+              });
+            })
+          );
+        });
+    }
+
+    return Promise.resolve([]);
+  });
+}
+
+/**
  * Determine if server-side render should be requested.
  * Server-side render should be requested if no browser present
  * (and can't determine JS ability) OR if a browser does not respond to ping
  * message (presumes a client has no-js).
+ *
+ * If SSR required, remove and invalidate the non-SSR routes.
+ * Forces network request and cache population with SSR versions.
+ *
+ * @see #98
  *
  * @param {Boolean} startup - True if called from startup, false otherwise.
  * @returns {Promise} resolves to '1' if server-side render should happen,
@@ -39,6 +80,7 @@ const pingTimeout = 250;
  */
 function determineServerSideRender (startup) {
   if (!startup) {
+    debug('JS in effect, no SSR required');
     // If not startup, then JS is happening, so SSR not needed.
     return Promise.resolve(0);
   }
@@ -70,8 +112,11 @@ function determineServerSideRender (startup) {
             });
           })
         ).then(function(results) {
-          // If there is any 1 result (a timeout), then render on server.
-          return results.indexOf(1) > -1 ? 1 : 0;
+          const serverSideRender = results.indexOf(1) > -1 ? 1 : 0;
+
+          return removeAndInvalidateNonSSRRoutes().then(() => {
+            return serverSideRender;
+          });
         });
       }
 
@@ -136,13 +181,18 @@ function cacheRequest (request) {
  *
  * @private
  *
+ * @param {Boolean} serverSideRender - [0 or 1] 1 means serverSideRender.
  * @param {Request} request - The request of the successful network fetch.
  * @param {Response} response - The response of the successful network fetch.
  * @returns {Promise} A Promise resolving to the input response.
  */
-function addRecentRoute (request, response) {
+function addRecentRoute (serverSideRender, request, response) {
   return idb.get(idb.stores.init, 'routes').then((routes = {}) => {
-    routes[(new URL(request.url, location.origin)).pathname] = Date.now();
+    const url = (new URL(request.url, location.origin)).pathname;
+
+    routes[url] = routes[url] || {};
+    routes[url].timestamp = Date.now();
+    routes[url].ssr = serverSideRender === 1;
 
     return idb.put(idb.stores.init, 'routes', routes).then(() => {
       return response;
@@ -162,7 +212,7 @@ function addRecentRoute (request, response) {
 function getRecentRoute (url) {
   return idb.get(idb.stores.init, 'routes').then((routes) => {
     if (routes && routes[url]) {
-      const age = Date.now() - routes[url];
+      const age = Date.now() - routes[url].timestamp;
 
       if (age < routeTTL) {
         return toolbox.cacheOnly(new Request(url)).then((response) => {
@@ -197,7 +247,7 @@ function cacheAndInstallRoute (serverSideRender, url) {
 
   // Must handle errors here, precache error is irrelevant beyond here.
   return contentRace(networkRequest(serverSideRender, url), url, null, {
-    successHandler: addRecentRoute
+    successHandler: addRecentRoute.bind(null, serverSideRender)
   })
     .catch((error) => {
       debug(`failed to precache ${url}`, error);
@@ -220,7 +270,7 @@ function installRouteGetHandler (serverSideRender, url) {
     networkRequest.bind(null, serverSideRender), cacheRequest
   ), {
     debug: toolbox.options.debug,
-    successHandler: addRecentRoute
+    successHandler: addRecentRoute.bind(null, serverSideRender)
   });
 
   return Promise.resolve();
@@ -228,11 +278,13 @@ function installRouteGetHandler (serverSideRender, url) {
 
 /**
  * What this does:
- * 1. Fetch the mainNav routes of the application and update the cache with the responses.
+ * 1. Fetch the mainNav routes of the application and update the cache with the
+ * responses.
  * 2. Install route handlers for all the main nav routes.
  *
  * The route GET handler will be the start of a main navigation entry point for
- * the application. It will be fetched and cached from the network, unless offline.
+ * the application. It will be fetched and cached from the network, unless
+ * offline.
  * The page returned, will cause an 'init' command to execute again, along with
  * this method.
  *

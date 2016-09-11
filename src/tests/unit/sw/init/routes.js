@@ -78,6 +78,14 @@ describe('sw/init/routes', () => {
     calledPostMessage = 0;
   });
 
+  afterEach(function () {
+    delete global.caches;
+  });
+
+  function setupCacheStorage (options) {
+    global.caches = globalCacheStorage.create(options);
+  }
+
   function findFetchedTestUrls () {
     return globalFetch.findUrls(
       Object.keys(payload.RouteStore.routes).map((route) => {
@@ -110,7 +118,7 @@ describe('sw/init/routes', () => {
   }
 
   describe('detectServerSideRender', () => {
-    let saveClients;
+    let saveClients, cache;
 
     before(() => {
       saveClients = global.clients;
@@ -126,6 +134,13 @@ describe('sw/init/routes', () => {
     });
 
     function prep (postMessage) {
+      cache = new globalCacheStorage.Cache();
+      setupCacheStorage({
+        cacheNames: {
+          [toolbox.options.cache.name]: cache
+        }
+      });
+
       global.clients = {
         matchAll: () => {
           return Promise.resolve([{
@@ -195,6 +210,9 @@ describe('sw/init/routes', () => {
           done(error || unexpectedFlowError);
         })
     });
+
+    it.skip('should remove non-SSR routes from cache if SSR', () => {
+    });
   });
 
   describe('route behavior', () => {
@@ -214,14 +232,6 @@ describe('sw/init/routes', () => {
     beforeEach(() => {
       globalFetch.reset();
     });
-
-    afterEach(function () {
-      delete global.caches;
-    });
-
-    function setupCacheStorage (options) {
-      global.caches = globalCacheStorage.create(options);
-    }
 
     it('should cache the given routes if not recent', (done) => {
       treoMock.setValue([]); // set not recent
@@ -269,7 +279,9 @@ describe('sw/init/routes', () => {
 
       // Set routes to "recent"
       treoMock.setValue(Object.keys(routes).reduce((prev, curr) => {
-        prev[routes[curr].path] = Date.now();
+        prev[routes[curr].path] = {};
+        prev[routes[curr].path].timestamp = Date.now();
+        prev[routes[curr].path].ssr = false;
         return prev;
       }, {}));
 
