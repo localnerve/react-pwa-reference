@@ -239,7 +239,7 @@ describe('sw/utils/customNetworkFirst', function () {
       })
         .then(function (response) {
           expect(response).to.eql(responses.resCache);
-          setTimeout(done, 100);
+          setTimeout(done, 200);
         })
         .catch(function (error) {
           setTimeout(done, 200, error || unexpectedFlowError);
@@ -271,7 +271,7 @@ describe('sw/utils/customNetworkFirst', function () {
         .then(function (response) {
           expect(calledFallback).to.equal(1);
           expect(response).to.eql(responses.resCache);
-          setTimeout(done, 100);
+          setTimeout(done, 200);
         })
         .catch(function (error) {
           setTimeout(done, 200, error || unexpectedFlowError);
