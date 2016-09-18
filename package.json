@@ -95,7 +95,7 @@
     "gulp-rev": "^7.0.0",
     "gulp-sass": "2.3.2",
     "gulp-svg2png": "1.0.2",
-    "gulp-svgmin": "1.2.2",
+    "gulp-svgmin": "1.2.3",
     "gulp-webpagetest": "1.1.1",
     "jsdom": "9.5.0",
     "json-loader": "0.5.4",
