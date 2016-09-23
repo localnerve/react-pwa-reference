@@ -81,7 +81,7 @@
     "coveralls": "2.11.14",
     "cross-env": "2.0.1",
     "del": "2.2.2",
-    "eslint": "3.5.0",
+    "eslint": "3.6.0",
     "eslint-plugin-react": "6.3.0",
     "fg-loadcss": "1.2.0",
     "fontfaceobserver": "2.0.4",
