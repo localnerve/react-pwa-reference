@@ -101,7 +101,7 @@
     "json-loader": "0.5.4",
     "lodash-webpack-plugin": "0.10.1",
     "mkdirp": "0.5.1",
-    "mocha": "3.0.2",
+    "mocha": "3.1.0",
     "mockery": "1.7.0",
     "node-sass-asset-functions": "0.0.9",
     "nyc": "8.3.0",
