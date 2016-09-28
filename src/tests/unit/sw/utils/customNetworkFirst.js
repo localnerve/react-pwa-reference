@@ -9,7 +9,7 @@ var expect = require('chai').expect;
 var mocks = require('test/mocks');
 
 describe('sw/utils/customNetworkFirst', function () {
-  var toolbox, globalFetch, GlobalRequest, globalCacheStorage;
+  var toolbox, globalFetch, GlobalRequest, globalCacheStorage, treoMock;
   var requestUrl = 'someurl', requestCacheUrl = requestUrl + '-cache';
   var unexpectedFlowError = new Error('Unexpected flow occurred');
   var responses, requests;
@@ -20,6 +20,10 @@ describe('sw/utils/customNetworkFirst', function () {
 
     mocks.swData.begin();
     mocks.swToolbox.begin();
+    mocks.swUtilsIdbTreo.begin();
+
+    treoMock = require('treo');
+    treoMock.setValue(null);
 
     toolbox = require('sw-toolbox');
     toolbox.mockSetup();
@@ -43,6 +47,7 @@ describe('sw/utils/customNetworkFirst', function () {
     delete global.response;
     delete global.fetch;
     toolbox.mockTeardown();
+    mocks.swUtilsIdbTreo.end();
     mocks.swToolbox.end();
     mocks.swData.end();
   });

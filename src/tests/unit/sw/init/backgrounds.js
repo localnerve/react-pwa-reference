@@ -9,7 +9,7 @@ var expect = require('chai').expect;
 var mocks = require('test/mocks');
 
 describe('sw/init/backgrounds', function () {
-  var toolbox, backgrounds,
+  var toolbox, backgrounds, treoMock,
     mockFetchUnexpected = new Error('unexpected mockFetch results'),
     imageService = 'https://some-service',
     backgroundUrls = {
@@ -30,6 +30,11 @@ describe('sw/init/backgrounds', function () {
     global.caches = require('test/mocks/sw-caches').create();
     mocks.swData.begin();
     mocks.swToolbox.begin();
+    mocks.swUtilsIdbTreo.begin();
+
+    treoMock = require('treo');
+    treoMock.setValue(null);
+
     toolbox = require('sw-toolbox');
 
     backgrounds = require('application/client/sw/init/backgrounds').default;
@@ -37,6 +42,7 @@ describe('sw/init/backgrounds', function () {
 
   after(function () {
     toolbox.mockTeardown();
+    mocks.swUtilsIdbTreo.end();
     mocks.swToolbox.end();
     mocks.swData.end();
     delete global.Request;

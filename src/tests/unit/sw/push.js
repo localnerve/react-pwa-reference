@@ -13,7 +13,7 @@ var Response = require('test/mocks/response');
 describe('sw/push', function () {
   var calledPostMessage,
     unexpectedFlowError = new Error('unexpected push error');
-  var globalFetch, toolbox, selfMock;
+  var globalFetch, toolbox, selfMock, treoMock;
 
   before('setup sw/push', function () {
     this.timeout(5000);
@@ -21,6 +21,10 @@ describe('sw/push', function () {
     mocks.swData.begin();
     mocks.swToolbox.begin();
     mocks.swSyncPush.begin();
+    mocks.swUtilsIdbTreo.begin();
+
+    treoMock = require('treo');
+    treoMock.setValue(null);
 
     selfMock = new Self();
     toolbox = require('sw-toolbox');
@@ -62,6 +66,7 @@ describe('sw/push', function () {
     delete global.fetch;
     toolbox.mockTeardown();
     selfMock.teardown();
+    mocks.swUtilsIdbTreo.end();
     mocks.swSyncPush.end();
     mocks.swToolbox.end();
     mocks.swData.end();

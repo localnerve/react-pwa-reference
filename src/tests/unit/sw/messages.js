@@ -9,7 +9,7 @@ const mocks = require('test/mocks');
 const Self = require('test/mocks/self');
 
 describe('sw/messages', () => {
-  let selfMock, initMock, pushSyncMock,
+  let selfMock, initMock, pushSyncMock, treoMock,
     calledPostMessage,
     unexpectedFlowError = new Error('unexpected messages error');
 
@@ -18,6 +18,11 @@ describe('sw/messages', () => {
     mocks.swData.begin();
     mocks.swInit.begin();
     mocks.swSyncPush.begin();
+    mocks.swUtilsIdbTreo.begin();
+
+    treoMock = require('treo');
+    treoMock.setValue(null);
+
     selfMock = new Self();
     selfMock.setup();
 
@@ -39,6 +44,7 @@ describe('sw/messages', () => {
   after('sw/message', () => {
     delete global.clients;
     selfMock.teardown();
+    mocks.swUtilsIdbTreo.end();
     mocks.swSyncPush.end();
     mocks.swInit.end();
     mocks.swData.end();
