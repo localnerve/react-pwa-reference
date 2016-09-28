@@ -14,6 +14,11 @@ import gulpNodemon from 'gulp-nodemon';
  * @returns {Function} The nodemon task.
  */
 export default function nodemonTaskFactory (settings, target) {
+  const legacyWatchOptions = {
+    legacyWatch: true,
+    pollingInterval: 250
+  };
+
   const options = {
     ignore: [
       settings.src.serviceWorker.data,
@@ -24,8 +29,9 @@ export default function nodemonTaskFactory (settings, target) {
     ignoreRoot: [
       'build',
       'tests',
-      'node_modules/application/'
+      'node_modules/application'
     ],
+    verbose: true,
     ext: 'js jsx scss',
     watch: settings.src.baseDir,
     tasks: (changedFiles) => {
@@ -48,6 +54,11 @@ export default function nodemonTaskFactory (settings, target) {
       return Array.from(tasks);
     }
   };
+
+  // This is a workaround for an OSX/chokidar issue I'm experiencing (#217)
+  if (process.platform === 'darwin') {
+    Object.assign(options, legacyWatchOptions);
+  }
 
   if (target === 'debug') {
     options.nodeArgs = ['--debug-brk'];
