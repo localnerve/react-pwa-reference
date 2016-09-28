@@ -14,6 +14,9 @@ node_modules/*
 # Optional npm cache directory
 .npm
 
+# Optional nvm version resource
+.nvmrc
+
 # Optional REPL history
 .node_repl_history
 
