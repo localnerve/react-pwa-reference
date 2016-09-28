@@ -28,16 +28,16 @@ describe('sw/sync/index', function () {
 
     // setup for fetchMock is local to suites below
     fetchMock = require('test/mocks/sw-fetch');
-
-    index = require('application/client/sw/sync');
     treoMock = require('treo');
     toolboxMock = require('sw-toolbox');
 
     toolboxMock.mockSetup();
-    treoMock.setValue([]);
+    treoMock.setValue(null);
 
     global.Request = require('test/mocks/request');
     global.Blob = require('test/mocks/blob');
+
+    index = require('application/client/sw/sync');
   });
 
   after('sw/sync/index teardown', function () {
@@ -96,6 +96,10 @@ describe('sw/sync/index', function () {
   });
 
   describe('maintainRequests', function () {
+    beforeEach(function () {
+      treoMock.setValue([]);
+    });
+
     it('should pass through the given response', function (done) {
       var response = {
         test: 'response'

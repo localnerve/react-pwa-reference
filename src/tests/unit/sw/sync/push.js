@@ -28,6 +28,7 @@ describe('sw/sync/push', function () {
     toolboxMock = require('sw-toolbox');
 
     toolboxMock.mockSetup();
+    treoMock.setValue(null);
 
     globalFetch = require('test/mocks/sw-fetch');
     global.fetch = globalFetch.fetch;

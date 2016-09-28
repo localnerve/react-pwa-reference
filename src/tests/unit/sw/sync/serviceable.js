@@ -33,17 +33,17 @@ describe('sw/sync/serviceable', function () {
       }
     });
 
-    index = require('application/client/sw/sync');
     treoMock = require('treo');
     toolboxMock = require('sw-toolbox');
 
     toolboxMock.mockSetup();
-    treoMock.setValue([]);
+    treoMock.setValue(null);
 
     global.Request = require('test/mocks/request');
     global.Response = require('test/mocks/response');
     global.Blob = require('test/mocks/blob');
 
+    index = require('application/client/sw/sync');
     serviceable = require('application/client/sw/sync/serviceable');
   });
 

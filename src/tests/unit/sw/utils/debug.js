@@ -20,10 +20,9 @@ describe('sw/utils/debug', function () {
     mocks.swUtilsIdbTreo.begin();
     mocks.swData.begin();
     treoMock = require('treo');
+    treoMock.setValue(mockValue);
     debugLib =
       require('application/client/sw/node_modules/sw/utils/debug').default;
-
-    treoMock.setValue(mockValue);
   });
 
   after(function () {
