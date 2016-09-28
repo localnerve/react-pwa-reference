@@ -111,8 +111,8 @@ describe('sw/utils/requests', function () {
     });
   });
 
-  describe('dehydrateRequest', function (done) {
-    it('should return expected object', function () {
+  describe('dehydrateRequest', function () {
+    it('should return expected object', function (done) {
       var bodyType = 'json', body = 'hello', request = {
           method: 'GET',
           url: 'https://123.456',
