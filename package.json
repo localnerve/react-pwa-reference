@@ -72,7 +72,7 @@
     "babel-plugin-istanbul": "2.0.1",
     "babel-plugin-lodash": "3.2.9",
     "babel-preset-es2015": "6.14.0",
-    "babel-preset-react": "6.11.1",
+    "babel-preset-react": "6.16.0",
     "babel-register": "6.14.0",
     "cannibalizr": "0.1.3",
     "chai": "3.5.0",
