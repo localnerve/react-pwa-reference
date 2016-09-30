@@ -74,7 +74,7 @@
     "babel-preset-es2015": "6.16.0",
     "babel-preset-react": "6.16.0",
     "babel-register": "6.16.0",
-    "cannibalizr": "0.1.3",
+    "cannibalizr": "0.1.4",
     "chai": "3.5.0",
     "chai-as-promised": "6.0.0",
     "colors": "1.1.2",
