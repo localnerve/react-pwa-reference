@@ -45,13 +45,21 @@
 
 .contact-line {
   @include grid-container;
-
   margin: 0;
+
   @include breakpoint(medium) {
     margin: 0 auto;
     min-width: 40rem;
     // hack for IE, ref: #41
     width: 0;
+  }
+
+  [itemProp="addressLocality"]::after {
+    content: ",";
+  }
+  [itemProp="addressRegion"]::before,
+  [itemProp="addressRegion"]::after {
+    content: " ";
   }
 }
 
@@ -79,5 +87,11 @@
   @media #{$height-constrained-phone} {
     font-size: 75%;
     overflow-y: visible;
+  }
+
+  .by-line-items {
+    span::after {
+      content: ' ';
+    }
   }
 }

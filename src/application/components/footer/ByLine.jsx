@@ -16,15 +16,20 @@ const ByLine = React.createClass({
 
     return (
       <div className="grid-row-spaced footer-line by-line">
-        <span>
+        <span className="by-line-items">
           <span>
-            {byLine}&nbsp;
+            {byLine}
           </span>
-          <a href={this.props.author.url} target="_blank">
-            {this.props.author.name}
-          </a>
           <span>
-            &nbsp;&copy;&nbsp;{(new Date()).getFullYear()}
+            <a href={this.props.author.url} target="_blank">
+              {this.props.author.name}
+            </a>
+          </span>
+          <span>
+            &copy;
+          </span>
+          <span>
+            {(new Date()).getFullYear()}
           </span>
         </span>
       </div>

@@ -28,10 +28,10 @@ const LocalBusiness = React.createClass({
             </span>
             <div>
               <span itemProp="addressLocality">
-                {this.props.business.address.addressLocality},&nbsp;
+                {this.props.business.address.addressLocality}
               </span>
               <span itemProp="addressRegion">
-                {this.props.business.address.addressRegion}&nbsp;
+                {this.props.business.address.addressRegion}
               </span>
               <span itemProp="postalCode">
                 {this.props.business.address.postalCode}
