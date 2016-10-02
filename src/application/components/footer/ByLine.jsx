@@ -17,11 +17,15 @@ const ByLine = React.createClass({
     return (
       <div className="grid-row-spaced footer-line by-line">
         <span>
-          {byLine}&nbsp;
+          <span>
+            {byLine}&nbsp;
+          </span>
           <a href={this.props.author.url} target="_blank">
             {this.props.author.name}
           </a>
-          &nbsp;&copy;&nbsp;{(new Date()).getFullYear()}
+          <span>
+            &nbsp;&copy;&nbsp;{(new Date()).getFullYear()}
+          </span>
         </span>
       </div>
     );
