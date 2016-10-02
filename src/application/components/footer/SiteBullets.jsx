@@ -11,11 +11,15 @@ const SiteBullets = React.createClass({
 
   render: function () {
     const items = this.props.items.map(function (item, index, arr) {
-      const bullet = index < (arr.length - 1) ?
-          <span>&nbsp;&bull;&nbsp;</span> : <span></span>;
-
       return (
-        <span key={`bullet${index}`}>{item}{bullet}</span>
+        <span key={`bullet${index}`}>
+          <span>
+            {item}
+          </span>
+          <span>
+            { index < (arr.length - 1) ? ' • ' : '' }
+          </span>
+        </span>
       );
     });
 
