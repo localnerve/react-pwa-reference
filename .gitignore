@@ -23,6 +23,9 @@ node_modules/*
 # macosx ignores
 .DS_Store
 
+# Optional vscode junk
+.vscode
+
 # Project Boilerplate ignores
 .jshint*
 tmp
