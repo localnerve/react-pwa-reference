@@ -141,7 +141,7 @@
     "react-addons-css-transition-group": "~15.3.0",
     "react-dom": "~15.3.0",
     "react-element-size-reporter": "0.2.9",
-    "react-modal": "1.4.0",
+    "react-modal": "1.5.1",
     "react-spinner": "0.2.6",
     "react-swipe": "github:localnerve/react-swipe#v4.1.0",
     "remarkable": "1.7.1",
