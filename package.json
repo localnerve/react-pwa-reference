@@ -149,7 +149,7 @@
     "serve-favicon": "2.3.0",
     "sitemap-xml": "localnerve/sitemap-xml",
     "superagent": "2.3.0",
-    "sw-toolbox": "3.3.0",
+    "sw-toolbox": "3.4.0",
     "treo": "0.5.1",
     "web-push": "0.0.11"
   },
