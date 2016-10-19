@@ -108,7 +108,7 @@
     "precommit-hook": "3.0.0",
     "react-addons-test-utils": "~15.3.0",
     "rimraf": "2.5.4",
-    "sw-precache": "4.1.0",
+    "sw-precache": "4.2.1",
     "wd": "0.4.0",
     "webpack": "1.13.2",
     "webpack-bundle-size-analyzer": "2.2.0",
