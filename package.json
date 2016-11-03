@@ -89,7 +89,7 @@
     "gulp": "gulpjs/gulp#4.0",
     "gulp-cssmin": "0.1.7",
     "gulp-if": "2.0.1",
-    "gulp-imagemin": "3.1.0",
+    "gulp-imagemin": "3.1.1",
     "gulp-nodemon": "2.2.1",
     "gulp-postcss": "6.2.0",
     "gulp-rev": "^7.0.0",
@@ -104,7 +104,7 @@
     "mocha": "3.1.2",
     "mockery": "2.0.0",
     "node-sass-asset-functions": "0.0.9",
-    "nyc": "8.3.2",
+    "nyc": "8.4.0",
     "precommit-hook": "3.0.0",
     "react-addons-test-utils": "~15.3.0",
     "rimraf": "2.5.4",
@@ -115,7 +115,7 @@
     "xml2js": "^0.4.16"
   },
   "dependencies": {
-    "amqplib": "0.4.1",
+    "amqplib": "0.5.0",
     "body-parser": "1.15.2",
     "classnames": "2.2.5",
     "compression": "1.6.2",
