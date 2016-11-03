@@ -153,10 +153,7 @@
     "treo": "0.5.1",
     "web-push": "0.0.11"
   },
-  "devEngines": {
-    "node": ">= 4.x"
-  },
   "engines": {
-    "node": "> = 4.x"
+    "node": "6.x"
   }
 }
