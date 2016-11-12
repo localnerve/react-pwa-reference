@@ -114,7 +114,7 @@
     "xml2js": "^0.4.16"
   },
   "dependencies": {
-    "amqplib": "0.5.0",
+    "amqplib": "0.5.1",
     "body-parser": "1.15.2",
     "classnames": "2.2.5",
     "compression": "1.6.2",
