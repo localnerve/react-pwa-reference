@@ -80,7 +80,7 @@
     "colors": "1.1.2",
     "coveralls": "2.11.15",
     "del": "2.2.2",
-    "eslint": "3.9.0",
+    "eslint": "3.10.0",
     "eslint-plugin-react": "6.6.0",
     "fg-loadcss": "1.2.0",
     "fontfaceobserver": "2.0.5",
