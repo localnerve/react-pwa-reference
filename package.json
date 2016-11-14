@@ -81,7 +81,7 @@
     "coveralls": "2.11.15",
     "del": "2.2.2",
     "eslint": "3.10.0",
-    "eslint-plugin-react": "6.6.0",
+    "eslint-plugin-react": "6.7.0",
     "fg-loadcss": "1.2.0",
     "fontfaceobserver": "2.0.5",
     "foundation-apps": "localnerve/foundation-apps",
