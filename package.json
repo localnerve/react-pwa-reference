@@ -103,7 +103,7 @@
     "mocha": "3.1.2",
     "mockery": "2.0.0",
     "node-sass-asset-functions": "0.0.9",
-    "nyc": "8.3.2",
+    "nyc": "9.0.1",
     "precommit-hook": "3.0.0",
     "react-addons-test-utils": "~15.3.0",
     "rimraf": "2.5.4",
