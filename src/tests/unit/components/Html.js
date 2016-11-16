@@ -4,25 +4,20 @@
  * for terms.
  */
 /* global afterEach, describe, it, beforeEach */
-'use strict';
-
-var expect = require('chai').expect;
-var testUtils = require('react-addons-test-utils');
-var RouteStore =
-  require('application/stores/RouteStore').RouteStore;
-var BackgroundStore =
-  require('application/stores/BackgroundStore').BackgroundStore;
-var HtmlComponent = require('react')
-  .createFactory(require('application/components/Html').default);
-var createMockComponentContext =
-  require('fluxible/utils').createMockComponentContext;
+import { expect } from 'chai';
+import React from 'react';
+import testUtils from 'react-addons-test-utils';
+import { RouteStore } from 'application/stores/RouteStore';
+import { BackgroundStore } from 'application/stores/BackgroundStore';
+import html from 'application/components/Html';
+import { createMockComponentContext } from 'fluxible/utils';
 // HtmlComponent never renders on the client, so dont make dom until test render
-var testDom = require('test/utils/testdom');
+import { start as testDomStart, stop as testDomStop } from 'test/utils/testdom';
 
-describe('html component', function () {
-  var htmlComponent;
+describe('html component', () => {
+  let htmlComponent;
 
-  var testProps = {
+  const testProps = {
     mainScript: 'path/to/mainScript',
     trackingSnippet: 'someTrackingCode',
     inlineStyles: '@charset "UTF-8";',
@@ -36,9 +31,7 @@ describe('html component', function () {
     browserConfig: 'path/to/browserConfig.xml',
     swRegistrationScript: 'path/to/service-worker-registration.js',
     swMainScript: 'service-worker.js',
-    revAsset: function (asset) {
-      return asset;
-    }
+    revAsset: (asset) => asset
   };
 
   /**
@@ -55,10 +48,10 @@ describe('html component', function () {
    * @returns {ReactComponent} The html component.
    */
   function renderHtmlIntoDocument (el) {
-    var ReactDOM = require('react-dom');
-    var ReactDOMServer = require('react-dom/server');
+    const ReactDOM = require('react-dom');
+    const ReactDOMServer = require('react-dom/server');
 
-    var iframe = global.document.createElement('iframe');
+    const iframe = global.document.createElement('iframe');
 
     global.document.body.appendChild(iframe);
     iframe.src = 'about:blank';
@@ -71,47 +64,47 @@ describe('html component', function () {
     /* eslint-enable react/no-render-return-value */
   }
 
-  beforeEach(function () {
+  beforeEach(() => {
     testProps.context = createMockComponentContext({
       stores: [RouteStore, BackgroundStore]
     });
-    var htmlElement = HtmlComponent(testProps);
+    const htmlElement = React.createFactory(html)(testProps);
 
     // This enables dom render after HtmlComponent factory call.
     // This mimics what really happens.
-    testDom.start();
+    testDomStart();
 
     // Create the htmlComponent for use in tests.
     htmlComponent = renderHtmlIntoDocument(htmlElement);
   });
 
-  afterEach(function () {
+  afterEach(() => {
     // Remove the dom for the next HtmlComponent factory call.
-    testDom.stop();
+    testDomStop();
   });
 
-  it('should render inline styles', function () {
-    var component =
+  it('should render inline styles', () => {
+    const component =
       testUtils.findRenderedDOMComponentWithTag(htmlComponent, 'style');
     expect(component.textContent).to.equal(testProps.inlineStyles);
   });
 
-  it('should render a title', function () {
-    var component =
+  it('should render a title', () => {
+    const component =
       testUtils.scryRenderedDOMComponentsWithTag(htmlComponent, 'title');
     expect(component[0].textContent).to.be.empty;
   });
 
-  it('should render a section', function () {
-    var component =
+  it('should render a section', () => {
+    const component =
       testUtils.findRenderedDOMComponentWithTag(htmlComponent, 'section');
     expect(component.textContent).to.equal(testProps.markup);
   });
 
-  it('should render a standard app manifest', function () {
-    var links =
+  it('should render a standard app manifest', () => {
+    const links =
       testUtils.scryRenderedDOMComponentsWithTag(htmlComponent, 'link');
-    var manifestLink = links.filter(function (link) {
+    const manifestLink = links.filter((link) => {
       return link.getAttribute('rel') === 'manifest';
     });
 
@@ -120,11 +113,10 @@ describe('html component', function () {
       .to.contain(manifestLink[0].getAttribute('href'));
   });
 
-  it('should render css meta holders for external stylesheet loads',
-  function () {
-    var metas =
+  it('should render css meta holders for external stylesheet loads', () => {
+    const metas =
       testUtils.scryRenderedDOMComponentsWithTag(htmlComponent, 'meta');
-    var cssMetas = metas.filter(function (meta) {
+    const cssMetas = metas.filter((meta) => {
       return meta.getAttribute('itemprop') === 'stylesheet';
     });
 
@@ -134,8 +126,8 @@ describe('html component', function () {
     ).to.contain(cssMetas[0].getAttribute('content'));
   });
 
-  it('should render multiple scripts', function () {
-    var component =
+  it('should render multiple scripts', () => {
+    const component =
       testUtils.scryRenderedDOMComponentsWithTag(htmlComponent, 'script');
 
     expect(component.length).to.equal(5);

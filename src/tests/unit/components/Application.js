@@ -4,7 +4,7 @@
  */
 /* global Promise, require, after, describe, it, before, beforeEach */
 import { expect } from 'chai';
-import testDom from 'test/utils/testdom';
+import { start as testDomStart, stop as testDomStop } from 'test/utils/testdom';
 import { createFluxibleRouteTransformer } from 'utils';
 import { getActions } from 'application/actions/interface';
 
@@ -49,7 +49,7 @@ describe('application component', () => {
 
   before('setup', (done) => {
     // We'll be rendering the isomorphic component, so set dom env for react here
-    testDom.start();
+    testDomStart();
 
     // Now proceed to load modules that might use React
     createMockComponentContext =
@@ -89,7 +89,7 @@ describe('application component', () => {
   });
 
   after(() => {
-    testDom.stop();
+    testDomStop();
   });
 
   function createContextAndApp (routeName, content, path) {
