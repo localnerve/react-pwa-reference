@@ -165,8 +165,6 @@ function prepTaskCompFactory () {
 /**
  * Factory for standalone task to process symlinks.
  *
- * TODO: use settings.
- *
  * @param {Boolean} output - True to create symlink in output, false for src.
  * @returns The symlink task.
  */
