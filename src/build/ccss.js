@@ -8,7 +8,7 @@ import gulpSvgmin from 'gulp-svgmin';
 import gulpSass from 'gulp-sass';
 import gulpPostcss from 'gulp-postcss';
 import gulpIf from 'gulp-if';
-import gulpCssmin from 'gulp-cssmin';
+import gulpCssClean from 'gulp-clean-css';
 import autoprefixer from 'autoprefixer';
 import assetFunctions from 'node-sass-asset-functions';
 
@@ -80,7 +80,7 @@ function sass (settings, prod) {
       ])
     )
     .pipe(
-      gulpIf(prod, gulpCssmin())
+      gulpIf(prod, gulpCssClean())
     )
     .pipe(
       gulp.dest(settings.dist.styles)
