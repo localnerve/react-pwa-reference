@@ -194,6 +194,7 @@ Application = connectToStores(
       modal: {
         open: modalStore.getIsOpen(),
         component: modalStore.getComponent(),
+        componentName: modalStore.getComponentName(),
         props: modalStore.getProps(),
         failure: modalStore.getFailure()
       }

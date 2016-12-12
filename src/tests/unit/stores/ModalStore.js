@@ -49,6 +49,11 @@ describe('modal store', function () {
       expect(storeInstance.getIsOpen()).to.equal(true);
     });
 
+    it('should update componentName', function () {
+      storeInstance.modalStart(payload);
+      expect(storeInstance.getComponentName()).to.equal(payload.component);
+    });
+
     it('should update failure to false', function () {
       storeInstance.modalStart(payload);
       expect(storeInstance.getFailure()).to.equal(false);

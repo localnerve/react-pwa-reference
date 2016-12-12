@@ -105,6 +105,13 @@ export const ModalStore = createStore({
   },
 
   /**
+   * @returns {String} The current modal component name.
+   */
+  getComponentName: function () {
+    return this.currentComponent;
+  },
+
+  /**
    * @returns {Boolean} The isOpen boolean.
    */
   getIsOpen: function () {

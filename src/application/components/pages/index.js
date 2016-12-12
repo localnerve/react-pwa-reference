@@ -157,7 +157,8 @@ function createModalElement (component, props, failure) {
  *
  * @param {Object} modalProps - modal creation properties.
  * @param {Boolean} modalProps.open - True if show.
- * @param {String} modalProps.component - The name of the modal component.
+ * @param {String} modalProps.componentName - The name of the modal component.
+ * @param {Object} modalProps.component - The modal component.
  * @param {Object} modalProps.props - The props for the component.
  * @param {Boolean} modalProps.failure - True if component creation failure.
  * @return {Object} The modal React element.
@@ -167,6 +168,7 @@ export function createModal (modalProps, close) {
     return React.createElement(ReactModal, {
       isOpen: true,
       onRequestClose: close,
+      contentLabel: modalProps.componentName,
       style: {
         overlay: {
           backgroundColor: 'rgba(70, 70, 70, 0.75)'
