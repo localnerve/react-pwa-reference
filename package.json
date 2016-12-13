@@ -108,7 +108,7 @@
     "react-addons-test-utils": "~15.4.0",
     "rimraf": "2.5.4",
     "sw-precache": "4.2.3",
-    "wd": "0.4.0",
+    "wd": "1.1.1",
     "webpack": "1.14.0",
     "webpack-bundle-size-analyzer": "2.2.0",
     "xml2js": "^0.4.16"
