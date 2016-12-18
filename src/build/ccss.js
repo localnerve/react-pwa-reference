@@ -80,7 +80,9 @@ function sass (settings, prod) {
       ])
     )
     .pipe(
-      gulpIf(prod, gulpCssClean())
+      gulpIf(prod, gulpCssClean({
+        keepSpecialComments: 0
+      }))
     )
     .pipe(
       gulp.dest(settings.dist.styles)
