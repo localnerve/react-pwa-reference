@@ -5,6 +5,7 @@
 /* global describe, it, before */
 
 import _ from 'lodash';
+import path from 'path';
 import { expect } from 'chai';
 import utils from 'configs/settings/utils';
 
@@ -68,8 +69,8 @@ describe('settings/utils', () => {
       expect(strings).length.to.be(testTerminalCount);
       strings.forEach(function (aString) {
         expect(aString).to.contain(strToken);
-        expect(aString).to.contain(prePath);
-        expect(aString).to.contain(lastToken+'/');
+        expect(aString).to.contain(path.normalize(prePath));
+        expect(aString).to.contain(path.normalize(lastToken+'/'));
       });
     });
   });
