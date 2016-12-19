@@ -3,7 +3,6 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import gulp from 'gulp';
-import gulpSvg2png from 'gulp-svg2png';
 import gulpSvgmin from 'gulp-svgmin';
 import gulpSass from 'gulp-sass';
 import gulpPostcss from 'gulp-postcss';
@@ -11,23 +10,6 @@ import gulpIf from 'gulp-if';
 import gulpCssClean from 'gulp-clean-css';
 import autoprefixer from 'autoprefixer';
 import assetFunctions from 'node-sass-asset-functions';
-
-/**
- * Create png fallbacks.
- *
- * @param {Object} settings - The project config settings.
- */
-function svg2png (settings) {
-  return gulp.src('**/*.svg', {
-    cwd: settings.assets.images
-  })
-    .pipe(
-      gulpSvg2png()
-    )
-    .pipe(
-      gulp.dest(settings.dist.images)
-    );
-}
 
 /**
  * Minimize svgs.
@@ -97,10 +79,7 @@ function sass (settings, prod) {
  */
 export default function ccssTaskFactory (settings, prod) {
   return gulp.series(
-    gulp.parallel(
-      svg2png.bind(null, settings),
-      svgmin.bind(null, settings)
-    ),
+    svgmin.bind(null, settings),
     sass.bind(null, settings, prod)
   );
 }
