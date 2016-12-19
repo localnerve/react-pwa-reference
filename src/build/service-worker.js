@@ -3,6 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /*eslint no-console:0 */
+import path from 'path';
 import swPrecache from 'sw-precache';
 import cannibalizr from 'cannibalizr';
 
@@ -55,7 +56,7 @@ export default function serviceWorkerTaskFactory (settings, prod, debug) {
         cacheId: pkg.name,
         handleFetch: prod,
         directoryIndex: false,
-        stripPrefix: settings.dist.baseDir,
+        stripPrefix: settings.dist.baseDir.replace(path.sep, '/'),
         replacePrefix: settings.web.baseDir,
         staticFileGlobs: [
           `${settings.dist.fonts}/**.*`,
