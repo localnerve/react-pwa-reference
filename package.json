@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "async-lock": "0.3.8",
-    "autoprefixer": "6.5.4",
+    "autoprefixer": "6.6.0",
     "babel-cli": "6.18.0",
     "babel-core": "6.21.0",
     "babel-eslint": "7.1.1",
@@ -131,7 +131,7 @@
     "fluxible-plugin-fetchr": "0.3.11",
     "fluxible-router": "0.4.19",
     "inherits": "2.0.3",
-    "lodash": "4.17.2",
+    "lodash": "4.17.3",
     "morgan": "1.7.0",
     "nconf": "0.8.4",
     "nodemailer": "2.7.0",
