@@ -16,6 +16,10 @@
       "plugins": [
         [
           "istanbul", {
+            "exclude": [
+              "!**/node_modules/**",
+              "**/tests/**"
+            ]
           }
         ]
       ]
