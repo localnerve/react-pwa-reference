@@ -50,6 +50,9 @@ export default function mainConfig (settings, type) {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.NormalModuleReplacementPlugin(
+        /es6\-promise/, require.resolve('es6-promise')
+      ),
+      new webpack.NormalModuleReplacementPlugin(
         /for\-each/, require.resolve('lodash/forEach')
       ),
       new webpack.NormalModuleReplacementPlugin(
