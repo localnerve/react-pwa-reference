@@ -78,7 +78,7 @@
     "coveralls": "2.11.15",
     "del": "2.2.2",
     "eslint": "3.13.0",
-    "eslint-plugin-react": "6.8.0",
+    "eslint-plugin-react": "6.9.0",
     "fg-loadcss": "1.2.1",
     "fontfaceobserver": "2.0.6",
     "foundation-apps": "localnerve/foundation-apps",
@@ -89,7 +89,7 @@
     "gulp-nodemon": "2.2.1",
     "gulp-postcss": "6.2.0",
     "gulp-rev": "^7.0.0",
-    "gulp-sass": "3.0.0",
+    "gulp-sass": "3.1.0",
     "gulp-svgmin": "1.2.3",
     "gulp-webpagetest": "1.1.1",
     "jsdom": "9.9.1",
@@ -106,7 +106,7 @@
     "sw-precache": "4.3.0",
     "wd": "0.4.0",
     "webpack": "1.14.0",
-    "webpack-bundle-size-analyzer": "2.3.0",
+    "webpack-bundle-size-analyzer": "2.4.0",
     "xml2js": "^0.4.16"
   },
   "dependencies": {
