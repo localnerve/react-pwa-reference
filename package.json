@@ -131,7 +131,7 @@
     "lodash": "4.17.4",
     "morgan": "1.7.0",
     "nconf": "0.8.4",
-    "nodemailer": "2.7.2",
+    "nodemailer": "3.0.2",
     "object-assign": "4.1.1",
     "react": "~15.4.0",
     "react-addons-css-transition-group": "~15.4.0",
