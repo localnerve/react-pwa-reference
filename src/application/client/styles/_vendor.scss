@@ -630,9 +630,6 @@ $switch-background-active: $app-primary-bgcolor;
 // We are importing only exactly what is required by the app here.
 // A little more to pay attention to this way, but large size reductions
 // in cruft that is unused.
-// Since no release has occurred since May 2015,
-// this requires more attention anyways, possibly a fork at this point.
-// TODO: Evaluate moving forward with fork at YE 2015.
 // - - - - - - - - - - - - - - -
 // @import "foundation";
 
