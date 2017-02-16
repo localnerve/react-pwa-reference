@@ -98,7 +98,7 @@
     "mkdirp": "0.5.1",
     "mocha": "3.2.0",
     "mockery": "2.0.0",
-    "node-sass-asset-functions": "0.0.9",
+    "node-sass-asset-functions": "0.1.0",
     "nyc": "10.1.2",
     "precommit-hook": "3.0.0",
     "react-addons-test-utils": "~15.4.0",
