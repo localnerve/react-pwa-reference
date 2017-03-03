@@ -14,7 +14,7 @@
 This project is an evolution of [flux-react-example](https://github.com/localnerve/flux-react-example) and [flux-react-example-sw](https://github.com/localnerve/flux-react-example-sw) that adds evolved tooling and organization. It's a rather complete, performance minded reference PWA that uses data-driven routes and content from an attached service.
 
 ## Environment Prerequisites
-Just Node 6.  
+Just Node 6+.  
 <small>Some development dependencies of this project have binary installs (node-sass, image manipulators), so YMMV.</small>
 
 ## Stack
@@ -47,6 +47,7 @@ Just Node 6.
 | `npm run dev:analyze` | analyze webpack stats file and dump bundle size analysis to console |
 | `npm run dev:ccss` | build css assets, watch and recompile sass on change |
 | `npm run dev:debug` | lint, build assets, start/debug server, NODE_ENV=development, wait debugger attach |
+| `npm run dev:inspect` | like `dev:debug`, but use node --inspect, best w/Node 7+ |
 | `npm run dev:perf` | lint, build assets, scripts w/source maps, start server, NODE_ENV=production |
 | `npm run dev:prod` | lint, build assets, start server, NODE_ENV=production |
 | `npm run fixtures:dev` | build test fixtures from data service, development |
@@ -56,4 +57,5 @@ Just Node 6.
 | `npm run test` | run the entire test suite |
 | `npm run test:cover` | run the entire test suite, capture coverage, and report |
 | `npm run test:debug` | build with source maps, start the test suite, wait debugger attach |
+| `npm run test:inspect` | like `test:debug`, but use node --inspect, best w/Node 7+ |
 | `npm run test:func` | used by CI to run functional tests against selenium grid |

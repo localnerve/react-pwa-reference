@@ -244,6 +244,7 @@ const dumpconfigDev = dumpConfigTaskFactory.bind(this, false);
 const dumpconfigProd = dumpConfigTaskFactory.bind(this, true);
 const dev = buildTaskCompFactory.bind(this, true, 'dev');
 const debug = buildTaskCompFactory.bind(this, true, 'debug');
+const inspect = buildTaskCompFactory.bind(this, true, 'inspect');
 const perf = buildTaskCompFactory.bind(this, true, 'perf');
 const prod = buildTaskCompFactory.bind(this, true, 'prod');
 const build = buildTaskCompFactory.bind(this, false, 'prod');
@@ -277,6 +278,7 @@ export default {
   dumpconfigProd,
   fixturesDev,
   fixturesProd,
+  inspect,
   perf,
   perfbudget,
   prep,

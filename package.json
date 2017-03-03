@@ -36,6 +36,7 @@
     "dev:analyze": "webpack-bundle-size-analyzer",
     "dev:ccss": "gulp ccss",
     "dev:debug": "npm run lint && gulp debug",
+    "dev:inspect": "npm run lint && gulp inspect",
     "dev:perf": "npm run lint && gulp perf",
     "dev:prod": "npm run lint && gulp prod",
     "fixtures:dev": "gulp fixturesDev",
@@ -47,6 +48,7 @@
     "test": "npm run build:output && npm run _test",
     "test:cover": "rimraf .nyc_output/ && cross-env BABEL_ENV=cover npm run build:output && cross-env NYC_CWD=output nyc --reporter=lcov npm run _test",
     "test:debug": "npm run build:output -- -s inline && npm run _test -- --debug-brk",
+    "test:inspect": "npm run test:debug -- --inspect",
     "test:func": "node src/tests/functional/run-parallel '--reporter spec src/tests/functional/main.js'",
     "validate": "npm ls"
   },
@@ -150,6 +152,6 @@
     "web-push": "0.0.11"
   },
   "engines": {
-    "node": "6.x"
+    "node": ">= 6.x"
   }
 }

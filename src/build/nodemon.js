@@ -19,6 +19,8 @@ export default function nodemonTaskFactory (settings, target) {
     pollingInterval: 250
   };
 
+  const debugTarget = ['debug', 'inspect'].indexOf(target) > -1;
+
   const options = {
     ignore: [
       settings.src.serviceWorker.data,
@@ -35,7 +37,7 @@ export default function nodemonTaskFactory (settings, target) {
     ext: 'js jsx scss',
     watch: settings.src.baseDir,
     tasks: (changedFiles) => {
-      const buildTarget = target === 'debug' ? 'dev' : target;
+      const buildTarget = debugTarget ? 'dev' : target;
       const tasks = new Set();
 
       changedFiles.forEach((file) => {
@@ -60,8 +62,11 @@ export default function nodemonTaskFactory (settings, target) {
     Object.assign(options, legacyWatchOptions);
   }
 
-  if (target === 'debug') {
+  if (debugTarget) {
     options.nodeArgs = ['--debug-brk'];
+    if (target === 'inspect') {
+      options.nodeArgs.push('--inspect');
+    }
   }
 
   return function nodemon (done) {
