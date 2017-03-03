@@ -345,9 +345,13 @@ describe('sw/utils/customHelpers', function () {
         customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache)
       )
         .then(function () {
-          // b/c the difference was greater than 1%
-          expect(calledPostMessage).to.equal(1);
-          done();
+          // Cache responded, but wait for network to completely resolve to
+          // inspect side effects like postMessage.
+          setTimeout(() => {
+            // b/c the difference was greater than 1%
+            expect(calledPostMessage).to.equal(1);
+            done();
+          }, 100);
         })
         .catch(function (error) {
           done(error || unexpectedFlowError);
@@ -368,9 +372,12 @@ describe('sw/utils/customHelpers', function () {
         })
       )
         .then(function () {
-          expect(calledPostMessage).to.equal(0);
-          expect(calledUpdateHandler).to.equal(1);
-          done();
+          // wait to inspect side effect evidence
+          setTimeout(() => {
+            expect(calledPostMessage).to.equal(0);
+            expect(calledUpdateHandler).to.equal(1);
+            done();
+          }, 100);
         })
         .catch(function (error) {
           done(error || unexpectedFlowError);
@@ -396,8 +403,11 @@ describe('sw/utils/customHelpers', function () {
           );
         })
         .then(function () {
-          expect(calledUpdateHandler).to.equal(0);
-          done();
+          // wait to inspect side effect evidence
+          setTimeout(() => {
+            expect(calledUpdateHandler).to.equal(0);
+            done();
+          }, 100)
         })
         .catch(function (error) {
           done(error || unexpectedFlowError);
@@ -424,8 +434,11 @@ describe('sw/utils/customHelpers', function () {
           );
         })
         .then(function () {
-          expect(calledUpdateHandler).to.equal(0);
-          done();
+          // wait to inspect the side effect evidence
+          setTimeout(() => {
+            expect(calledUpdateHandler).to.equal(0);
+            done();
+          }, 100)
         })
         .catch(function (error) {
           done(error || unexpectedFlowError);
