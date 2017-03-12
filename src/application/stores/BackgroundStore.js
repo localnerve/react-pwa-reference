@@ -86,11 +86,12 @@ export const BackgroundStore = createStore({
    * NAVIGATE_SUCCESS action handler.
    * Updates the current background name.
    *
-   * @param {Object} route - An route object.
+   * @param {Object} navigate - A fluxible navigate object.
+   * @param {Object} navigate.route - The current route object.
    */
-  updateBackground: function (route) {
-    if (this.currentBackground !== route.background) {
-      this.currentBackground = route.background;
+  updateBackground: function (navigate) {
+    if (this.currentBackground !== navigate.route.background) {
+      this.currentBackground = navigate.route.background;
       this.emitChange();
     }
   },

@@ -3,47 +3,54 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it, beforeEach */
-'use strict';
 
-var expect = require('chai').expect;
-var RouteStore = require('application/stores/RouteStore').RouteStore;
-var transformer = require('utils').createFluxibleRouteTransformer({
-  actions: require('application/actions/interface').getActions()
+import { expect } from 'chai';
+import { RouteStore } from 'application/stores/RouteStore';
+import { getActions } from 'application/actions/interface';
+import { createFluxibleRouteTransformer } from 'utils';
+
+import routesResponseFixture from 'test/fixtures/routes-response';
+import { testTransform } from 'test/utils/tests';
+
+const transformer = createFluxibleRouteTransformer({
+  actions: getActions()
 });
 
-var routesResponseFixture = require('test/fixtures/routes-response');
-var helperTests = require('test/utils/tests');
+describe('Route store', () => {
+  let routesResponse, storeInstance;
 
-describe('Route store', function () {
-  var routesResponse, storeInstance;
-
-  beforeEach(function () {
+  beforeEach(() => {
     storeInstance = new RouteStore();
   });
 
-  it('should instantiate correctly', function () {
+  it('should instantiate correctly', () => {
     expect(storeInstance).to.be.an('object');
     expect(storeInstance._handleReceiveRoutes).to.be.a('function');
     expect(storeInstance.dehydrate).to.be.a('function');
     expect(storeInstance.rehydrate).to.be.a('function');
   });
 
-  describe('with routes', function () {
-    beforeEach(function () {
+  describe('with routes', () => {
+    beforeEach(() => {
       // clone the routes-response fixture data
       routesResponse = JSON.parse(JSON.stringify(routesResponseFixture));
     });
 
-    it('should dehydrate routes to json', function () {
+    it('should dehydrate routes to json', () => {
       storeInstance._handleReceiveRoutes(transformer.jsonToFluxible(routesResponse));
-      var state = storeInstance.dehydrate();
+      const state = storeInstance.dehydrate();
       expect(state.routes).to.eql(routesResponse);
     });
 
-    it('should rehydrate to fluxible routes', function () {
-      storeInstance.rehydrate({ routes: routesResponse });
+    it('should rehydrate to fluxible routes', () => {
+      storeInstance.rehydrate({
+        routes: routesResponse,
+        currentNavigate: {
+          url: '/bogus'
+        }
+      });
 
-      helperTests.testTransform(
+      testTransform(
         expect, storeInstance._routes, transformer.jsonToFluxible(routesResponse)
       );
     });

@@ -3,17 +3,18 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it, before, beforeEach, after, afterEach */
-'use strict';
+import { expect } from 'chai';
+import { BackgroundStore } from 'application/stores/BackgroundStore';
 
-var expect = require('chai').expect;
-var BackgroundStore = require('application/stores/BackgroundStore').BackgroundStore;
-
-describe('Background store', function () {
-  var onChange, storeInstance;
-  var route = {
+describe('Background store', () => {
+  let onChange, storeInstance;
+  const route = {
     background: '2'
   };
-  var initPayload = {
+  const navigatePayload = {
+    route: route
+  };
+  const initPayload = {
     backgrounds: {
       serviceUrl: 'https://lorempixel.com',
       serviceOptions: {
@@ -25,18 +26,18 @@ describe('Background store', function () {
     }
   };
 
-  beforeEach(function () {
+  beforeEach(() => {
     storeInstance = new BackgroundStore();
   });
 
-  afterEach(function () {
+  afterEach(() => {
     if (onChange) {
       storeInstance.removeChangeListener(onChange);
       onChange = null;
     }
   });
 
-  it('should instantiate correctly', function () {
+  it('should instantiate correctly', () => {
     expect(BackgroundStore.storeName).to.equal('BackgroundStore');
     expect(storeInstance).to.be.an('object');
     expect(storeInstance.width).to.equal(0);
@@ -48,15 +49,15 @@ describe('Background store', function () {
     expect(storeInstance.backgroundUrls).to.be.an('object').that.is.empty;
   });
 
-  describe('de/rehydrate', function () {
-    var dim = {
+  describe('de/rehydrate', () => {
+    const dim = {
       width: 4,
       height: 5,
       top: 6
     };
 
-    it('should dehydrate', function (done) {
-      var callbacks = 0;
+    it('should dehydrate', (done) => {
+      let callbacks = 0;
       function result () {
         if (++callbacks < 2) {
           return;
@@ -83,13 +84,13 @@ describe('Background store', function () {
         height: dim.height,
         top: dim.top
       });
-      storeInstance.updateBackground(route);
+      storeInstance.updateBackground(navigatePayload);
     });
 
-    it('should rehydrate', function () {
-      var currentUrl = 'two/2';
-      var notCurrentUrl = 'one/1';
-      var state = {
+    it('should rehydrate', () => {
+      const currentUrl = 'two/2';
+      const notCurrentUrl = 'one/1';
+      const state = {
         width: dim.width,
         height: dim.height,
         top: dim.top,
@@ -112,8 +113,8 @@ describe('Background store', function () {
     });
   });
 
-  describe('init backgrounds', function () {
-    it('should init background store as expected', function (done) {
+  describe('init backgrounds', () => {
+    it('should init background store as expected', (done) => {
       function result () {
         expect(storeInstance.getImageServiceUrl()).to.equal(initPayload.backgrounds.serviceUrl);
         expect(storeInstance.imageServiceOptions).to.eql(initPayload.backgrounds.serviceOptions);
@@ -132,28 +133,28 @@ describe('Background store', function () {
     });
   });
 
-  describe('update background', function () {
-    beforeEach(function () {
+  describe('update background', () => {
+    beforeEach(() => {
       storeInstance.initBackgrounds(initPayload);
     });
 
-    it('should be null when no width and height set', function (done) {
+    it('should be null when no width and height set', (done) => {
       function result () {
         expect(storeInstance.getCurrentBackgroundUrl()).to.be.null;
         done();
       }
       storeInstance.addChangeListener(onChange = result);
-      storeInstance.updateBackground(route);
+      storeInstance.updateBackground(navigatePayload);
     });
 
-    it('should update current background', function (done) {
-      var callbacks = 0;
-      var dimension = 5;
+    it('should update current background', (done) => {
+      let callbacks = 0;
+      const dimension = 5;
 
       function result () {
         if (++callbacks < 2) {
           // first time, its for updateSize
-          storeInstance.updateBackground(route);
+          storeInstance.updateBackground(navigatePayload);
           return;
         }
 
@@ -179,15 +180,15 @@ describe('Background store', function () {
     });
   });
 
-  describe('update size', function () {
+  describe('update size', () => {
     // separate instance because of accumulating
-    var sizeInstance;
+    let sizeInstance;
 
-    before(function () {
+    before(() => {
       sizeInstance = new BackgroundStore();
     });
 
-    var payloads = [{
+    const payloads = [{
       width: 100,
       height: 100
     }, {
@@ -206,56 +207,57 @@ describe('Background store', function () {
       accumulate: true
     }];
 
-    it('should set a width and height', function () {
+    it('should set a width and height', () => {
       sizeInstance.updateSize(payloads[0]);
       expect(sizeInstance.width).to.equal(100);
       expect(sizeInstance.height).to.equal(100);
       expect(sizeInstance.getTop()).to.equal(0);
     });
 
-    it('should increment height and set a top', function () {
+    it('should increment height and set a top', () => {
       sizeInstance.updateSize(payloads[1]);
       expect(sizeInstance.width).to.equal(100);
       expect(sizeInstance.height).to.equal(110);
       expect(sizeInstance.getTop()).to.equal(10);
     });
 
-    it('should reset width and height', function () {
+    it('should reset width and height', () => {
       sizeInstance.updateSize(payloads[2]);
       expect(sizeInstance.width).to.equal(200);
       expect(sizeInstance.height).to.equal(200);
       expect(sizeInstance.getTop()).to.equal(10);
     });
 
-    it('should assign a height and top', function () {
+    it('should assign a height and top', () => {
       sizeInstance.updateSize(payloads[3]);
       expect(sizeInstance.width).to.equal(0);
       expect(sizeInstance.height).to.equal(100);
       expect(sizeInstance.getTop()).to.equal(200);
     });
 
-    it('should increment height, keep top, and set width', function () {
+    it('should increment height, keep top, and set width', () => {
       sizeInstance.updateSize(payloads[4]);
       expect(sizeInstance.width).to.equal(200);
       expect(sizeInstance.height).to.equal(300);
       expect(sizeInstance.getTop()).to.equal(200);
     });
 
-    describe('cumulative change updates', function () {
-      var onChange;
+    describe('cumulative change updates', () => {
+      let onChange;
 
-      before(function () {
+      before(() => {
         sizeInstance.initBackgrounds(initPayload);
       });
 
-      after(function () {
+      after(() => {
         if (onChange) {
           sizeInstance.removeChangeListener(onChange);
           onChange = null;
         }
       });
 
-      it('should accumulate and reflect in the properties and background urls', function (done) {
+      it('should accumulate and reflect in the properties and background urls',
+      (done) => {
         // If this was called more than once the size properties would be wrong
         function result () {
           expect(sizeInstance.width).to.equal(200);
@@ -263,7 +265,7 @@ describe('Background store', function () {
           expect(sizeInstance.getTop()).to.equal(200);
           expect(Object.keys(sizeInstance.backgroundUrls).length).to.equal(2);
 
-          Object.keys(sizeInstance.backgroundUrls).forEach(function (key) {
+          Object.keys(sizeInstance.backgroundUrls).forEach((key) => {
             expect(sizeInstance.backgroundUrls[key]).to.contain(200);
             expect(sizeInstance.backgroundUrls[key]).to.contain(300);
           });
