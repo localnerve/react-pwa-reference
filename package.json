@@ -65,7 +65,7 @@
     "async-lock": "0.3.8",
     "autoprefixer": "6.7.7",
     "babel-cli": "6.23.0",
-    "babel-core": "6.23.1",
+    "babel-core": "6.24.0",
     "babel-eslint": "7.1.1",
     "babel-loader": "6.3.2",
     "babel-plugin-istanbul": "4.0.0",
