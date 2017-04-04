@@ -24,13 +24,15 @@ export default function mainConfig (settings, type) {
       NODE_ENV: JSON.stringify(type === 'dev' ? 'development' : 'production')
     }
   };
-  const config = statsPluginOptions(settings, {
+  const statsOptions = statsPluginOptions(settings);
+
+  const config = {
     resolve: {
-      extensions: ['', '.js', '.jsx']
+      extensions: ['.js', '.jsx']
     },
     entry: `./${settings.src.clientEntry}`,
     output: {
-      path: settings.dist.scripts,
+      path: settings.webpack.absoluteOutputPath,
       publicPath: `${settings.web.scripts}/`
     },
     module: {
@@ -77,7 +79,7 @@ export default function mainConfig (settings, type) {
     stats: {
       colors: true
     }
-  });
+  };
 
   if (type === 'dev') {
     config.output.filename = '[name].js';
@@ -85,7 +87,6 @@ export default function mainConfig (settings, type) {
   } else {
     config.output.filename = '[name].[chunkhash].min.js';
     config.output.chunkFilename = '[name].[chunkhash].min.js';
-    config.progress = false;
     if (type === 'prod') {
       additionalPlugins.push(uglifyPluginFactory());
     }
@@ -99,7 +100,7 @@ export default function mainConfig (settings, type) {
   Array.prototype.push.apply(config.plugins, additionalPlugins.concat(
     function () {
       const statsFile = type === 'prod' ? 'webpack-stats-main.json' : false;
-      return statsPlugin(this, statsFile);
+      return statsPlugin(this, statsOptions, statsFile);
     }
   ));
 

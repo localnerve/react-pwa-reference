@@ -17,7 +17,7 @@ export default function inlineConfig (settings, type) {
   const config = {
     entry: `./${settings.src.inlineScript}`,
     output: {
-      path: settings.dist.scripts,
+      path: settings.webpack.absoluteOutputPath,
       filename: path.basename(settings.dist.inlineScript)
     },
     module: {

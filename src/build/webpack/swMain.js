@@ -15,13 +15,14 @@ import { statsPlugin, statsPluginOptions } from './plugins/stats';
  */
 export default function swMainConfig (settings, type) {
   const devtoolModuleFilenameTemplate = 'webpack:///sw/[resource-path]';
+  const statsOptions = statsPluginOptions(settings);
 
-  const config = statsPluginOptions(settings, {
+  const config = {
     entry: {
       sw: `./${settings.src.serviceWorker.entry}`
     },
     output: {
-      path: settings.dist.scripts,
+      path: settings.webpack.absoluteOutputPath,
       publicPath: settings.web.scripts,
       // One name to rule them all
       filename: '[name].js'
@@ -31,7 +32,7 @@ export default function swMainConfig (settings, type) {
         {
           test: /\.json$/,
           exclude: /^\/node_modules/,
-          loader: 'json'
+          loader: 'json-loader'
         },
         {
           exclude: /(^\/node_modules|\.json$)/,
@@ -44,7 +45,7 @@ export default function swMainConfig (settings, type) {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurrenceOrderPlugin()
     ]
-  });
+  };
 
   if (type !== 'prod') {
     config.devtool = 'source-map';
@@ -54,7 +55,7 @@ export default function swMainConfig (settings, type) {
   }
 
   config.plugins.push(function () {
-    return statsPlugin(this);
+    return statsPlugin(this, statsOptions);
   });
 
   return config;

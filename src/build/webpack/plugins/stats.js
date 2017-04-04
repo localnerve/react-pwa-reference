@@ -16,34 +16,26 @@ const statsKey = 'stats';
  * Add the options for consumption by statsPlugin.
  *
  * @param {Object} settings - The project settings.
- * @param {Object} [options] - The options object to ammend.
  */
-export function statsPluginOptions (settings, options) {
-  options = options || {};
-
-  const pluginOptions = {
+export function statsPluginOptions (settings) {
+  return {
     assetsJson: settings.src.assetsJson,
     CHUNK_REGEX: /^([A-Za-z0-9_\-]+)\..*/
   };
-
-  if (options.custom) {
-    options.custom = merge(options.custom, pluginOptions);
-  } else {
-    options.custom = pluginOptions;
-  }
-
-  return options;
 }
 
 /**
  * Generate the webpack assets config
  *
  * @param {Object} self - A reference to the current webpack execution context
+ * @param {Object} options - stats plugin options.
+ * @param {String} options.assetsJson - String the assets json file path.
+ * @param {RegExp} options.CHUNK_REGEX - The regular expression identifying a chunk.
  * @param {String} [statsJson] - A path to a file to collect the build stats.
  */
-export function statsPlugin (self, statsJson) {
+export function statsPlugin (self, options, statsJson) {
   self.plugin('done', function (stats) {
-    const assetsJsonFile = self.options.custom.assetsJson;
+    const assetsJsonFile = options.assetsJson;
     const data = stats.toJson();
     const assets = data.assetsByChunkName;
     let output = {
@@ -54,7 +46,7 @@ export function statsPlugin (self, statsJson) {
       const value = assets[key];
 
       // If regex matched, use [name] for key
-      const matches = key.match(self.options.custom.CHUNK_REGEX);
+      const matches = key.match(options.CHUNK_REGEX);
       if (matches) {
         key = matches[1];
       }
@@ -62,6 +54,8 @@ export function statsPlugin (self, statsJson) {
     });
 
     // webpack can be running multiple configurations in parallel...
+    // THIS IS NO LONGER TRUE in WEBPACK 2. However, I've hope it WILL BE
+    // TRUE AGAIN (and there's no harm in synchronizing this).
     lock.acquire(statsKey, (done) => {
       // If assetsJsonFile exists, merge output
       if (fs.existsSync(assetsJsonFile)) {

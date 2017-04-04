@@ -16,12 +16,14 @@ import { statsPlugin, statsPluginOptions } from './plugins/stats';
 export default function swRegConfig (settings, type) {
   const devtoolModuleFilenameTemplate = 'webpack:///sw-reg/[resource-path]';
   const additionalPlugins = [];
-  const config = statsPluginOptions(settings, {
+  const statsOptions = statsPluginOptions(settings);
+
+  const config = {
     entry: {
       swReg: `./${settings.src.serviceWorker.registration}`
     },
     output: {
-      path: settings.dist.scripts,
+      path: settings.webpack.absoluteOutputPath,
       publicPath: settings.web.scripts
     },
     module: {
@@ -37,7 +39,7 @@ export default function swRegConfig (settings, type) {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurrenceOrderPlugin()
     ]
-  });
+  };
 
   if (type === 'dev') {
     config.output.filename = '[name].js';
@@ -54,7 +56,7 @@ export default function swRegConfig (settings, type) {
 
   Array.prototype.push.apply(config.plugins, additionalPlugins.concat(
     function () {
-      return statsPlugin(this);
+      return statsPlugin(this, statsOptions);
     }
   ));
 
