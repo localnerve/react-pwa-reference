@@ -3,16 +3,19 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import sizeAction from 'application/actions/size';
 import { fluxibleWindowResizeReporter } from 'react-element-size-reporter';
 import Notification from './Notification';
 
-let PageContainer = React.createClass({
-  propTypes: {
-    children: React.PropTypes.any.isRequired
-  },
+class PageContainer extends React.Component {
+  static get propTypes () {
+    return {
+      children: PropTypes.any.isRequired
+    };
+  }
 
-  render: function () {
+  render () {
     return (
       <div className="page">
         {this.props.children}
@@ -20,9 +23,9 @@ let PageContainer = React.createClass({
       </div>
     );
   }
-});
+}
 
-PageContainer = fluxibleWindowResizeReporter(
+const pageContainer = fluxibleWindowResizeReporter(
   PageContainer, '.page', sizeAction, {
     resizeWait: 50,
     sizeReporter: {
@@ -35,4 +38,4 @@ PageContainer = fluxibleWindowResizeReporter(
   }
 );
 
-export default PageContainer
+export default pageContainer

@@ -3,7 +3,8 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import PropTypes from 'prop-types';
+import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import cx from 'classnames';
 import contactAction from 'application/actions/contact';
 import ContactSteps from './Steps';
@@ -14,48 +15,59 @@ import Spinner from '../Spinner';
 // manually keep in sync with value in _anim.scss
 const animTimeout = 500;
 
-const Contact = React.createClass({
-  contextTypes: {
-    getStore: React.PropTypes.func.isRequired,
-    executeAction: React.PropTypes.func.isRequired
-  },
+class Contact extends React.Component {
+  static get contextTypes () {
+    return {
+      getStore: PropTypes.func.isRequired,
+      executeAction: PropTypes.func.isRequired
+    };
+  }
 
-  propTypes: {
-    name: React.PropTypes.string,
-    spinner: React.PropTypes.bool,
-    headingText: React.PropTypes.string,
-    stepFinal: React.PropTypes.number,
-    steps: React.PropTypes.array,
-    resultMessageFail: React.PropTypes.string,
-    resultMessageSuccess: React.PropTypes.string,
-    navigation: React.PropTypes.object,
-    models: React.PropTypes.object
-  },
+  static get propTypes () {
+    return {
+      name: PropTypes.string,
+      spinner: PropTypes.bool,
+      headingText: PropTypes.string,
+      stepFinal: PropTypes.number,
+      steps: PropTypes.array,
+      resultMessageFail: PropTypes.string,
+      resultMessageSuccess: PropTypes.string,
+      navigation: PropTypes.object,
+      models: PropTypes.object
+    };
+  }
 
-  getInitialState: function () {
+  constructor (props, context) {
+    super(props, context);
     const state = this.getStateFromStore();
     state.step = 0;
     state.stepped = false;
     state.direction = 'next';
     state.settled = true;
-    return state;
-  },
+    this.state = state;
 
-  componentDidMount: function () {
+    this.onChange = this.onChange.bind(this);
+    this.setInputElement = this.setInputElement.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handlePrevious = this.handlePrevious.bind(this);
+    this.handleRetry = this.handleRetry.bind(this);
+  }
+
+  componentDidMount () {
     this.context.getStore('ContactStore').addChangeListener(this.onChange);
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount () {
     this.context.getStore('ContactStore').removeChangeListener(this.onChange);
-  },
+  }
 
-  componentWillReceiveProps: function () {
+  componentWillReceiveProps () {
     this.setState({
       stepped: false
     }, this.setBlur);
-  },
+  }
 
-  render: function () {
+  render () {
     let content;
 
     if (this.props.spinner || !this.state.settled) {
@@ -69,23 +81,23 @@ const Contact = React.createClass({
         {content}
       </div>
     );
-  },
+  }
 
-  getStateFromStore: function () {
+  getStateFromStore () {
     const store = this.context.getStore('ContactStore');
     return {
       fields: store.getContactFields(),
       failure: store.getContactFailure()
     };
-  },
+  }
 
-  setInputElement: function (component) {
+  setInputElement (component) {
     if (component) {
       this.inputElement = component;
     }
-  },
+  }
 
-  renderContact: function () {
+  renderContact () {
     if (!this.props.steps || this.props.steps.length === 0) {
       return null;
     }
@@ -124,7 +136,7 @@ const Contact = React.createClass({
             this.props.resultMessageSuccess}
           retry={this.handleRetry} />
         <form className="contact-form" onSubmit={this.handleSubmit}>
-          <ReactCSSTransitionGroup
+          <CSSTransitionGroup
             component="div"
             className={cx({
               'contact-anim-container': true,
@@ -138,7 +150,7 @@ const Contact = React.createClass({
             <div className="contact-anim" key={step.name}>
               {contactElement}
             </div>
-          </ReactCSSTransitionGroup>
+          </CSSTransitionGroup>
           <ContactNav
             stepCurrent={this.state.step}
             stepFinal={this.props.stepFinal}
@@ -147,23 +159,23 @@ const Contact = React.createClass({
         </form>
       </div>
     );
-  },
+  }
 
-  setBlur: function () {
+  setBlur () {
     setTimeout(function (self, final) {
       if (!final && self.inputElement) {
         self.inputElement.blur();
       }
     }, 0, this, this.state.step === this.props.stepFinal);
-  },
+  }
 
-  onChange: function () {
+  onChange () {
     const state = this.getStateFromStore();
     state.settled = true;
     this.setState(state);
-  },
+  }
 
-  saveFields: function (fields) {
+  saveFields (fields) {
     const complete = this.state.step === (this.props.stepFinal - 1);
 
     this.setState({
@@ -174,25 +186,25 @@ const Contact = React.createClass({
         complete: complete
       });
     });
-  },
+  }
 
-  nextStep: function () {
+  nextStep () {
     this.setState({
       step: this.state.step + 1,
       direction: 'next',
       stepped: true
     });
-  },
+  }
 
-  prevStep: function () {
+  prevStep () {
     this.setState({
       step: this.state.step - 1,
       direction: 'prev',
       stepped: true
     });
-  },
+  }
 
-  handleRetry: function () {
+  handleRetry () {
     this.setState({
       settled: false
     }, function () {
@@ -201,9 +213,9 @@ const Contact = React.createClass({
         complete: true
       });
     });
-  },
+  }
 
-  handleSubmit: function (event) {
+  handleSubmit (event) {
     event.preventDefault();
     const step = this.props.steps[this.state.step];
 
@@ -217,12 +229,12 @@ const Contact = React.createClass({
 
     this.saveFields(fields);
     this.nextStep();
-  },
+  }
 
-  handlePrevious: function (event) {
+  handlePrevious (event) {
     event.preventDefault();
     this.prevStep();
   }
-});
+}
 
 export default Contact;

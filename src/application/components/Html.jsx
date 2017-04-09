@@ -6,30 +6,34 @@
  */
 /*eslint react/no-danger:0 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import path from 'path';
 import debugLib from 'debug';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 
 const debug = debugLib('HtmlComponent');
 
-let Html = React.createClass({
-  propTypes: {
-    currentPageTitle: React.PropTypes.string.isRequired,
-    imageServiceHost: React.PropTypes.string.isRequired,
-    inlineStyles: React.PropTypes.string.isRequired,
-    trackingSnippet: React.PropTypes.string.isRequired,
-    inlineScript: React.PropTypes.string.isRequired,
-    markup: React.PropTypes.string.isRequired,
-    state: React.PropTypes.string.isRequired,
-    mainScript: React.PropTypes.string.isRequired,
-    appManifest: React.PropTypes.string.isRequired,
-    otherStyles: React.PropTypes.array.isRequired,
-    browserConfig: React.PropTypes.string.isRequired,
-    swRegistrationScript: React.PropTypes.string.isRequired,
-    swMainScript: React.PropTypes.string.isRequired,
-    revAsset: React.PropTypes.func.isRequired
-  },
-  render: function () {
+class Html extends React.Component {
+  static get propTypes () {
+    return {
+      currentPageTitle: PropTypes.string.isRequired,
+      imageServiceHost: PropTypes.string.isRequired,
+      inlineStyles: PropTypes.string.isRequired,
+      trackingSnippet: PropTypes.string.isRequired,
+      inlineScript: PropTypes.string.isRequired,
+      markup: PropTypes.string.isRequired,
+      state: PropTypes.string.isRequired,
+      mainScript: PropTypes.string.isRequired,
+      appManifest: PropTypes.string.isRequired,
+      otherStyles: PropTypes.array.isRequired,
+      browserConfig: PropTypes.string.isRequired,
+      swRegistrationScript: PropTypes.string.isRequired,
+      swMainScript: PropTypes.string.isRequired,
+      revAsset: PropTypes.func.isRequired
+    };
+  }
+
+  render () {
     const asyncStyleImports = this.props.otherStyles.map((otherStyle, i) => {
       debug('otherStyle', otherStyle);
 
@@ -136,9 +140,9 @@ let Html = React.createClass({
       </html>
     );
   }
-});
+}
 
-Html = provideContext(
+const html = provideContext(
   connectToStores(Html, ['RouteStore', 'BackgroundStore'], (context) => {
     const routeStore = context.getStore('RouteStore'),
       backgroundStore = context.getStore('BackgroundStore'),
@@ -154,4 +158,4 @@ Html = provideContext(
   })
 );
 
-export default Html;
+export default html;

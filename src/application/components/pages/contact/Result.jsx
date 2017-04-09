@@ -3,22 +3,25 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-const ContactResult = React.createClass({
-  propTypes: {
-    failure: React.PropTypes.bool.isRequired,
-    failedMessage: React.PropTypes.string.isRequired,
-    label: React.PropTypes.object.isRequired,
-    message: React.PropTypes.object.isRequired,
-    business: React.PropTypes.object.isRequired
-  },
+class ContactResult extends React.Component {
+  static get propTypes () {
+    return {
+      failure: PropTypes.bool.isRequired,
+      failedMessage: PropTypes.string.isRequired,
+      label: PropTypes.object.isRequired,
+      message: PropTypes.object.isRequired,
+      business: PropTypes.object.isRequired
+    };
+  }
 
-  shouldComponentUpdate: function (nextProps) {
+  shouldComponentUpdate (nextProps) {
     return nextProps.failure !== this.props.failure;
-  },
+  }
 
-  render: function () {
+  render () {
     const links = this.renderLinks();
 
     return (
@@ -36,9 +39,9 @@ const ContactResult = React.createClass({
         </p>
       </div>
     );
-  },
+  }
 
-  renderLinks: function () {
+  renderLinks () {
     const uriMailTo = this.encodeURIMailTo();
     const uriTel = `tel:+1-${this.props.business.telephone}`;
 
@@ -72,9 +75,9 @@ const ContactResult = React.createClass({
         </a>
       ];
     }
-  },
+  }
 
-  encodeURIMailTo: function () {
+  encodeURIMailTo () {
     const subject =
       encodeURIComponent(`${this.props.business.alternateName} contact email`);
     const body =
@@ -82,6 +85,6 @@ const ContactResult = React.createClass({
 
     return `mailto:${this.props.business.email}?subject=${subject}&body=${body}`;
   }
-});
+}
 
 export default ContactResult;

@@ -6,7 +6,7 @@
 /* global afterEach, describe, it, beforeEach */
 import { expect } from 'chai';
 import React from 'react';
-import testUtils from 'react-addons-test-utils';
+import testUtils from 'react-dom/test-utils';
 import { RouteStore } from 'application/stores/RouteStore';
 import { BackgroundStore } from 'application/stores/BackgroundStore';
 import html from 'application/components/Html';

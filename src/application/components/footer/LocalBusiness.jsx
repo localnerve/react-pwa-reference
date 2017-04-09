@@ -4,14 +4,18 @@
  */
 import React from 'react';
 
-const LocalBusiness = React.createClass({
-  propTypes: {
-    business: React.PropTypes.object.isRequired
-  },
+import PropTypes from 'prop-types';
 
-  render: function () {
-    var uriMailTo = `mailto:${this.props.business.email}`;
-    var uriTel = `tel:+1-'${this.props.business.telephone}`;
+class LocalBusiness extends React.Component {
+  static get propTypes () {
+    return {
+      business: PropTypes.object.isRequired
+    };
+  }
+
+  render () {
+    const uriMailTo = `mailto:${this.props.business.email}`;
+    const uriTel = `tel:+1-'${this.props.business.telephone}`;
 
     return (
       <div
@@ -54,6 +58,6 @@ const LocalBusiness = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default LocalBusiness;

@@ -4,13 +4,17 @@
  */
 import React from 'react';
 
-const License = React.createClass({
-  propTypes: {
-    license: React.PropTypes.object.isRequired
-  },
+import PropTypes from 'prop-types';
 
-  render: function () {
-    var statements = this.props.license.statement.split(
+class License extends React.Component {
+  static get propTypes () {
+    return {
+      license: PropTypes.object.isRequired
+    };
+  }
+
+  render () {
+    const statements = this.props.license.statement.split(
       this.props.license.type
     );
 
@@ -30,6 +34,6 @@ const License = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default License;

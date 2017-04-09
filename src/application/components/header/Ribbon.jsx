@@ -4,19 +4,22 @@
  */
 /* global window */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'fluxible-router';
 import ModalLink from './ModalLink';
 import cx from 'classnames';
 
-const Ribbon = React.createClass({
-  propTypes: {
-    social: React.PropTypes.object.isRequired,
-    business: React.PropTypes.object.isRequired,
-    settings: React.PropTypes.object.isRequired,
-    hasServiceWorker: React.PropTypes.bool.isRequired
-  },
+class Ribbon extends React.Component {
+  static get propTypes () {
+    return {
+      social: PropTypes.object.isRequired,
+      business: PropTypes.object.isRequired,
+      settings: PropTypes.object.isRequired,
+      hasServiceWorker: PropTypes.bool.isRequired
+    };
+  }
 
-  render: function () {
+  render () {
     const serverRender = typeof window === 'undefined';
     const uriTel = `tel:+1-${this.props.business.telephone}`;
 
@@ -55,6 +58,6 @@ const Ribbon = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default Ribbon;

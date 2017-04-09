@@ -5,6 +5,7 @@
 /* global window, document */
 import debugLib from 'debug';
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connectToStores, provideContext } from 'fluxible-addons-react';
 import { handleHistory, navigateAction } from 'fluxible-router';
 import ReactSwipe from 'react-swipe';
@@ -17,24 +18,35 @@ import pages from './pages';
 
 const debug = debugLib('application');
 
-let Application = React.createClass({
-  propTypes: {
-    hasServiceWorker: React.PropTypes.bool.isRequired,
-    navigateComplete: React.PropTypes.bool.isRequired,
-    currentNavigateError: React.PropTypes.object,
-    pageTitle: React.PropTypes.string.isRequired,
-    analytics: React.PropTypes.string,
-    pageName: React.PropTypes.string.isRequired,
-    pages: React.PropTypes.object.isRequired,
-    pageModels: React.PropTypes.object.isRequired,
-    modal: React.PropTypes.object
-  },
-  contextTypes: {
-    getStore: React.PropTypes.func.isRequired,
-    executeAction: React.PropTypes.func.isRequired
-  },
+class Application extends React.Component {
+  constructor (props) {
+    super(props);
 
-  handleMessage: function (event) {
+    this.handleSwipe = this.handleSwipe.bind(this);
+  }
+
+  static get propTypes () {
+    return {
+      hasServiceWorker: PropTypes.bool.isRequired,
+      navigateComplete: PropTypes.bool.isRequired,
+      currentNavigateError: PropTypes.object,
+      pageTitle: PropTypes.string.isRequired,
+      analytics: PropTypes.string,
+      pageName: PropTypes.string.isRequired,
+      pages: PropTypes.object.isRequired,
+      pageModels: PropTypes.object.isRequired,
+      modal: PropTypes.object
+    };
+  }
+
+  static get contextTypes () {
+    return {
+      getStore: PropTypes.func.isRequired,
+      executeAction: PropTypes.func.isRequired
+    };
+  }
+
+  handleMessage (event) {
     if (event.data.command === 'navigate') {
       this.modalClose();
       this.context.executeAction(navigateAction, {
@@ -56,9 +68,9 @@ let Application = React.createClass({
       }
       return;
     }
-  },
+  }
 
-  handleSwipe: function (index) {
+  handleSwipe (index) {
     const pages = this.props.pages;
     if (pages[this.props.pageName].order !== index) {
       const nextPageName = Object.keys(pages).filter(function (page) {
@@ -70,13 +82,13 @@ let Application = React.createClass({
         url: pages[nextPageName].path
       });
     }
-  },
+  }
 
-  modalClose: function () {
+  modalClose () {
     this.context.executeAction(modalAction);
-  },
+  }
 
-  render: function () {
+  render () {
     debug('props', this.props);
 
     const routeOrdinal = this.props.pages[this.props.pageName].order;
@@ -118,24 +130,24 @@ let Application = React.createClass({
         <Footer models={this.props.pageModels} />
       </div>
     );
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount () {
     if (this.props.hasServiceWorker) {
       window.navigator.serviceWorker.addEventListener(
         'message', this.handleMessage
       );
     }
     pages.assignAppElementToModal(document.getElementById('app-element'));
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount () {
     if (this.props.hasServiceWorker) {
       window.navigator.serviceWorker.removeEventListener(
         'message', this.handleMessage
       );
     }
-  },
+  }
 
   /**
    * Allow rendering if the page has changed (The result of NAVIGATE_START).
@@ -144,14 +156,14 @@ let Application = React.createClass({
    *
    * @param {Object} nextProps - The nextProps, per React lifecycle docs.
    */
-  shouldComponentUpdate: function (nextProps) {
+  shouldComponentUpdate (nextProps) {
     const pageChange = nextProps.pageName !== this.props.pageName;
     const navigationComplete =
       nextProps.navigateComplete && this.props.navigateComplete;
     return pageChange || navigationComplete;
-  },
+  }
 
-  componentDidUpdate: function () {
+  componentDidUpdate () {
     document.title = this.props.pageTitle;
 
     const analytics = window[this.props.analytics];
@@ -162,50 +174,50 @@ let Application = React.createClass({
       analytics('send', 'pageview');
     }
   }
-});
+}
 
-Application = connectToStores(
-  Application, ['ContentStore', 'RouteStore', 'ModalStore'], (context) => {
-    const
-      routeStore =
-        context.getStore('RouteStore'),
-      contentStore =
-        context.getStore('ContentStore'),
-      modalStore =
-        context.getStore('ModalStore'),
-      currentRoute =
-        routeStore.getCurrentRoute(),
-      pageName =
-        (currentRoute && currentRoute.page) ||
-          contentStore.getDefaultResource(),
-      pageTitle =
-        (currentRoute && currentRoute.pageTitle) ||
-          contentStore.getDefaultResource(),
-      hasServiceWorker =
-        typeof window !== 'undefined' && 'serviceWorker' in window.navigator;
+const application = provideContext(
+  handleHistory(
+    connectToStores(
+      Application, ['ContentStore', 'RouteStore', 'ModalStore'], (context) => {
+        const
+          routeStore =
+            context.getStore('RouteStore'),
+          contentStore =
+            context.getStore('ContentStore'),
+          modalStore =
+            context.getStore('ModalStore'),
+          currentRoute =
+            routeStore.getCurrentRoute(),
+          pageName =
+            (currentRoute && currentRoute.page) ||
+              contentStore.getDefaultResource(),
+          pageTitle =
+            (currentRoute && currentRoute.pageTitle) ||
+              contentStore.getDefaultResource(),
+          hasServiceWorker =
+            typeof window !== 'undefined' && 'serviceWorker' in window.navigator;
 
-    return {
-      hasServiceWorker: hasServiceWorker,
-      navigateComplete: routeStore.isNavigateComplete(),
-      pageName: pageName,
-      pageTitle: pageTitle,
-      pageModels: contentStore.getCurrentPageModels(),
-      pages: routeStore.getRoutes(),
-      modal: {
-        open: modalStore.getIsOpen(),
-        component: modalStore.getComponent(),
-        componentName: modalStore.getComponentName(),
-        props: modalStore.getProps(),
-        failure: modalStore.getFailure()
+        return {
+          hasServiceWorker: hasServiceWorker,
+          navigateComplete: routeStore.isNavigateComplete(),
+          pageName: pageName,
+          pageTitle: pageTitle,
+          pageModels: contentStore.getCurrentPageModels(),
+          pages: routeStore.getRoutes(),
+          modal: {
+            open: modalStore.getIsOpen(),
+            component: modalStore.getComponent(),
+            componentName: modalStore.getComponentName(),
+            props: modalStore.getProps(),
+            failure: modalStore.getFailure()
+          }
+        };
       }
-    };
-  }
-);
-
-Application = provideContext(
-  handleHistory(Application, {
+    )
+  , {
     enableScroll: false
   })
 );
 
-export default Application;
+export default application;

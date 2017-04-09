@@ -3,6 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import debugLib from 'debug';
 import { connectToStores } from 'fluxible-addons-react';
 import { closeModal as modalAction } from 'application/actions/modal';
@@ -20,34 +21,48 @@ import Switch from './Switch';
 
 const debug = debugLib('Settings');
 
-let Settings = React.createClass({
-  propTypes: {
-    failure: React.PropTypes.bool.isRequired,
-    spinner: React.PropTypes.bool,
-    name: React.PropTypes.string,
-    heading: React.PropTypes.string,
-    settingsNotSupported: React.PropTypes.string,
-    pushNotifications: React.PropTypes.object,
-    backgroundSync: React.PropTypes.object,
-    demo: React.PropTypes.object,
-    hasServiceWorker: React.PropTypes.bool,
-    hasPushMessaging: React.PropTypes.bool,
-    hasPermissions: React.PropTypes.bool,
-    hasNotifications: React.PropTypes.bool,
-    pushBlocked: React.PropTypes.bool,
-    syncBlocked: React.PropTypes.bool,
-    pushSubscription: React.PropTypes.object,
-    pushSubscriptionError: React.PropTypes.object,
-    pushTopics: React.PropTypes.array,
-    pushTopicsError: React.PropTypes.object,
-    transition: React.PropTypes.object
-  },
-  contextTypes: {
-    executeAction: React.PropTypes.func.isRequired,
-    getStore: React.PropTypes.func.isRequired
-  },
+class Settings extends React.Component {
+  constructor (props) {
+    super(props);
 
-  render: function () {
+    this.closeModal = this.closeModal.bind(this);
+    this.subscriptionChange = this.subscriptionChange.bind(this);
+    this.topicChange = this.topicChange.bind(this);
+    this.pushDemo = this.pushDemo.bind(this);
+  }
+
+  static get propTypes () {
+    return {
+      failure: PropTypes.bool.isRequired,
+      spinner: PropTypes.bool,
+      name: PropTypes.string,
+      heading: PropTypes.string,
+      settingsNotSupported: PropTypes.string,
+      pushNotifications: PropTypes.object,
+      backgroundSync: PropTypes.object,
+      demo: PropTypes.object,
+      hasServiceWorker: PropTypes.bool,
+      hasPushMessaging: PropTypes.bool,
+      hasPermissions: PropTypes.bool,
+      hasNotifications: PropTypes.bool,
+      pushBlocked: PropTypes.bool,
+      syncBlocked: PropTypes.bool,
+      pushSubscription: PropTypes.object,
+      pushSubscriptionError: PropTypes.object,
+      pushTopics: PropTypes.array,
+      pushTopicsError: PropTypes.object,
+      transition: PropTypes.object
+    };
+  }
+
+  static get contextTypes () {
+    return {
+      executeAction: PropTypes.func.isRequired,
+      getStore: PropTypes.func.isRequired
+    };
+  }
+
+  render () {
     if (!this.props.failure &&
         this.props.spinner ||
         Object.keys(this.props.transition).length > 0) {
@@ -57,12 +72,12 @@ let Settings = React.createClass({
     }
 
     return this.renderSettings();
-  },
+  }
 
   /**
    * Render the settings dialog contents.
    */
-  renderSettings: function () {
+  renderSettings () {
     const failureElement = this.renderFailure(),
       notSupported = this.renderNotSupported(),
       settingsControls = this.renderControls();
@@ -76,7 +91,7 @@ let Settings = React.createClass({
         {settingsControls}
       </div>
     );
-  },
+  }
 
   /**
    * Render a modal dialog failure outcome.
@@ -84,7 +99,7 @@ let Settings = React.createClass({
    * 500 content is appropriate here. It is preloaded by the server,
    * so it is reliable.
    */
-  renderFailure: function () {
+  renderFailure () {
     const contentStore = this.context.getStore('ContentStore');
 
     if (this.props.failure) {
@@ -94,12 +109,12 @@ let Settings = React.createClass({
     }
 
     return null;
-  },
+  }
 
   /**
    * Render a message that indicates lack of support.
    */
-  renderNotSupported: function () {
+  renderNotSupported () {
     const hasSettings = !this.props.failure &&
       this.props.hasServiceWorker && this.props.hasPushMessaging;
 
@@ -110,12 +125,12 @@ let Settings = React.createClass({
     }
 
     return null;
-  },
+  }
 
   /**
    * Render the settings controls.
    */
-  renderControls: function () {
+  renderControls () {
     if (!this.props.failure) {
       const pushDisabled =
         !this.props.hasServiceWorker ||
@@ -167,12 +182,12 @@ let Settings = React.createClass({
     }
 
     return null;
-  },
+  }
 
   /**
    * Render the push demo content.
    */
-  renderPushDemo: function (pushDisabled, hasSubscription) {
+  renderPushDemo (pushDisabled, hasSubscription) {
     if (this.props.demo && this.props.demo.pushNotification) {
       return (
         <div className="push-demo">
@@ -186,24 +201,24 @@ let Settings = React.createClass({
     }
 
     return null;
-  },
+  }
 
   /**
    * Subscribe/Unsubscribe all.
    */
-  subscriptionChange: function (event) {
+  subscriptionChange (event) {
     debug('update subscription', event);
 
     const action = event.target.checked ? subscribeAction : unsubscribeAction;
     this.context.executeAction(action);
-  },
+  }
 
   /**
    * Subscribe/Unsubscribe from a push topic.
    *
    * @param {Object} event - The synthetic checkbox event.
    */
-  topicChange: function (event) {
+  topicChange (event) {
     debug('update topic ', event.target.name, event.target.checked);
 
     this.context.executeAction(updateTopicsAction, {
@@ -214,12 +229,12 @@ let Settings = React.createClass({
         subscribed: event.target.checked
       }]
     });
-  },
+  }
 
   /**
    * Send a push notification to the current subscription id.
    */
-  pushDemo: function (event) {
+  pushDemo (event) {
     debug('demo push notification handler');
 
     event.currentTarget.blur();
@@ -227,17 +242,17 @@ let Settings = React.createClass({
     this.context.executeAction(sendAction, {
       subscription: this.props.pushSubscription
     });
-  },
+  }
 
   /**
    * Closes the modal dialog.
    */
-  closeModal: function () {
+  closeModal () {
     this.context.executeAction(modalAction);
   }
-});
+}
 
-Settings = connectToStores(Settings, ['SettingsStore'], (context) => {
+const settings = connectToStores(Settings, ['SettingsStore'], (context) => {
   const settingsStore = context.getStore('SettingsStore');
 
   return {
@@ -255,4 +270,4 @@ Settings = connectToStores(Settings, ['SettingsStore'], (context) => {
   };
 });
 
-export default Settings;
+export default settings;

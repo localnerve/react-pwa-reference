@@ -4,17 +4,21 @@
  */
 import React from 'react';
 
-const Switch = React.createClass({
-  propTypes: {
-    inputId: React.PropTypes.string.isRequired,
-    checked: React.PropTypes.bool.isRequired,
-    disabled: React.PropTypes.bool.isRequired,
-    onChange: React.PropTypes.func.isRequired,
-    label: React.PropTypes.string.isRequired,
-    notice: React.PropTypes.string
-  },
+import PropTypes from 'prop-types';
 
-  render: function () {
+class Switch extends React.Component {
+  static get propTypes () {
+    return {
+      inputId: PropTypes.string.isRequired,
+      checked: PropTypes.bool.isRequired,
+      disabled: PropTypes.bool.isRequired,
+      onChange: PropTypes.func.isRequired,
+      label: PropTypes.string.isRequired,
+      notice: PropTypes.string
+    };
+  }
+
+  render () {
     return (
       <div>
         <div className="switch">
@@ -35,6 +39,6 @@ const Switch = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default Switch;

@@ -6,31 +6,34 @@
 import React from 'react';
 import cx from 'classnames';
 
-const Notification = React.createClass({
-  getInitialState: function () {
-    return {
+class Notification extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       hide: true,
       active: false,
       close: false,
       message: ''
     };
-  },
+    this.close = this.close.bind(this);
+    this.messageHandler = this.messageHandler.bind(this);
+  }
 
-  componentDidMount: function () {
+  componentDidMount () {
     window.addEventListener('message', this.messageHandler);
     if ('serviceWorker' in window.navigator) {
       window.navigator.serviceWorker.addEventListener('message', this.messageHandler);
     }
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount () {
     window.removeEventListener('message', this.messageHandler);
     if ('serviceWorker' in window.navigator) {
       window.navigator.serviceWorker.removeEventListener('message', this.messageHandler);
     }
-  },
+  }
 
-  render: function () {
+  render () {
     return (
       <div className={cx({
         hide: this.state.hide,
@@ -49,7 +52,7 @@ const Notification = React.createClass({
         </div>
       </div>
     );
-  },
+  }
 
   /**
    * Handle notification events.
@@ -66,7 +69,7 @@ const Notification = React.createClass({
    * @param {Number} event.data.time - The time the message should be visible.
    * If omitted, this results in a close button being displayed.
    */
-  messageHandler: function (event) {
+  messageHandler (event) {
     if (event.origin === window.location.origin &&
         event.data.command === 'notify') {
       this.setState({
@@ -93,9 +96,9 @@ const Notification = React.createClass({
         }, event.data.time, this);
       }
     }
-  },
+  }
 
-  close: function () {
+  close () {
     this.setState({
       hide: true,
       message: '',
@@ -103,6 +106,6 @@ const Notification = React.createClass({
       active: false
     });
   }
-});
+}
 
 export default Notification;

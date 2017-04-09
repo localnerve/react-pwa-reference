@@ -83,7 +83,7 @@ describe('application component', () => {
     React =
       require('react');
     testUtils =
-      require('react-addons-test-utils');
+      require('react-dom/test-utils');
 
     settle(250, done);
   });

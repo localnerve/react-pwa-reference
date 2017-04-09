@@ -3,21 +3,24 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 
-const ContactNav = React.createClass({
-  propTypes: {
-    stepCurrent: React.PropTypes.number.isRequired,
-    stepFinal: React.PropTypes.number.isRequired,
-    onPrevious: React.PropTypes.func.isRequired,
-    nav: React.PropTypes.object.isRequired
-  },
+class ContactNav extends React.Component {
+  static get propTypes () {
+    return {
+      stepCurrent: PropTypes.number.isRequired,
+      stepFinal: PropTypes.number.isRequired,
+      onPrevious: PropTypes.func.isRequired,
+      nav: PropTypes.object.isRequired
+    };
+  }
 
-  shouldComponentUpdate: function (nextProps) {
+  shouldComponentUpdate (nextProps) {
     return nextProps.stepCurrent !== this.props.stepCurrent;
-  },
+  }
 
-  render: function () {
+  render () {
     const last = this.props.stepCurrent === this.props.stepFinal;
     const nav = last ? [] : this.renderContactNav();
 
@@ -29,9 +32,9 @@ const ContactNav = React.createClass({
         {nav}
       </div>
     );
-  },
+  }
 
-  renderContactNav: function () {
+  renderContactNav () {
     const complete = this.props.stepCurrent === this.props.stepFinal - 1;
     const nextText = complete ? this.props.nav.next.last :
       this.props.nav.next.text;
@@ -54,6 +57,6 @@ const ContactNav = React.createClass({
       </button>
     ];
   }
-});
+}
 
 export default ContactNav;

@@ -3,19 +3,22 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import Ribbon from './Ribbon';
 import Logo from './Logo';
 import Nav from './Nav';
 
-const Header = React.createClass({
-  propTypes: {
-    selected: React.PropTypes.string.isRequired,
-    links: React.PropTypes.array.isRequired,
-    models: React.PropTypes.object.isRequired,
-    hasServiceWorker: React.PropTypes.bool.isRequired
-  },
+class Header extends React.Component {
+  static get propTypes () {
+    return {
+      selected: PropTypes.string.isRequired,
+      links: PropTypes.array.isRequired,
+      models: PropTypes.object.isRequired,
+      hasServiceWorker: PropTypes.bool.isRequired
+    };
+  }
 
-  render: function () {
+  render () {
     return (
       <header className="app-header">
         <div className="app-header-bg">
@@ -31,6 +34,6 @@ const Header = React.createClass({
       </header>
     );
   }
-});
+}
 
 export default Header;

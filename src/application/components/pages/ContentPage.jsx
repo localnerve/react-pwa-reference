@@ -3,15 +3,18 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import Spinner from './Spinner';
 
-const ContentPage = React.createClass({
-  propTypes: {
-    content: React.PropTypes.any,
-    spinner: React.PropTypes.bool
-  },
+class ContentPage extends React.Component {
+  static get propTypes () {
+    return {
+      content: PropTypes.any,
+      spinner: PropTypes.bool
+    };
+  }
 
-  render: function () {
+  render () {
     const content = this.renderContent();
 
     return (
@@ -19,16 +22,16 @@ const ContentPage = React.createClass({
         {content}
       </div>
     );
-  },
+  }
 
-  shouldComponentUpdate: function (nextProps) {
+  shouldComponentUpdate (nextProps) {
     const spinnerChange = this.props.spinner !== nextProps.spinner;
     const contentChange = this.props.content !== nextProps.content;
     return spinnerChange || contentChange;
-  },
+  }
 
   /*eslint-disable react/no-danger */
-  renderContent: function () {
+  renderContent () {
     if (this.props.spinner) {
       return (
         <Spinner />
@@ -41,6 +44,6 @@ const ContentPage = React.createClass({
     }
   }
   /*eslint-enable react/no-danger */
-});
+}
 
 export default ContentPage;

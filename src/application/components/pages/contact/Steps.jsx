@@ -3,34 +3,37 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import cx from 'classnames';
 import noop from 'lodash/noop';
 
-const ContactSteps = React.createClass({
-  propTypes: {
-    steps: React.PropTypes.array.isRequired,
-    stepCurrent: React.PropTypes.number.isRequired,
-    stepFinal: React.PropTypes.number.isRequired,
-    failure: React.PropTypes.bool.isRequired,
-    resultMessage: React.PropTypes.string,
-    retry: React.PropTypes.func.isRequired
-  },
+class ContactSteps extends React.Component {
+  static get propTypes () {
+    return {
+      steps: PropTypes.array.isRequired,
+      stepCurrent: PropTypes.number.isRequired,
+      stepFinal: PropTypes.number.isRequired,
+      failure: PropTypes.bool.isRequired,
+      resultMessage: PropTypes.string,
+      retry: PropTypes.func.isRequired
+    };
+  }
 
-  shouldComponentUpdate: function (nextProps) {
+  shouldComponentUpdate (nextProps) {
     return nextProps.stepCurrent !== this.props.stepCurrent ||
            nextProps.failure !== this.props.failure;
-  },
+  }
 
-  render: function () {
+  render () {
     const contactSteps = this.renderContactSteps();
     return (
       <ul className="contact-steps">
         {contactSteps}
       </ul>
     );
-  },
+  }
 
-  renderContactSteps: function () {
+  renderContactSteps () {
     if (this.props.stepCurrent === this.props.stepFinal) {
       return (
         <li className={cx({
@@ -60,6 +63,6 @@ const ContactSteps = React.createClass({
         }, this);
     }
   }
-});
+}
 
 export default ContactSteps;

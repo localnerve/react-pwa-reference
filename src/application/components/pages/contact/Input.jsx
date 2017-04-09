@@ -4,18 +4,22 @@
  */
 import React from 'react';
 
-const ContactInput = React.createClass({
-  propTypes: {
-    fieldValue: React.PropTypes.string,
-    setInputReference: React.PropTypes.func.isRequired,
-    label: React.PropTypes.object.isRequired,
-    inputElement: React.PropTypes.string.isRequired,
-    inputType: React.PropTypes.string,
-    inputId: React.PropTypes.string.isRequired,
-    focus: React.PropTypes.bool.isRequired
-  },
+import PropTypes from 'prop-types';
 
-  render: function () {
+class ContactInput extends React.Component {
+  static get propTypes () {
+    return {
+      fieldValue: PropTypes.string,
+      setInputReference: PropTypes.func.isRequired,
+      label: PropTypes.object.isRequired,
+      inputElement: PropTypes.string.isRequired,
+      inputType: PropTypes.string,
+      inputId: PropTypes.string.isRequired,
+      focus: PropTypes.bool.isRequired
+    };
+  }
+
+  render () {
     const inputElement = React.createElement(this.props.inputElement, {
       type: this.props.inputType,
       id: this.props.inputId,
@@ -39,6 +43,6 @@ const ContactInput = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default ContactInput;

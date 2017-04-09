@@ -4,14 +4,18 @@
  */
 import React from 'react';
 
-const Topics = React.createClass({
-  propTypes: {
-    topics: React.PropTypes.array.isRequired,
-    disabled: React.PropTypes.bool.isRequired,
-    onChange: React.PropTypes.func.isRequired
-  },
+import PropTypes from 'prop-types';
 
-  render: function () {
+class Topics extends React.Component {
+  static get propTypes () {
+    return {
+      topics: PropTypes.array.isRequired,
+      disabled: PropTypes.bool.isRequired,
+      onChange: PropTypes.func.isRequired
+    };
+  }
+
+  render () {
     const topics = this.props.topics.map((topic) => {
       return (
         <li key={topic.tag}>
@@ -35,6 +39,6 @@ const Topics = React.createClass({
       </ul>
     );
   }
-});
+}
 
 export default Topics;

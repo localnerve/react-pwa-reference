@@ -5,24 +5,32 @@
 /* global document */
 import React from 'react';
 
-const Background = React.createClass({
-  contextTypes: {
-    getStore: React.PropTypes.func.isRequired
-  },
+import PropTypes from 'prop-types';
 
-  propTypes: {
-    prefetch: React.PropTypes.bool
-  },
-
-  getInitialState: function () {
-    return {
+class Background extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
       top: 0,
       height: 0,
       loaded: false
     };
-  },
+    this.onChange = this.onChange.bind(this);
+  }
 
-  render: function () {
+  static get contextTypes () {
+    return {
+      getStore: PropTypes.func.isRequired
+    };
+  }
+
+  static get propTypes () {
+    return {
+      prefetch: PropTypes.bool
+    }
+  }
+
+  render () {
     const gradient = 'linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))';
     // Setting 'image' initially to 'none' seems to help IE 11, but it still can't
     //   change images properly - you always get the same image. #41
@@ -53,26 +61,26 @@ const Background = React.createClass({
         </div>
       </div>
     );
-  },
+  }
 
-  componentDidMount: function () {
+  componentDidMount () {
     this.context.getStore('BackgroundStore').addChangeListener(this.onChange);
-  },
+  }
 
-  componentWillUnmount: function () {
+  componentWillUnmount () {
     this.context.getStore('BackgroundStore').removeChangeListener(this.onChange);
-  },
+  }
 
-  getStateFromStore: function () {
+  getStateFromStore () {
     const store = this.context.getStore('BackgroundStore');
     return {
       src: store.getCurrentBackgroundUrl(),
       top: store.getTop(),
       height: store.getHeight()
     };
-  },
+  }
 
-  fetchImage: function (fetchOnly) {
+  fetchImage (fetchOnly) {
     const self = this;
     const img = document.createElement('img');
 
@@ -89,9 +97,9 @@ const Background = React.createClass({
     }
 
     img.src = fetchOnly || this.state.src;
-  },
+  }
 
-  prefetchImages: function () {
+  prefetchImages () {
     if (this.props.prefetch && !this.prefetched) {
       this.context.getStore('BackgroundStore')
         .getNotCurrentBackgroundUrls()
@@ -101,9 +109,9 @@ const Background = React.createClass({
 
       this.prefetched = true;
     }
-  },
+  }
 
-  onChange: function () {
+  onChange () {
     const state = this.getStateFromStore();
     state.prevSrc = this.state.src;
     state.loaded = false;
@@ -113,6 +121,6 @@ const Background = React.createClass({
 
     this.prefetchImages();
   }
-});
+}
 
 export default Background;

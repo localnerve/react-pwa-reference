@@ -4,12 +4,16 @@
  */
 import React from 'react';
 
-const SiteBullets = React.createClass({
-  propTypes: {
-    items: React.PropTypes.array.isRequired
-  },
+import PropTypes from 'prop-types';
 
-  render: function () {
+class SiteBullets extends React.Component {
+  static get propTypes () {
+    return {
+      items: PropTypes.array.isRequired
+    };
+  }
+
+  render () {
     const items = this.props.items.map(function (item, index, arr) {
       return (
         <span key={`bullet${index}`}>
@@ -31,6 +35,6 @@ const SiteBullets = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default SiteBullets;

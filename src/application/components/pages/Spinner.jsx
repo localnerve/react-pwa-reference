@@ -3,14 +3,17 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactSpinner from 'react-spinner';
 
-const Spinner = React.createClass({
-  propTypes: {
-    contained: React.PropTypes.bool
-  },
+class Spinner extends React.Component {
+  static get propTypes () {
+    return {
+      contained: PropTypes.bool
+    };
+  }
 
-  render: function () {
+  render () {
     const spinner = <ReactSpinner className="react-spinner-custom" />;
     const element = this.props.contained
       ? React.createElement('div', { style: { marginTop: '50%' } }, spinner)
@@ -18,6 +21,6 @@ const Spinner = React.createClass({
 
     return element;
   }
-});
+}
 
 export default Spinner;

@@ -4,13 +4,17 @@
  */
 import React from 'react';
 
-const ByLine = React.createClass({
-  propTypes: {
-    author: React.PropTypes.object.isRequired
-  },
+import PropTypes from 'prop-types';
 
-  render: function () {
-    var byLine = this.props.author.byLine.replace(
+class ByLine extends React.Component {
+  static get propTypes () {
+    return {
+      author: PropTypes.object.isRequired
+    };
+  }
+
+  render () {
+    const byLine = this.props.author.byLine.replace(
       ` ${this.props.author.name}`, ''
     );
 
@@ -35,6 +39,6 @@ const ByLine = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default ByLine;

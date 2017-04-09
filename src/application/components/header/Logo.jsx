@@ -3,14 +3,17 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'fluxible-router';
 
-const Logo = React.createClass({
-  propTypes: {
-    site: React.PropTypes.object.isRequired
-  },
+class Logo extends React.Component {
+  static get propTypes () {
+    return {
+      site: PropTypes.object.isRequired
+    };
+  }
 
-  render: function () {
+  render () {
     return (
       <div className="logo">
         <NavLink routeName="home" title="flux-react-example">
@@ -24,6 +27,6 @@ const Logo = React.createClass({
       </div>
     );
   }
-});
+}
 
 export default Logo;
