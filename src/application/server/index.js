@@ -14,12 +14,13 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import csrf from 'csurf';
 import errorHandler from 'express-error-handler';
-import rewrite from 'connect-modrewrite';
 import https from 'https';
 import http from 'http';
 import configs from 'configs';
 import fluxibleApp from 'application/app';
 import main from './main';
+import { rewriteBasics, rewriteServiceWorker } from './rewrites';
+import statics from './statics';
 import robots from './robots';
 import sitemap from './sitemap';
 import servicesData from './services/data';
@@ -32,15 +33,6 @@ import servicesPush from './services/push';
 const config = configs.create();
 const settings = config.settings;
 const protocol = settings.web.ssl ? https : http;
-const rewriteRules = [
-  // rewrite root image requests to settings.web.images
-  '^/([^\\/]+\\.(?:png|jpg|jpeg|webp|ico|svg|gif)(?:\\?.*)?$) ' +
-    settings.web.images + '/$1 [NC L]',
-  // alias home to root
-  '^/home/?$ / [L]',
-  // forbid 404 and 500 direct requests
-  '^/(?:404|500)/?$ [F L]'
-];
 const app = express();
 const server = protocol.createServer(app);
 
@@ -52,30 +44,11 @@ app.use(compress());
 app.use(errorHandler.maintenance());
 
 // Handle special requests
-app.use(rewrite(rewriteRules));
-// Service worker rewrites delayed so assets.json not required on app start.
-app.use((req, res, next) => {
-  const swRule = new RegExp(
-    '^(/' + settings.web.assets.swMainScript(true) + ')$', 'i'
-  );
-
-  if (swRule.test(req.url)) {
-    req.url = req.url.replace(swRule, settings.web.assets.swMainScript());
-  } else {
-    let reSourceMap = new RegExp(
-      '^(/' + settings.web.assets.swMainScriptMap(true) + ')$', 'i'
-    );
-    if (reSourceMap.test(req.url)) {
-      req.url = req.url.replace(reSourceMap, settings.web.assets.swMainScriptMap());
-    }
-  }
-  next();
-});
+app.use(rewriteBasics(settings));
+app.use(rewriteServiceWorker(settings));
 
 // Serve cached statics
-app.use(settings.web.baseDir, express.static(
-  settings.dist.baseDir, { maxAge: settings.web.assetAge }
-));
+app.use(settings.web.baseDir, statics(settings));
 
 // Setup security
 app.use(cookieParser({
