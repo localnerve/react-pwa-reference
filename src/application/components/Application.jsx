@@ -23,6 +23,8 @@ class Application extends React.Component {
     super(props);
 
     this.handleSwipe = this.handleSwipe.bind(this);
+    this.modalClose = this.modalClose.bind(this);
+    this.handleMessage = this.handleMessage.bind(this);
   }
 
   static get propTypes () {
