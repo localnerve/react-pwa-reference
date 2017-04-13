@@ -63,15 +63,16 @@ const defaultXhrPath = '/api';
 /**
  * Create the network request for fetch.
  *
- * Api is CSRF protected, so we include the cookie.
+ * Api is CSRF protected, so we 'include' the cookie.
  *
  * @param {Object} request - The Request object from sw-toolbox.
  * @returns {Promise} Resolves to a Request object that includes the cookie.
  */
 function networkRequest (request) {
-  // Thought 'same-origin' would work by spec, but it doesn't. 'include' does.
+  // re: https://fetch.spec.whatwg.org/#dom-request
   return Promise.resolve(new Request(request.clone(), {
-    credentials: 'include'
+    credentials: 'include',
+    mode: 'same-origin'
   }));
 }
 
