@@ -124,7 +124,7 @@
     "express": "4.15.2",
     "express-error-handler": "localnerve/express-error-handler",
     "fluxible": "1.2.0",
-    "fluxible-addons-react": "0.2.9",
+    "fluxible-addons-react": "0.2.10",
     "fluxible-plugin-fetchr": "0.3.11",
     "fluxible-router": "1.0.1",
     "glob": "7.1.1",
