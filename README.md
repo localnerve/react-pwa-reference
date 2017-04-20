@@ -11,7 +11,7 @@
 > A project boilerplate and reference example for ~~isomorphic~~ universal reactiflux progressive web applications.
 
 ## Summary
-This project is an evolution of [flux-react-example](https://github.com/localnerve/flux-react-example) and [flux-react-example-sw](https://github.com/localnerve/flux-react-example-sw) that adds evolved tooling and organization. It's a rather complete, performance minded reference PWA that uses data-driven routes and content from an attached service.
+This project is an evolution of [flux-react-example](https://github.com/localnerve/flux-react-example) and [flux-react-example-sw](https://github.com/localnerve/flux-react-example-sw) that adds evolved tooling and organization. It's a rather complete, performance minded reference PWA that uses data-driven routes and content from an attached service. The data service driving the app is this [Github repo](https://github.com/localnerve/fred).
 
 ## Environment Prerequisites
 Just Node 6+.  
