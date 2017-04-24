@@ -19,7 +19,7 @@ describe('html component', () => {
 
   const testProps = {
     mainScript: 'path/to/mainScript',
-    trackingSnippet: 'someTrackingCode',
+    trackingSnippet: 'window["SomeTrackingCode"] = 0;',
     inlineStyles: '@charset "UTF-8";',
     inlineScript: 'window["MyTest"] = 0;',
     state: '123456789',
@@ -72,7 +72,10 @@ describe('html component', () => {
 
     // This enables dom render after HtmlComponent factory call.
     // This mimics what really happens.
-    testDomStart();
+    // Suppress JSDOM errors b/c resources do not really exist.
+    testDomStart(null, {
+      suppressJSDOMError: true
+    });
 
     // Create the htmlComponent for use in tests.
     htmlComponent = renderHtmlIntoDocument(htmlElement);
