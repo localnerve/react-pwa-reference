@@ -35,7 +35,9 @@ export const name = 'push';
 export function create (req, resource, params, body, config, callback) {
   webPush.setGCMAPIKey(pushConfig.service.apiKey());
 
-  return webPush.sendNotification(params.endpoint).then(() => {
+  return webPush.sendNotification({
+    endpoint: params.endpoint
+  }).then(() => {
     callback();
   }).catch((err) => {
     callback(error(err));
