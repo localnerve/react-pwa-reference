@@ -106,7 +106,7 @@
     "sw-precache": "5.1.1",
     "wd": "1.2.0",
     "webpack": "2.5.1",
-    "webpack-bundle-size-analyzer": "2.6.0",
+    "webpack-bundle-size-analyzer": "2.7.0",
     "xml2js": "^0.4.16"
   },
   "dependencies": {
