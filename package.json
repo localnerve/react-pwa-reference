@@ -72,7 +72,7 @@
     "babel-preset-react": "6.24.1",
     "babel-register": "6.24.1",
     "cannibalizr": "~0.1.5",
-    "chai": "3.5.0",
+    "chai": "4.0.2",
     "chai-as-promised": "6.0.0",
     "colors": "1.1.2",
     "coveralls": "2.13.1",
