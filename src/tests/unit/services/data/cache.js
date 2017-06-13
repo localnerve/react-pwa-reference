@@ -111,7 +111,7 @@ describe('data/cache-interface', function () {
       var res = cache.get(invalid.resource);
 
       expect(res).to.be.an('object');
-      expect(res).to.have.deep.property('models.InvalidModel', undefined);
+      expect(res).to.have.nested.property('models.InvalidModel', undefined);
       expect(res).to.have.property('content')
         .that.deep.equals(cacheResources.markupData);
     });

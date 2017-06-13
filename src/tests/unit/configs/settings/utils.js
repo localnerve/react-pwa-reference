@@ -66,7 +66,7 @@ describe('settings/utils', () => {
 
       collectStrings(result, strings);
 
-      expect(strings).length.to.be(testTerminalCount);
+      expect(strings).to.have.lengthOf(testTerminalCount);
       strings.forEach(function (aString) {
         expect(aString).to.contain(strToken);
         expect(aString).to.contain(path.normalize(prePath));
