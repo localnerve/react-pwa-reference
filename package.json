@@ -83,7 +83,7 @@
     "fontfaceobserver": "2.0.12",
     "foundation-apps": "localnerve/foundation-apps",
     "gulp": "gulpjs/gulp#4.0",
-    "gulp-clean-css": "3.4.1",
+    "gulp-clean-css": "3.4.2",
     "gulp-if": "2.0.2",
     "gulp-imagemin": "3.3.0",
     "gulp-nodemon": "2.2.1",
