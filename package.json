@@ -97,7 +97,7 @@
     "lodash-webpack-plugin": "0.11.4",
     "mkdirp": "0.5.1",
     "mocha": "3.4.2",
-    "mockery": "2.0.0",
+    "mockery": "2.1.0",
     "node-sass-asset-functions": "0.1.0",
     "nyc": "11.0.2",
     "precommit-hook": "3.0.0",
