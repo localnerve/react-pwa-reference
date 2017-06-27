@@ -60,7 +60,7 @@
     "report-dir": "reports/coverage"
   },
   "devDependencies": {
-    "async-lock": "0.3.9",
+    "async-lock": "0.3.10",
     "autoprefixer": "7.1.1",
     "babel-cli": "6.24.1",
     "babel-core": "6.25.0",
