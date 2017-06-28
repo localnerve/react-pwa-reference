@@ -120,7 +120,7 @@
     "csurf": "1.9.0",
     "debug": "github:localnerve/debug#worker-support",
     "diff-match-patch": "1.0.0",
-    "es6-promise": "4.1.0",
+    "es6-promise": "4.1.1",
     "express": "4.15.3",
     "express-error-handler": "localnerve/express-error-handler",
     "fluxible": "1.4.0",
