@@ -119,10 +119,9 @@ export function createElements (navPages, contentStore) {
       key: key + count,
       id: key + count++
     }, React.createElement(
-        getClass(np.component),
-        getProps(data.content, data.models)
-      )
-    );
+      getClass(np.component),
+      getProps(data.content, data.models)
+    ));
   });
 }
 

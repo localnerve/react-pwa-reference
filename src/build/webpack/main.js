@@ -52,25 +52,25 @@ export default function mainConfig (settings, type) {
       new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.NormalModuleReplacementPlugin(
-        /es6\-promise/, require.resolve('es6-promise')
+        /es6-promise/, require.resolve('es6-promise')
       ),
       new webpack.NormalModuleReplacementPlugin(
-        /for\-each/, require.resolve('lodash/forEach')
+        /for-each/, require.resolve('lodash/forEach')
       ),
       new webpack.NormalModuleReplacementPlugin(
-        /is\-function/, require.resolve('lodash/isFunction')
+        /is-function/, require.resolve('lodash/isFunction')
       ),
       new webpack.NormalModuleReplacementPlugin(
         /lodash\.assign/, require.resolve('object-assign')
       ),
       new webpack.NormalModuleReplacementPlugin(
-        /object\-assign/, require.resolve('object-assign')
+        /object-assign/, require.resolve('object-assign')
       ),
       new webpack.NormalModuleReplacementPlugin(
         /ReactDOMServer/, require.resolve(reactDOMServerStub)
       ),
       new webpack.NormalModuleReplacementPlugin(
-        /^react\-?$/, require.resolve('react')
+        /^react-?$/, require.resolve('react')
       )
     ],
     node: {

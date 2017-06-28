@@ -2,19 +2,18 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
- /* global before, after, describe, it */
-'use strict';
+/* global before, after, describe, it */
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('mail/queue', function () {
-  var queue, amqplib,
-    fields = {
-      name: 'testuser',
-      email: 'test@test.com',
-      message: 'this is a message'
-    };
+describe('mail/queue', () => {
+  let queue, amqplib;
+  const fields = {
+    name: 'testuser',
+    email: 'test@test.com',
+    message: 'this is a message'
+  };
 
   before(function () {
     this.timeout(5000);
@@ -24,94 +23,94 @@ describe('mail/queue', function () {
     amqplib = require('amqplib');
   });
 
-  after(function () {
+  after(() => {
     mocks.queue.end();
   });
 
-  describe('sendMail', function () {
+  describe('sendMail', () => {
     // test sendMail
 
-    it('should handle connect error', function (done) {
-      var errorType = 'connect';
+    it('should handle connect error', (done) => {
+      const errorType = 'connect';
       amqplib.setErrors({
         connect: true
       });
 
-      queue.sendMail(fields, function (err) {
+      queue.sendMail(fields, (err) => {
         expect(err).to.be.an.instanceof(Error);
         expect(err.message).to.equal(errorType);
         done();
       });
     });
 
-    it('should handle a connection error', function (done) {
-      var errorType = 'connection';
+    it('should handle a connection error', (done) => {
+      const errorType = 'connection';
       amqplib.setErrors({
         connection: true
       });
 
-      queue.sendMail(fields, function (err) {
+      queue.sendMail(fields, (err) => {
         expect(err).to.be.an.instanceof(Error);
         expect(err.message).to.equal(errorType);
         done();
       });
     });
 
-    it('should handle a channel error', function (done) {
-      var errorType = 'channel';
+    it('should handle a channel error', (done) => {
+      const errorType = 'channel';
       amqplib.setErrors({
         channel: true
       });
 
-      queue.sendMail(fields, function (err) {
+      queue.sendMail(fields, (err) => {
         expect(err).to.be.an.instanceof(Error);
         expect(err.message).to.equal(errorType);
         done();
       });
     });
 
-    it('should work with no errors', function (done) {
+    it('should work with no errors', (done) => {
       amqplib.setErrors({});
 
-      queue.sendMail(fields, function (err) {
+      queue.sendMail(fields, (err) => {
         done(err);
       });
     });
   });
 
-  describe('contactWorker', function () {
+  describe('contactWorker', () => {
     // test contactWorker
 
-    it('should ack messages', function (done) {
+    it('should ack messages', (done) => {
       amqplib.setErrors({});
 
       amqplib.setConsumerMessage(fields);
 
-      amqplib.setConsumerAck(function (msg) {
-        var result = amqplib.getConsumerMessage(msg);
+      amqplib.setConsumerAck((msg) => {
+        const result = amqplib.getConsumerMessage(msg);
         expect(result).to.eql(fields);
         done();
       });
-      amqplib.setConsumerNack(function () {
+      amqplib.setConsumerNack(() => {
         done(new Error('Nack should not have been called'));
       });
 
       queue.contactWorker();
     });
 
-    it('should nack messages', function (done) {
+    it('should nack messages', (done) => {
       amqplib.setErrors({});
 
-      var payload = JSON.parse(JSON.stringify(fields));
+      const payload = JSON.parse(JSON.stringify(fields));
       payload.emulateError = true;
 
       amqplib.setConsumerMessage(payload);
 
-      amqplib.setConsumerAck(function () {
+      amqplib.setConsumerAck(() => {
         done(new Error('Ack should not have been called'));
       });
-      amqplib.setConsumerNack(function (msg) {
-        var result = amqplib.getConsumerMessage(msg);
+      amqplib.setConsumerNack((msg) => {
+        const result = amqplib.getConsumerMessage(msg);
         delete result.emulateError;
         expect(result).to.eql(fields);
         done();

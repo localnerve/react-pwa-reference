@@ -2,14 +2,13 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
- /* global before, after, describe, it */
-'use strict';
+/* global before, after, describe, it */
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('markdown', function () {
-  var markdown;
+describe('markdown', () => {
+  let markdown;
 
   before(function () {
     this.timeout(5000);
@@ -18,11 +17,11 @@ describe('markdown', function () {
     markdown = require('application/server/services/data/markdown').markdown;
   });
 
-  after(function () {
+  after(() => {
     mocks.remarkable.end();
   });
 
-  it('should return some markup', function () {
+  it('should return some markup', () => {
     expect(markdown('Hello')).to.contain('</').and.contain('Hello');
   });
 });

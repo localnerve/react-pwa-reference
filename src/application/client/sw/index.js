@@ -28,7 +28,7 @@ toolbox.options.debug = dataManifest.debug;
 // Construct cache name and save scope.
 // Relies on sw-toolbox default name format for scope.
 // CacheId must always start name.
-const m = toolbox.options.cache.name.match(/([^\$]+)\${3}$/);
+const m = toolbox.options.cache.name.match(/([^$]+)\${3}$/);
 toolbox.options.scope = m && m[1];
 toolbox.options.cache.name = dataManifest.cacheId + '-' +
   toolbox.options.cache.name;
@@ -60,24 +60,24 @@ const initPromise = initData()
 
 // #43, Setup a temporary default handler for async startup needs.
 toolbox.router.default =
-/**
- * The toolbox routes are not setup until the init command installs
- * the dynamic routes. Setup a default handler until init completes.
- *
- * @param {Request} request - The fetch event request object.
- * @returns {Promise} Resolves to a Response or a Network Error.
- */
-function defaultHandler (request) {
-  return initPromise.then(() => {
-    debug('defaultHandler request ', request.url);
+  /**
+   * The toolbox routes are not setup until the init command installs
+   * the dynamic routes. Setup a default handler until init completes.
+   *
+   * @param {Request} request - The fetch event request object.
+   * @returns {Promise} Resolves to a Response or a Network Error.
+   */
+  function defaultHandler (request) {
+    return initPromise.then(() => {
+      debug('defaultHandler request ', request.url);
 
-    // Since init complete, get the handler.
-    const handler = toolbox.router.match(request);
-    if (handler) {
-      debug('defaultHandler successfully handled ', request.url);
-      return handler(request);
-    }
+      // Since init complete, get the handler.
+      const handler = toolbox.router.match(request);
+      if (handler) {
+        debug('defaultHandler successfully handled ', request.url);
+        return handler(request);
+      }
 
-    debug('defaultHandler could not handle ', request);
-  });
-};
+      debug('defaultHandler could not handle ', request);
+    });
+  };

@@ -3,54 +3,53 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global after, before, describe, it */
-'use strict';
 
-var assert = require('chai').assert;
-var expect = require('chai').expect;
-var messages = require('utils/messages');
-var testDom = require('test/utils/testdom');
-var mockWorker = require('test/mocks/worker');
+import { assert, expect } from 'chai';
+import messages from 'utils/messages';
+import { start as testDomStart, stop as testDomStop } from 'test/utils/testdom';
+import mockWorker from 'test/mocks/worker';
 
-describe('messages', function () {
-  var method = 'workerSendMessage', badSuccess = 'should not have succeeded';
+describe('messages', () => {
+  const method = 'workerSendMessage';
+  const badSuccess = 'should not have succeeded';
 
-  before('all messages', function () {
-    testDom.start();
+  before('all messages', () => {
+    testDomStart();
   });
 
-  after('all messages', function () {
-    testDom.stop();
+  after('all messages', () => {
+    testDomStop();
   });
 
-  describe('workerSendMessage', function () {
-    it('should fail if no worker is supplied', function (done) {
-      messages.workerSendMessage({ none: null }).then(function () {
+  describe('workerSendMessage', () => {
+    it('should fail if no worker is supplied', (done) => {
+      messages.workerSendMessage({ none: null }).then(() => {
         assert.fail(method, method, badSuccess);
-        done(method + ' ' + badSuccess);
-      }).catch(function () {
+        done(`${method} ${badSuccess}`);
+      }).catch(() => {
         // worked.
         done();
       });
     });
 
-    it('should fall through if no messaging handler', function (done) {
+    it('should fall through if no messaging handler', (done) => {
       // Make sure serviceWorker doesn't show up in jsdom
       expect(global.navigator.serviceWorker).to.not.exist;
       expect(global.window.navigator.serviceWorker).to.not.exist;
 
-      var worker = mockWorker.createWorker();
-      messages.workerSendMessage({ none: null }, worker).then(function () {
+      const worker = mockWorker.createWorker();
+      messages.workerSendMessage({ none: null }, worker).then(() => {
         assert.fail(method, method, badSuccess);
-        done(method+' '+badSuccess);
-      }, function () {
+        done(`${method} ${badSuccess}`);
+      }, () => {
         // reject called because no serviceWorker on jsdom
         done();
       }).catch(done);
     });
 
-    describe('MessageChannel', function () {
+    describe('MessageChannel', () => {
       // Mock a MessageChannel to return a shared object on construction.
-      var messageChannel = {
+      const messageChannel = {
         port1: {},
         port2: {}
       };
@@ -58,7 +57,7 @@ describe('messages', function () {
         return messageChannel;
       }
 
-      before('message channel', function () {
+      before('message channel', () => {
         // expect no MessageChannel on jsdom - if it changes, get notified here.
         expect(global.window.MessageChannel).to.not.exist;
         expect(global.MessageChannel).to.not.exist;
@@ -66,63 +65,63 @@ describe('messages', function () {
         global.MessageChannel = MessageChannel;
       });
 
-      after('message channel', function () {
+      after('message channel', () => {
         global.window.MessageChannel = undefined;
       });
 
-      it('should use message channel if exists, success', function (done) {
+      it('should use message channel if exists, success', (done) => {
         // give the shared object to the mock worker.
-        var worker = mockWorker.createWorker({
+        const worker = mockWorker.createWorker({
           messageChannel: messageChannel
         });
 
-        messages.workerSendMessage({ empty: null }, worker).then(function (data) {
+        messages.workerSendMessage({ empty: null }, worker).then((data) => {
           expect(data.handled).to.equal(mockWorker.handled.messageChannel);
           done();
         }).catch(done);
       });
 
-      it('should use message channel if exists, failure', function (done) {
+      it('should use message channel if exists, failure', (done) => {
         // give the shared object to the mock worker.
-        var worker = mockWorker.createWorker({
+        const worker = mockWorker.createWorker({
           messageChannel: messageChannel,
           simulateError: true
         });
 
-        messages.workerSendMessage({ empty: null }, worker).then(function () {
+        messages.workerSendMessage({ empty: null }, worker).then(() => {
           assert.fail(method, method, badSuccess);
-          done(method+' '+badSuccess);
-        }, function (error) {
+          done(`${method} ${badSuccess}`);
+        }, (error) => {
           expect(error).to.be.true;
           done();
-        }).catch(function (error) {
+        }).catch((error) => {
           done(error);
         });
       });
     });
 
-    describe('worker.onmessage', function () {
-      it('should use worker onmessage if message channel does not exist, success', function (done) {
-        var worker = mockWorker.createWorker({
+    describe('worker.onmessage', () => {
+      it('should use worker onmessage if message channel does not exist, success', (done) => {
+        const worker = mockWorker.createWorker({
           onmessage: true
         });
 
-        messages.workerSendMessage({ empty: null }, worker).then(function (data) {
+        messages.workerSendMessage({ empty: null }, worker).then((data) => {
           expect(data.handled).to.equal(mockWorker.handled.worker);
           done();
         }).catch(done);
       });
 
-      it('should use worker onmessage if message channel does not exist, failure', function (done) {
-        var worker = mockWorker.createWorker({
+      it('should use worker onmessage if message channel does not exist, failure', (done) => {
+        const worker = mockWorker.createWorker({
           onmessage: true,
           simulateError: true
         });
 
-        messages.workerSendMessage({ empty: null }, worker).then(function () {
+        messages.workerSendMessage({ empty: null }, worker).then(() => {
           assert.fail(method, method, badSuccess);
-          done(method+' '+badSuccess);
-        }, function (error) {
+          done(`${method} ${badSuccess}`);
+        }, (error) => {
           expect(error).to.be.true;
           done();
         }).catch(done);

@@ -214,8 +214,7 @@ describe('application component', () => {
         });
 
         actionContext.service = new MockService();
-        actionContext.service.setService('contact',
-        (method, params, ...args) => {
+        actionContext.service.setService('contact', (method, params, ...args) => {
           const callback = args[args.length - 1];
 
           expect(method).to.equal('create');
@@ -353,8 +352,7 @@ describe('application component', () => {
           });
 
           actionContext.service = new MockService();
-          actionContext.service.setService('page',
-          (method, params, ...args) => {
+          actionContext.service.setService('page', (method, params, ...args) => {
             const callback = args[args.length - 1];
 
             expect(method).to.equal('read');

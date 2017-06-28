@@ -298,8 +298,7 @@ describe('sw/init/routes', () => {
         });
     });
 
-    it('should not fetch routes if recent, but install handlers',
-    (done) => {
+    it('should not fetch routes if recent, but install handlers', (done) => {
       const routes = payload.RouteStore.routes;
       const dummyResponse = new global.Response({
         body: 'dummy'

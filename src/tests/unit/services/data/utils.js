@@ -2,25 +2,24 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
- /* global before, describe, it */
-'use strict';
+/* global before, describe, it */
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
 
-describe('data/utils', function () {
-  var utils;
+describe('data/utils', () => {
+  let utils;
 
-  before('utils', function () {
+  before('utils', () => {
     utils = require('application/server/services/data/utils');
   });
 
-  describe('objContains', function () {
-    var testKey = 'testKey';
-    var testValue = 'testValue';
-    var test = {
+  describe('objContains', () => {
+    const testKey = 'testKey';
+    const testValue = 'testValue';
+    const test = {
       some: 'string'
     };
-    var object = {
+    const object = {
       other: {
         test: {
           some: 'string'
@@ -29,18 +28,18 @@ describe('data/utils', function () {
       test: {}
     };
 
-    before('objContains', function () {
+    before('objContains', () => {
       test[testKey] = testValue;
       object.test = Object.assign(object.test, test);
     });
 
-    it('should retrieve test object', function () {
-      var result = utils.objContains(testKey, testValue, object);
+    it('should retrieve test object', () => {
+      const result = utils.objContains(testKey, testValue, object);
       expect(result).to.eql(test);
     });
 
-    it('should returned undefined if not found', function () {
-      var result = utils.objContains('nope', 'nothing', object);
+    it('should returned undefined if not found', () => {
+      const result = utils.objContains('nope', 'nothing', object);
       expect(result).to.be.undefined;
     });
   });

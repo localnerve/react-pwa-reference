@@ -2,17 +2,16 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
- /* global before, beforeEach, after, describe, it */
-'use strict';
+/* global before, beforeEach, after, describe, it */
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-var config = require('configs').create().data;
+const config = require('configs').create().data;
 
-describe('data/fetch', function () {
-  var fetch, cache, request,
-    expectedError = new Error('Expected error');
+describe('data/fetch', () => {
+  let fetch, cache, request;
+  const expectedError = new Error('Expected error');
 
   before(function () {
     this.timeout(5000);
@@ -23,18 +22,18 @@ describe('data/fetch', function () {
     request = require('superagent');
   });
 
-  after(function () {
+  after(() => {
     mocks.superAgent.end();
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
     request.setEmulateError(false);
     request.setNoData(false);
   });
 
-  describe('fetchOne', function () {
-    it('should fetch the FRED if no url supplied', function (done) {
-      fetch.fetchOne({ resource: 'test' }, function (err, res) {
+  describe('fetchOne', () => {
+    it('should fetch the FRED if no url supplied', (done) => {
+      fetch.fetchOne({ resource: 'test' }, (err, res) => {
         if (err) {
           return done(err);
         }
@@ -46,9 +45,9 @@ describe('data/fetch', function () {
       });
     });
 
-    it('should fetch the supplied url', function (done) {
-      var supplied = '123456789';
-      fetch.fetchOne({ resource: 'test', url: supplied }, function (err, res) {
+    it('should fetch the supplied url', (done) => {
+      const supplied = '123456789';
+      fetch.fetchOne({ resource: 'test', url: supplied }, (err, res) => {
         if (err) {
           return done(err);
         }
@@ -60,10 +59,10 @@ describe('data/fetch', function () {
       });
     });
 
-    it('should fail if no data', function (done) {
+    it('should fail if no data', (done) => {
       request.setNoData(true);
 
-      fetch.fetchOne({ resource: 'test' }, function (err) {
+      fetch.fetchOne({ resource: 'test' }, (err) => {
         if (err) {
           return done();
         }
@@ -72,10 +71,10 @@ describe('data/fetch', function () {
       });
     });
 
-    it('should fail if network fails', function (done) {
+    it('should fail if network fails', (done) => {
       request.setEmulateError(true);
 
-      fetch.fetchOne({ resource: 'test' }, function (err) {
+      fetch.fetchOne({ resource: 'test' }, (err) => {
         if (err) {
           return done();
         }
@@ -84,9 +83,9 @@ describe('data/fetch', function () {
       });
     });
 
-    it('should fail if resource not found after fetch', function (done) {
-      var resourceName = 'miss';
-      fetch.fetchOne({ resource: resourceName }, function (err) {
+    it('should fail if resource not found after fetch', (done) => {
+      const resourceName = 'miss';
+      fetch.fetchOne({ resource: resourceName }, (err) => {
         if (err) {
           expect(err.toString()).to.contain(resourceName);
           return done();
@@ -97,9 +96,9 @@ describe('data/fetch', function () {
     });
   });
 
-  describe('fetchMain', function () {
-    it('should fetch the main resource', function (done) {
-      fetch.fetchMain(function (err, res) {
+  describe('fetchMain', () => {
+    it('should fetch the main resource', (done) => {
+      fetch.fetchMain((err, res) => {
         if (err) {
           return done(err);
         }
@@ -112,14 +111,14 @@ describe('data/fetch', function () {
     });
   });
 
-  describe('fetchAll', function () {
-    it('should fetch all resources', function (done) {
-      fetch.fetchAll(function (err, res) {
+  describe('fetchAll', () => {
+    it('should fetch all resources', (done) => {
+      fetch.fetchAll((err, res) => {
         if (err) {
           return done(err);
         }
 
-        var routes = cache.get('routes');
+        const routes = cache.get('routes');
 
         // It should return content for each route
         expect(Object.keys(routes).length).to.equal(res.length);
@@ -132,10 +131,10 @@ describe('data/fetch', function () {
       });
     });
 
-    it('should fail if network fails', function (done) {
+    it('should fail if network fails', (done) => {
       request.setEmulateError(true);
 
-      fetch.fetchAll(function (err) {
+      fetch.fetchAll((err) => {
         if (err) {
           return done();
         }
@@ -145,23 +144,23 @@ describe('data/fetch', function () {
     });
   });
 
-  describe('isManifestRequest', function () {
-    it('should positively identify manifest request', function () {
-      var result = fetch.isManifestRequest({
+  describe('isManifestRequest', () => {
+    it('should positively identify manifest request', () => {
+      const result = fetch.isManifestRequest({
         resource: config.FRED.mainResource
       });
       expect(result).to.be.true;
     });
 
-    it('should negatively identify manifest request', function () {
-      var result = fetch.isManifestRequest({
+    it('should negatively identify manifest request', () => {
+      const result = fetch.isManifestRequest({
         resource: 'settings'
       });
       expect(result).to.be.false;
     });
 
-    it('should handle bad input', function () {
-      var result = fetch.isManifestRequest();
+    it('should handle bad input', () => {
+      const result = fetch.isManifestRequest();
       expect(result).to.be.false;
     });
   });

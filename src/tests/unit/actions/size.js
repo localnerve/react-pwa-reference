@@ -3,37 +3,36 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it, beforeEach */
-'use strict';
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
+import { createMockActionContext } from 'fluxible/utils';
+import { updateSize as sizeAction } from 'application/actions/size';
+import { BackgroundStore } from 'application/stores/BackgroundStore';
 
-var createMockActionContext = require('fluxible/utils').createMockActionContext;
-var sizeAction = require('application/actions/size').updateSize;
-var BackgroundStore = require('application/stores/BackgroundStore').BackgroundStore;
-
-describe('size action', function () {
-  var context, params = {
-      width: 1,
-      height: 2,
-      top: 3,
-      accumulate: false
-    };
+describe('size action', () => {
+  const params = {
+    width: 1,
+    height: 2,
+    top: 3,
+    accumulate: false
+  };
+  let context;
 
   // create the action context wired to BackgroundStore
-  beforeEach(function () {
+  beforeEach(() => {
     context = createMockActionContext({
       stores: [ BackgroundStore ]
     });
   });
 
-  it('should update the background store', function (done) {
+  it('should update the background store', (done) => {
     // TODO: add listener to store to get the whole story
-    context.executeAction(sizeAction, params, function (err) {
+    context.executeAction(sizeAction, params, (err) => {
       if (err) {
         return done(err);
       }
 
-      var store = context.getStore(BackgroundStore);
+      const store = context.getStore(BackgroundStore);
       expect(store.getTop()).to.equal(params.top);
 
       done();

@@ -65,7 +65,8 @@ describe('Background store', () => {
 
         expect(callbacks).to.be.at.most(3);
 
-        var state = storeInstance.dehydrate();
+        const state = storeInstance.dehydrate();
+
         expect(state.width).to.equal(dim.width);
         expect(state.height).to.equal(dim.height);
         expect(state.top).to.equal(dim.top);
@@ -79,26 +80,19 @@ describe('Background store', () => {
 
       storeInstance.addChangeListener(onChange = result);
       storeInstance.initBackgrounds(initPayload);
-      storeInstance.updateSize({
-        width: dim.width,
-        height: dim.height,
-        top: dim.top
-      });
+      storeInstance.updateSize(dim);
       storeInstance.updateBackground(navigatePayload);
     });
 
     it('should rehydrate', () => {
       const currentUrl = 'two/2';
       const notCurrentUrl = 'one/1';
-      const state = {
-        width: dim.width,
-        height: dim.height,
-        top: dim.top,
+      const state = Object.assign({}, dim, {
         currentBackground: route.background,
         imageServiceUrl: initPayload.backgrounds.serviceUrl,
         imageServiceOptions: initPayload.backgrounds.serviceOptions,
         backgroundUrls: { '1': notCurrentUrl, '2': currentUrl }
-      };
+      });
 
       storeInstance.rehydrate(state);
 
@@ -162,13 +156,13 @@ describe('Background store', () => {
         expect(callbacks).to.be.at.most(2);
 
         // second time, its for updateBackground
-        var backgroundUrl = storeInstance.getCurrentBackgroundUrl();
+        const backgroundUrl = storeInstance.getCurrentBackgroundUrl();
         expect(backgroundUrl).to.contain(initPayload.backgrounds.serviceUrl);
         expect(backgroundUrl).to.contain(dimension);
         expect(backgroundUrl).to.contain(route.background);
 
         // also check non-current, should be the remainder of not route.get('background')
-        var nonCurrent = storeInstance.getNotCurrentBackgroundUrls();
+        const nonCurrent = storeInstance.getNotCurrentBackgroundUrls();
         expect(nonCurrent.length).to.equal(1);
         expect(nonCurrent[0]).to.contain('1');
 
@@ -256,8 +250,7 @@ describe('Background store', () => {
         }
       });
 
-      it('should accumulate and reflect in the properties and background urls',
-      (done) => {
+      it('should accumulate and reflect in the properties and background urls', (done) => {
         // If this was called more than once the size properties would be wrong
         function result () {
           expect(sizeInstance.width).to.equal(200);

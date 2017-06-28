@@ -3,34 +3,32 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global before, describe, it */
-'use strict';
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
+import imageServiceUrls from 'utils/imageServiceUrls';
 
-var imageServiceUrls = require('utils/imageServiceUrls');
-
-describe('imageServiceUrls', function () {
-  it('should export expected operations', function () {
+describe('imageServiceUrls', () => {
+  it('should export expected operations', () => {
     expect(imageServiceUrls).to.respondTo('buildImageUrl');
   });
 
-  describe('buildImageUrl', function () {
-    var buildImageUrl, url;
+  describe('buildImageUrl', () => {
+    let buildImageUrl, url;
 
-    before('buildImageUrl', function () {
+    before('buildImageUrl', () => {
       buildImageUrl = imageServiceUrls.buildImageUrl;
     });
 
-    it('should fail for non-supported service', function () {
-      expect(function () {
+    it('should fail for non-supported service', () => {
+      expect(() => {
         buildImageUrl('https://notsupported.net', {});
       }).to.throw(Error);
     });
 
-    describe('lorempixel', function () {
-      var serviceUrl = 'https://lorempixel.com',
-        width = 10,
-        height = 20;
+    describe('lorempixel', () => {
+      const serviceUrl = 'https://lorempixel.com';
+      const width = 10;
+      const height = 20;
 
       /**
        * Test the buildImageUrl function with a different name input.
@@ -56,38 +54,38 @@ describe('imageServiceUrls', function () {
         expect(url).to.match(/[1-9]\/$/);
       }
 
-      it('should build a lorempixel url with random numeric image', function () {
+      it('should build a lorempixel url with random numeric image', () => {
         testImageName('tester');
       });
 
-      it('should build a lorempixel url from image base name, not zero', function () {
+      it('should build a lorempixel url from image base name, not zero', () => {
         testImageName('0.jpg');
       });
 
-      it('should build a lorempixel url from image base name', function () {
-        var imageName = '4',
-          name = imageName + '.jpg';
+      it('should build a lorempixel url from image base name', () => {
+        const imageName = '4';
+        const name = `${imageName}.jpg`;
 
         testImageName(name);
-        expect(url).to.match(new RegExp(imageName +'\/$'));
+        expect(url).to.match(new RegExp(imageName + '/$'));
       });
 
-      it('should build a lorempixel url from image name', function () {
-        var name = '4';
+      it('should build a lorempixel url from image name', () => {
+        const name = '4';
 
         testImageName(name, true);
-        expect(url).to.match(new RegExp(name +'\/$'));
+        expect(url).to.match(new RegExp(name + '/$'));
       });
     });
 
-    describe('cloudinary', function () {
-      var cloudName = 'cloud',
-        width = 100,
-        height = 200,
-        imageName = 'image',
-        cropMode = 'mymode',
-        serviceUrl = 'https://res.cloudinary.com',
-        matches;
+    describe('cloudinary', () => {
+      const cloudName = 'cloud';
+      const width = 100;
+      const height = 200;
+      const imageName = 'image';
+      const cropMode = 'mymode';
+      const serviceUrl = 'https://res.cloudinary.com';
+      let matches;
 
       function basicTests (url) {
         // should start with the serviceUrl
@@ -105,7 +103,7 @@ describe('imageServiceUrls', function () {
         expect(url).to.contain(cloudName);
       }
 
-      it('should build a request, no cropMode', function () {
+      it('should build a request, no cropMode', () => {
         url = buildImageUrl(serviceUrl, {
           serviceOptions: {
             cloudName: cloudName
@@ -121,7 +119,7 @@ describe('imageServiceUrls', function () {
         expect(url).to.contain('c_fill');
       });
 
-      it('should build a request, with cropMode', function () {
+      it('should build a request, with cropMode', () => {
         url = buildImageUrl(serviceUrl, {
           serviceOptions: {
             cloudName: cloudName,

@@ -2,14 +2,13 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
- /* global before, after, describe, it */
-'use strict';
+/* global before, after, describe, it */
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('mail/index', function () {
-  var mail;
+describe('mail/index', () => {
+  let mail;
 
   before(function () {
     this.timeout(5000);
@@ -18,21 +17,21 @@ describe('mail/index', function () {
     mail = require('application/server/services/mail/index');
   });
 
-  after(function () {
+  after(() => {
     mocks.mail.end();
   });
 
-  it('should send mail without error', function (done) {
+  it('should send mail without error', (done) => {
     mail.send({
       name: 'tom',
       email: 'tom@heaven.org',
       message: 'thinking of you'
-    }, function(err) {
+    }, (err) => {
       done(err);
     });
   });
 
-  it('should expose a worker method', function () {
+  it('should expose a worker method', () => {
     expect(mail.worker).to.be.a('function');
     expect(mail).to.respondTo('worker');
   });

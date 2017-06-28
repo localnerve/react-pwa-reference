@@ -48,24 +48,24 @@ describe('page action', function () {
   });
 
   it('should use the ContentStore before making a service call',
-  function (done) {
-    var contentStore = context.getStore(ContentStore);
+    function (done) {
+      var contentStore = context.getStore(ContentStore);
 
-    // make sure content for params.resource is there
-    if (!contentStore.get(params.resource)) {
-      contentStore.contents[params.resource] =
-        serviceData.createContent(params.resource);
-    }
-
-    context.executeAction(pageAction, params, function (err) {
-      if (err) {
-        return done(err);
+      // make sure content for params.resource is there
+      if (!contentStore.get(params.resource)) {
+        contentStore.contents[params.resource] =
+          serviceData.createContent(params.resource);
       }
 
-      expect(calledService).to.equal(0);
-      done();
+      context.executeAction(pageAction, params, function (err) {
+        if (err) {
+          return done(err);
+        }
+
+        expect(calledService).to.equal(0);
+        done();
+      });
     });
-  });
 
   it('should fail as expected', function (done) {
     context.executeAction(pageAction, {

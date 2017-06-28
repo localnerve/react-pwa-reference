@@ -2,14 +2,13 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
- /* global before, after, beforeEach, describe, it */
-'use strict';
+/* global before, after, beforeEach, describe, it */
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('data/index', function () {
-  var data, cache, fetchLib;
+describe('data/index', () => {
+  let data, cache, fetchLib;
 
   before(function () {
     this.timeout(5000);
@@ -20,18 +19,18 @@ describe('data/index', function () {
     fetchLib = require('./fetch');
   });
 
-  after(function () {
+  after(() => {
     mocks.fetch.end();
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
     cache.mockReset();
     fetchLib.mockReset();
   });
 
-  describe('fetch', function () {
-    it('should pull from cache if exists', function (done) {
-      data.fetch({}, function (err, res) {
+  describe('fetch', () => {
+    it('should pull from cache if exists', (done) => {
+      data.fetch({}, (err, res) => {
         if (err) {
           done(err);
         }
@@ -41,8 +40,8 @@ describe('data/index', function () {
       });
     });
 
-    it('should fetch if not in cache', function (done) {
-      data.fetch({ resource: 'miss' }, function (err, res) {
+    it('should fetch if not in cache', (done) => {
+      data.fetch({ resource: 'miss' }, (err, res) => {
         if (err) {
           done(err);
         }
@@ -52,14 +51,14 @@ describe('data/index', function () {
       });
     });
 
-    it('should fetch using find spec if not in cache', function (done) {
-      data.fetch({ resource: 'find' }, function (err, res) {
+    it('should fetch using find spec if not in cache', (done) => {
+      data.fetch({ resource: 'find' }, (err, res) => {
         if (err) {
           done(err);
         }
 
-        var callCounts = cache.mockCounts();
-        var params = fetchLib.mockParams();
+        const callCounts = cache.mockCounts();
+        const params = fetchLib.mockParams();
 
         expect(callCounts.get).to.equal(1);
         expect(callCounts.find).to.equal(1);
@@ -70,14 +69,14 @@ describe('data/index', function () {
     });
   });
 
-  describe('initialize', function () {
-    it('should initialize', function (done) {
+  describe('initialize', () => {
+    it('should initialize', (done) => {
       data.initialize(done);
     });
   });
 
-  describe('update', function () {
-    it('should update', function (done) {
+  describe('update', () => {
+    it('should update', (done) => {
       data.update(done);
     });
   });

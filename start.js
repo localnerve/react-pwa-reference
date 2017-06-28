@@ -9,7 +9,7 @@
 require('babel-register')({
   ignore: [
     new RegExp(
-      require('path').basename(__dirname) + '\/node_modules\/.*'
+      require('path').basename(__dirname) + '/node_modules/.*'
     )
   ]
 });

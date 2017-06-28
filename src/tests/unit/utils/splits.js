@@ -3,49 +3,47 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global before, describe, it */
-'use strict';
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
+import { createMockActionContext } from 'fluxible/utils';
+import { splitHandlers as splits } from 'utils/splits';
 
-var createMockActionContext = require('fluxible/utils').createMockActionContext;
-var splits = require('utils/splits').splitHandlers;
-
-describe('splits', function () {
-  it('should expose settings split', function () {
+describe('splits', () => {
+  it('should expose settings split', () => {
     expect(splits).to.respondTo('settings');
   });
 
-  describe('settings', function () {
-    var context,
-      payload = {
-        action: {
-          name: 'settings'
-        },
-        component: 'settings'
+  describe('settings', () => {
+    let context;
+    const payload = {
+      action: {
+        name: 'settings'
       },
-      action = function (context, payload, done) {
-        expect(context).to.respondTo('dispatch');
-        expect(context).to.respondTo('getStore');
-        expect(context).to.respondTo('executeAction');
-        if (payload.emulateError) {
-          return done(new Error('mock'));
-        }
-        return done();
-      };
+      component: 'settings'
+    };
+    const action = (context, payload, done) => {
+      expect(context).to.respondTo('dispatch');
+      expect(context).to.respondTo('getStore');
+      expect(context).to.respondTo('executeAction');
+      if (payload.emulateError) {
+        return done(new Error('mock'));
+      }
+      return done();
+    };
 
-    before(function () {
+    before(() => {
       context = createMockActionContext();
     });
 
-    it('should resolve successfully', function (done) {
-      splits.settings(context, payload, action).then(function () {
+    it('should resolve successfully', (done) => {
+      splits.settings(context, payload, action).then(() => {
         done();
-      }).catch(function (error) {
+      }).catch((error) => {
         done(error);
       });
     });
 
-    it('should reject as expected', function (done) {
+    it('should reject as expected', (done) => {
       payload.emulateError = true;
 
       function complete (error) {
@@ -53,9 +51,9 @@ describe('splits', function () {
         done(error);
       }
 
-      splits.settings(context, payload, action).then(function () {
+      splits.settings(context, payload, action).then(() => {
         complete(new Error('should have thrown an error'));
-      }).catch(function () {
+      }).catch(() => {
         complete();
       });
     });

@@ -3,13 +3,12 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global after, before, beforeEach, describe, it */
-'use strict';
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('sw/utils/db', function () {
-  var toolbox, db;
+describe('sw/utils/db', () => {
+  let toolbox, db;
 
   before('setup sw/utils/db', function () {
     this.timeout(5000);
@@ -23,25 +22,26 @@ describe('sw/utils/db', function () {
     db = require('application/client/sw/node_modules/sw/utils/db').stores;
   });
 
-  after(function () {
+  after(() => {
     toolbox.mockTeardown();
     mocks.swUtilsDb.end();
     mocks.swData.end();
   });
 
-  it('should export expected methods', function () {
+  it('should export expected methods', () => {
     expect(db).to.respondTo('init');
     expect(db).to.respondTo('requests');
   });
 
-  describe('initStore', function () {
-    var initStore, keyName = 'someKey';
+  describe('initStore', () => {
+    let initStore;
+    const keyName = 'someKey';
 
-    beforeEach(function () {
+    beforeEach(() => {
       initStore = db.init({ key: keyName });
     });
 
-    it('should construct DataWrapper properly', function () {
+    it('should construct DataWrapper properly', () => {
       expect(initStore.storeName).to.equal('init');
       expect(initStore.keyName).to.equal(keyName);
       expect(initStore.read).to.be.a('function');
@@ -50,48 +50,48 @@ describe('sw/utils/db', function () {
       expect(initStore).to.respondTo('update');
     });
 
-    it('should read successfully', function (done) {
+    it('should read successfully', (done) => {
       initStore.read()
-        .then(function (value) {
+        .then((value) => {
           expect(value).to.be.a('string').that.is.not.empty;
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error);
         });
     });
 
-    it('should read unsuccessfully', function (done) {
+    it('should read unsuccessfully', (done) => {
       initStore = db.init({ key: keyName, emulateError: true });
 
       initStore.read()
-        .then(function () {
+        .then(() => {
           done(new Error('expected failure'));
         })
-        .catch(function (error) {
+        .catch((error) => {
           expect(error.message).to.be.a('string');
           done();
         });
     });
 
-    it('should update successfully', function (done) {
+    it('should update successfully', (done) => {
       initStore.update('someValue')
-        .then(function () {
+        .then(() => {
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error);
         });
     });
 
-    it('should update unsuccessfully', function (done) {
+    it('should update unsuccessfully', (done) => {
       initStore = db.init({ key: keyName, emulateError: true });
 
       initStore.update('someValue')
-        .then(function () {
+        .then(() => {
           done(new Error('expected failure'));
         })
-        .catch(function () {
+        .catch(() => {
           done();
         });
     });

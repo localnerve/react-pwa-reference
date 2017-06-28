@@ -41,7 +41,7 @@ export default function serviceWorkerTaskFactory (settings, prod, debug) {
             captures: [{
               global: true,
               matchIndex: 1,
-              re: /url\(([^\)]+)\)/ig
+              re: /url\(([^)]+)\)/ig
             }]
           }]
         },

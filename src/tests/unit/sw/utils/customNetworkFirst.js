@@ -3,17 +3,17 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global Promise, after, afterEach, before, beforeEach, describe, it */
-'use strict';
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('sw/utils/customNetworkFirst', function () {
-  var toolbox, globalFetch, GlobalRequest, globalCacheStorage, treoMock;
-  var requestUrl = 'someurl', requestCacheUrl = requestUrl + '-cache';
-  var unexpectedFlowError = new Error('Unexpected flow occurred');
-  var responses, requests;
-  var customNetworkFirst;
+describe('sw/utils/customNetworkFirst', () => {
+  let toolbox, globalFetch, GlobalRequest, globalCacheStorage, treoMock;
+  const requestUrl = 'someurl';
+  const requestCacheUrl = requestUrl + '-cache';
+  const unexpectedFlowError = new Error('Unexpected flow occurred');
+  let responses, requests;
+  let customNetworkFirst;
 
   before('sw/utils/customNetworkFirst', function () {
     this.timeout(5000);
@@ -43,7 +43,7 @@ describe('sw/utils/customNetworkFirst', function () {
       require('application/client/sw/node_modules/sw/utils/customNetworkFirst');
   });
 
-  after('sw/utils/customNetworkFirst', function () {
+  after('sw/utils/customNetworkFirst', () => {
     delete global.response;
     delete global.fetch;
     toolbox.mockTeardown();
@@ -52,10 +52,10 @@ describe('sw/utils/customNetworkFirst', function () {
     mocks.swData.end();
   });
 
-  beforeEach(function () {
+  beforeEach(() => {
     responses = createResponses();
 
-    var cacheNames = {};
+    const cacheNames = {};
     cacheNames[toolbox.options.cache.name] = new globalCacheStorage.Cache();
     cacheNames[toolbox.options.cache.name].put(requestCacheUrl, responses.resCache);
     setupCacheStorage({
@@ -65,7 +65,7 @@ describe('sw/utils/customNetworkFirst', function () {
     globalFetch.setMockResponse(responses.resNet);
   });
 
-  afterEach(function () {
+  afterEach(() => {
     globalFetch.reset();
     globalFetch.setResponseDelay(0);
     globalFetch.setEmulateError(false);
@@ -84,7 +84,7 @@ describe('sw/utils/customNetworkFirst', function () {
   }
 
   function createRequests (method) {
-    var reqOptions = {
+    const reqOptions = {
       method: method || 'GET',
       body: {
         some: 'body'
@@ -106,7 +106,7 @@ describe('sw/utils/customNetworkFirst', function () {
 
     requests = createRequests(method);
 
-    var factoryOptions = options.factory || {};
+    const factoryOptions = options.factory || {};
     delete options.factory;
 
     function requestFactory (which) {
@@ -116,7 +116,7 @@ describe('sw/utils/customNetworkFirst', function () {
       return Promise.resolve(requests[which]);
     }
 
-    var networkFirst = customNetworkFirst.routeHandlerFactory(
+    const networkFirst = customNetworkFirst.routeHandlerFactory(
       requestFactory.bind(null, 'reqNet'), requestFactory.bind(null, 'reqCache'),
       factoryOptions.fallback
     );
@@ -124,148 +124,146 @@ describe('sw/utils/customNetworkFirst', function () {
     return networkFirst(null, null, options);
   }
 
-  it('should handle request failures as expected', function (done) {
+  it('should handle request failures as expected', (done) => {
     runTest({
       factory: {
         requestFail: true
       }
     })
-      .then(function () {
+      .then(() => {
         done(unexpectedFlowError);
       })
-      .catch(function (error) {
+      .catch((error) => {
         expect(error).to.be.an.instanceof(Error);
         done();
       });
   });
 
-  describe('fallback', function () {
+  describe('fallback', () => {
     // Setup fetch and cache failures to force fallback usage.
-    beforeEach('fallback', function (done) {
+    beforeEach('fallback', (done) => {
       globalFetch.setEmulateError(true);
 
       global.caches.open(toolbox.options.cache.name)
-        .then(function (cache) {
+        .then((cache) => {
           // Remove previously cached response.
           cache.put(requestCacheUrl, undefined);
           done();
         });
     });
 
-    it('should return undefined response when no fallback', function (done) {
+    it('should return undefined response when no fallback', (done) => {
       runTest()
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.be.undefined;
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
 
-    it('should fail when fallback fails', function (done) {
-      var calledFallback = 0;
+    it('should fail when fallback fails', (done) => {
+      let calledFallback = 0;
 
       runTest({
         factory: {
-          fallback: function (reqCache) {
+          fallback: (reqCache) => {
             expect(reqCache).to.eql(requests.reqCache);
             calledFallback++;
             return Promise.reject(new Error('mock error'));
           }
         }
       })
-        .then(function () {
+        .then(() => {
           done(unexpectedFlowError);
         })
-        .catch(function (error) {
+        .catch((error) => {
           expect(calledFallback).to.equal(1);
           expect(error).to.be.an.instanceof(Error);
           done();
         });
     });
 
-    it('should call fallback as specified when network and cache fails',
-    function (done) {
-      var calledFallback = 0;
+    it('should call fallback as specified when network and cache fails', (done) => {
+      let calledFallback = 0;
 
       runTest({
         factory: {
-          fallback: function (reqCache) {
+          fallback: (reqCache) => {
             expect(reqCache).to.eql(requests.reqCache);
             calledFallback++;
             return Promise.resolve(responses.resCache);
           }
         }
       })
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.eql(responses.resCache);
           expect(calledFallback).to.equal(1);
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
   });
 
-  describe('nominal network first', function () {
-    it('should resolve to a network response first', function (done) {
+  describe('nominal network first', () => {
+    it('should resolve to a network response first', (done) => {
       runTest()
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.eql(responses.resNet);
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
 
-    it('should resolve to a cache response on network failure', function (done) {
+    it('should resolve to a cache response on network failure', (done) => {
       globalFetch.setEmulateError(true);
 
       runTest()
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.eql(responses.resCache);
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
   });
 
-  describe('timeout', function () {
-    it('should respond from cache if timeout before fetch', function (done) {
+  describe('timeout', () => {
+    it('should respond from cache if timeout before fetch', (done) => {
       globalFetch.setResponseDelay(200);
 
       runTest({
         networkTimeout: 100
       })
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.eql(responses.resCache);
           setTimeout(done, 200);
         })
-        .catch(function (error) {
+        .catch((error) => {
           setTimeout(done, 200, error || unexpectedFlowError);
         });
     });
 
-    it('should respond from fallback if no cache and timeout before fetch',
-    function (done) {
-      var calledFallback = 0;
+    it('should respond from fallback if no cache and timeout before fetch', (done) => {
+      let calledFallback = 0;
 
       globalFetch.setResponseDelay(200);
 
       global.caches.open(toolbox.options.cache.name)
-        .then(function (cache) {
+        .then((cache) => {
           // Remove previously cached response.
           return cache.put(requestCacheUrl, undefined);
         })
-        .then(function () {
+        .then(() => {
           return runTest({
             factory: {
-              fallback: function () {
+              fallback: () => {
                 calledFallback++;
                 return Promise.resolve(responses.resCache);
               }
@@ -273,66 +271,64 @@ describe('sw/utils/customNetworkFirst', function () {
             networkTimeout: 100
           });
         })
-        .then(function (response) {
+        .then((response) => {
           expect(calledFallback).to.equal(1);
           expect(response).to.eql(responses.resCache);
           setTimeout(done, 200);
         })
-        .catch(function (error) {
+        .catch((error) => {
           setTimeout(done, 200, error || unexpectedFlowError);
         });
     });
 
-    it('should respond from network if before timeout', function (done) {
+    it('should respond from network if before timeout', (done) => {
       globalFetch.setResponseDelay(50);
 
       runTest({
         networkTimeout: 100
       })
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.eql(responses.resNet);
           setTimeout(done, 50);
         })
-        .catch(function (error) {
+        .catch((error) => {
           setTimeout(done, 100, error || unexpectedFlowError);
         });
     });
 
-    it('should respond from cache if fetch fails and also clearTimeout',
-    function (done) {
+    it('should respond from cache if fetch fails and also clearTimeout', (done) => {
       globalFetch.setEmulateError(true);
 
       runTest({
         networkTimeout: 100
       })
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.eql(responses.resCache);
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           setTimeout(done, 100, error || unexpectedFlowError);
         });
     });
 
-    it('should still respond from network if timeout and no cache',
-    function (done) {
+    it('should still respond from network if timeout and no cache', (done) => {
       globalFetch.setResponseDelay(100);
 
       global.caches.open(toolbox.options.cache.name)
-        .then(function (cache) {
+        .then((cache) => {
           // Remove previously cached response.
           return cache.put(requestCacheUrl, undefined);
         })
-        .then(function () {
+        .then(() => {
           return runTest({
             networkTimeout: 50
           });
         })
-        .then(function (response) {
+        .then((response) => {
           expect(response).to.eql(responses.resNet);
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           setTimeout(done, 100, error || unexpectedFlowError);
         });
     });

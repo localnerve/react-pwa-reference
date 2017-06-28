@@ -69,8 +69,10 @@ function mergeContent (newStores) {
  * content for the resource specified in the request.
  */
 export function resourceContentResponse (request) {
-  const matches = request.match(/resource=([\w\-]+)/),
-    resource = matches && matches[1];
+  /* eslint-disable no-useless-escape */
+  const matches = request.match(/resource=([\w\-]+)/);
+  /* eslint-enable no-useless-escape */
+  const resource = matches && matches[1];
 
   if (resource) {
     return idb.get(idb.stores.init, keyName).then((payload) => {

@@ -3,41 +3,37 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it */
-'use strict';
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
+import push from 'utils/push';
 
-var push = require('utils/push');
-
-describe('push', function () {
-  it('should expose getSubscriptionId', function () {
+describe('push', () => {
+  it('should expose getSubscriptionId', () => {
     expect(push).to.respondTo('getSubscriptionId');
   });
 
-  describe('getSubscriptionId', function () {
-    var subId = '1234',
-      subId2 = '5678',
-      endpoint = 'https://endpoint/'+subId2;
+  describe('getSubscriptionId', () => {
+    const subId = '1234';
+    const subId2 = '5678';
+    const endpoint = `https://endpoint/${subId2}`;
 
-    it('should return null if falsy subscription supplied', function () {
+    it('should return null if falsy subscription supplied', () => {
       expect(push.getSubscriptionId()).to.be.null;
     });
 
-    it('should return null if no endpoint or getKey', function () {
+    it('should return null if no endpoint or getKey', () => {
       expect(push.getSubscriptionId({})).to.be.null;
     });
 
-    it('should return subscriptionId from endpoint', function () {
+    it('should return subscriptionId from endpoint', () => {
       expect(push.getSubscriptionId({
-        endpoint: endpoint
+        endpoint
       })).to.equal(subId2);
     });
 
-    it('should use getKey if no endpoint', function () {
+    it('should use getKey if no endpoint', () => {
       expect(push.getSubscriptionId({
-        getKey: function () {
-          return subId;
-        }
+        getKey: () => subId
       })).to.equal(subId);
     });
   });

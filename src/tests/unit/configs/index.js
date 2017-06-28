@@ -2,95 +2,93 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-/*eslint no-console:0 */
+/* eslint no-console:0 */
 /* global Promise, describe, it, before, beforeEach, afterEach, require */
-'use strict';
 
-var expect = require('chai').expect;
-var assert = require('chai').assert;
-var path = require('path');
-var configLib = require('configs');
-var utils = require('utils/node');
-var localEnv = require('configs/local.env.json');
+import { expect } from 'chai';
+import { assert } from 'chai';
+import path from 'path';
+import configLib from 'configs';
+import utils from 'utils/node';
+import localEnv from 'configs/local.env.json';
 
-describe('configs', function () {
-  describe('index', function () {
-    it('accepts overrides', function () {
-      var value = 'ItsAPizzaPie1';
-      var config = configLib.create({ PIZZA: value });
+describe('configs', () => {
+  describe('index', () => {
+    it('accepts overrides', () => {
+      const value = 'ItsAPizzaPie1';
+      const config = configLib.create({ PIZZA: value });
       expect(config.PIZZA).to.equal(value);
     });
 
-    it('loads env vars', function () {
-      var value = 'ItsAPizzaPie2';
+    it('loads env vars', () => {
+      const value = 'ItsAPizzaPie2';
       process.env.PIZZA = value;
 
-      var config = configLib.create();
+      const config = configLib.create();
       expect(config.PIZZA).to.equal(value);
     });
 
-    it('fallsback to local dev env vars', function () {
-      var value = localEnv.PORT;
+    it('fallsback to local dev env vars', () => {
+      const value = localEnv.PORT;
 
       delete process.env.PORT; // not sure if this really works
       assert.isUndefined(process.env.PORT, 'process.env.PORT was unexpectedly defined and invalidated this test');
 
-      var config = configLib.create();
+      const config = configLib.create();
       expect(config.PORT).to.equal(value);
     });
 
-    it('allows env vars to override to local dev env vars', function () {
-      var value = 8080;
+    it('allows env vars to override to local dev env vars', () => {
+      const value = 8080;
       process.env.PORT = value;
 
-      var config = configLib.create();
+      const config = configLib.create();
       expect(Number(config.PORT)).to.equal(value);
     });
   });
 
-  describe('settings', function () {
-    var fs = require('fs');
-    var config;
+  describe('settings', () => {
+    const fs = require('fs');
+    let config;
 
     /**
      * Make sure the assets build output files are available.
      */
     function ensureAssetFiles (done) {
-      var
-        assetsJsonFile = path.join(
-          path.dirname(require.resolve('configs/settings/index.js')),
-          'assets.json'
-        ),
-        assetsJsonData = JSON.stringify({
-          assets: {
-            main: [
-              'main.js',
-              'main.js.map'
-            ],
-            sw: [
-              'sw.js',
-              'sw.js.map'
-            ],
-            swReg: [
-              'swReg.js',
-              'swReg.js.map'
-            ]
-          }
-        }),
-        revManifestFile = path.join(
-          path.dirname(require.resolve('configs/settings/index.js')),
-          'assets-rev-manifest.json'
-        ),
-        revManifestData = JSON.stringify({
-          'images/android-chrome-144x144.png':
-            'images/android-chrome-144x144-aa104ff74a.png',
-          'images/android-chrome-192x192.png':
-            'images/android-chrome-192x192-3f837d5a9e.png'
-        });
+      const assetsJsonFile = path.join(
+        path.dirname(require.resolve('configs/settings/index.js')),
+        'assets.json'
+      );
+      const assetsJsonData = JSON.stringify({
+        assets: {
+          main: [
+            'main.js',
+            'main.js.map'
+          ],
+          sw: [
+            'sw.js',
+            'sw.js.map'
+          ],
+          swReg: [
+            'swReg.js',
+            'swReg.js.map'
+          ]
+        }
+      });
+      const revManifestFile = path.join(
+        path.dirname(require.resolve('configs/settings/index.js')),
+        'assets-rev-manifest.json'
+      );
+      const revManifestData = JSON.stringify({
+        'images/android-chrome-144x144.png':
+          'images/android-chrome-144x144-aa104ff74a.png',
+        'images/android-chrome-192x192.png':
+          'images/android-chrome-192x192-3f837d5a9e.png'
+      });
 
       Promise.all([
         utils.nodeCall(fs.stat, assetsJsonFile)
-          .catch(function (err) {
+          .catch((err) => {
             if (err.code === 'ENOENT') {
               console.log('assets json did not exist');
               return utils.nodeCall(
@@ -100,7 +98,7 @@ describe('configs', function () {
             throw err;
           }),
         utils.nodeCall(fs.stat, revManifestFile)
-          .catch(function (err) {
+          .catch((err) => {
             if (err.code === 'ENOENT') {
               console.log('assets rev manifest did not exist');
               return utils.nodeCall(
@@ -110,36 +108,36 @@ describe('configs', function () {
             throw err;
           })
       ])
-        .then(function () {
+        .then(() => {
           done();
         })
         .catch(done);
     }
 
-    beforeEach(function () {
+    beforeEach(() => {
       config = configLib.create();
     });
 
-    it('loads settings.web', function () {
+    it('loads settings.web', () => {
       expect(config.settings.web).to.be.an('object').that.is.not.empty;
     });
 
-    it('loads settings.dist', function () {
+    it('loads settings.dist', () => {
       expect(config.settings.dist).to.be.an('object').that.is.not.empty;
     });
 
-    it('loads settings.src', function () {
+    it('loads settings.src', () => {
       expect(config.settings.src).to.be.an('object').that.is.not.empty;
     });
 
-    it('defines testable web assets object', function () {
-      var assets = config.settings.web.assets;
+    it('defines testable web assets object', () => {
+      const assets = config.settings.web.assets;
       expect(assets).to.be.an('object').that.is.not.empty;
       expect(assets.mainScript).to.be.a('function');
       expect(config.settings.src.assetsJson).to.be.a('string').that.is.not.empty;
     });
 
-    it('loads script asset dynamically as expected', function (done) {
+    it('loads script asset dynamically as expected', (done) => {
       function testAssetScript (script, map) {
         expect(script).to.be.a('string').that.is.not.empty;
         expect(script).to.contain(config.settings.web.scripts);
@@ -151,11 +149,11 @@ describe('configs', function () {
       }
 
       function testAssetScripts () {
-        var main = config.settings.web.assets.mainScript();
-        var swReg = config.settings.web.assets.swRegScript();
-        var sw = config.settings.web.assets.swMainScript();
-        var swMapName = config.settings.web.assets.swMainScriptMap(true);
-        var swMapFull = config.settings.web.assets.swMainScriptMap();
+        const main = config.settings.web.assets.mainScript();
+        const swReg = config.settings.web.assets.swRegScript();
+        const sw = config.settings.web.assets.swMainScript();
+        const swMapName = config.settings.web.assets.swMainScriptMap(true);
+        const swMapFull = config.settings.web.assets.swMainScriptMap();
 
         testAssetScript(main);
         testAssetScript(swReg);
@@ -170,7 +168,7 @@ describe('configs', function () {
         done();
       }
 
-      ensureAssetFiles(function (err) {
+      ensureAssetFiles((err) => {
         if (err) {
           return done(err);
         }
@@ -178,14 +176,14 @@ describe('configs', function () {
       });
     });
 
-    it('loads revved assets dynamically as expected', function (done) {
+    it('loads revved assets dynamically as expected', (done) => {
       function testAssetRevScripts () {
-        var asset144 =
+        const asset144 =
           config.settings.web.assets.revAsset('android-chrome-144x144.png');
-        var asset192 =
+        const asset192 =
           config.settings.web.assets.revAsset('android-chrome-192x192.png');
 
-        [asset144, asset192].forEach(function (asset) {
+        [asset144, asset192].forEach((asset) => {
           expect(asset).to.exist;
           expect(asset).to.be.a('string').that.is.not.empty;
           expect(asset).to.contain(config.settings.web.images);
@@ -195,7 +193,7 @@ describe('configs', function () {
         done();
       }
 
-      ensureAssetFiles(function (err) {
+      ensureAssetFiles((err) => {
         if (err) {
           return done(err);
         }
@@ -204,273 +202,269 @@ describe('configs', function () {
     });
   });
 
-  describe('images', function () {
-    var config;
+  describe('images', () => {
+    let config;
 
-    beforeEach(function () {
+    beforeEach(() => {
       config = configLib.create();
     });
 
-    describe('service url', function () {
-      var url = '123.com';
+    describe('service url', () => {
+      const url = '123.com';
 
-      afterEach(function () {
+      afterEach(() => {
         delete process.env.FIRESIZE_URL;
         delete process.env.IMAGE_SERVICE_URL;
       });
 
-      it('should exist', function () {
+      it('should exist', () => {
         expect(config.images.service.url).to.be.a('function');
       });
 
-      it('should return a string and have a default', function () {
+      it('should return a string and have a default', () => {
         expect(config.images.service.url()).to.be.a('string').that.is.not.empty;
       });
 
-      it('should return IMAGE_SERVICE_URL if defined', function () {
+      it('should return IMAGE_SERVICE_URL if defined', () => {
         process.env.FIRESIZE_URL = 'wrong_url';
         process.env.IMAGE_SERVICE_URL = url;
         expect(config.images.service.url()).to.equal(url);
       });
     });
 
-    describe('service cloudName', function () {
-      before(function () {
+    describe('service cloudName', () => {
+      before(() => {
         // just in case this is hanging around in local env
         delete process.env.CLOUD_NAME;
       });
 
-      afterEach(function () {
+      afterEach(() => {
         delete process.env.CLOUD_NAME;
       });
 
-      it('should exist', function () {
+      it('should exist', () => {
         expect(config.images.service.cloudName).to.be.a('function');
       });
 
-      it('should be undefined by default', function () {
+      it('should be undefined by default', () => {
         expect(config.images.service.cloudName()).to.be.undefined;
       });
 
-      it('should return CLOUD_NAME if defined', function () {
-        var cloudName = 'correct_cloudname';
+      it('should return CLOUD_NAME if defined', () => {
+        const cloudName = 'correct_cloudname';
         process.env.CLOUD_NAME = cloudName;
         expect(config.images.service.cloudName()).to.equal(cloudName);
       });
     });
   });
 
-  describe('contact', function () {
-    var config;
+  describe('contact', () => {
+    let config;
 
-    beforeEach(function () {
+    beforeEach(() => {
       config = configLib.create();
     });
 
-    describe('mail', function () {
-      it('should exist', function () {
+    describe('mail', () => {
+      it('should exist', () => {
         expect(config.contact.mail).to.be.an('object').that.is.not.empty;
         expect(config.contact.mail.subject).to.be.a('string').that.is.not.empty;
       });
 
-      describe('service', function () {
-        afterEach(function () {
+      describe('service', () => {
+        afterEach(() => {
           delete process.env.MAIL_SERVICE;
         });
 
-        it('should exist and have a default', function () {
+        it('should exist and have a default', () => {
           expect(config.contact.mail.service).to.be.a('function');
           expect(config.contact.mail.service()).to.be.a('string').that.is.not.empty;
         });
 
-        it('should return MAIL_SERVICE if defined', function () {
-          var service = 'wellknown';
+        it('should return MAIL_SERVICE if defined', () => {
+          const service = 'wellknown';
           process.env.MAIL_SERVICE = service;
           expect(config.contact.mail.service()).to.equal(service);
         });
       });
 
-      describe('username', function () {
-        before(function () {
+      describe('username', () => {
+        before(() => {
           // just in case this is hanging around in a local env
           delete process.env.SPARKPOST_USERNAME;
           delete process.env.MAIL_USERNAME;
         });
 
-        afterEach(function () {
+        afterEach(() => {
           delete process.env.SPARKPOST_USERNAME;
           delete process.env.MAIL_USERNAME;
         });
 
-        it('should exist and be undefined by default', function () {
+        it('should exist and be undefined by default', () => {
           expect(config.contact.mail.username).to.be.a('function');
           expect(config.contact.mail.username()).to.be.undefined;
         });
 
-        it('should return MANDRILL_USERNAME if defined', function () {
-          var username = 'correct_username';
+        it('should return MANDRILL_USERNAME if defined', () => {
+          const username = 'correct_username';
           process.env.SPARKPOST_USERNAME = username;
           expect(config.contact.mail.username()).to.equal(username);
         });
 
-        it('should return MAIL_USERNAME if defined', function () {
-          var username = 'sircharlesbarkley@sportscenter.com';
+        it('should return MAIL_USERNAME if defined', () => {
+          const username = 'sircharlesbarkley@sportscenter.com';
           process.env.SPARKPOST_USERNAME = 'wrong_username';
           process.env.MAIL_USERNAME = username;
           expect(config.contact.mail.username()).to.equal(username);
         });
       });
 
-      describe('password', function () {
-        var password = '123456';
+      describe('password', () => {
+        const password = '123456';
 
-        before(function () {
+        before(() => {
           // just in case this is hanging around in a local env
           delete process.env.SPARKPOST_APIKEY;
           delete process.env.MAIL_PASSWORD;
         });
 
-        afterEach(function () {
+        afterEach(() => {
           delete process.env.SPARKPOST_APIKEY;
           delete process.env.MAIL_PASSWORD;
         });
 
-        it('should exist and but be undefined by default', function () {
+        it('should exist and but be undefined by default', () => {
           expect(config.contact.mail.password).to.be.a('function');
           expect(config.contact.mail.password()).to.be.undefined;
         });
 
-        it('should return SPARKPOST_APIKEY if defined', function () {
+        it('should return SPARKPOST_APIKEY if defined', () => {
           process.env.SPARKPOST_APIKEY = password;
           expect(config.contact.mail.password()).to.equal(password);
         });
 
-        it('should return MAIL_PASSWORD if defined', function () {
+        it('should return MAIL_PASSWORD if defined', () => {
           process.env.SPARKPOST_APIKEY = 'wrong_password';
           process.env.MAIL_PASSWORD = password;
           expect(config.contact.mail.password()).to.equal(password);
         });
       });
 
-      describe('mailTo', function () {
-        var theMailTo = 'this@that';
+      describe('mailTo', () => {
+        const theMailTo = 'this@that';
 
-        before(function () {
+        before(() => {
           // just in case this is hanging around in a local env
           delete process.env.MAIL_TO;
         });
 
-        afterEach(function () {
+        afterEach(() => {
           delete process.env.MAIL_TO;
         });
 
-        it('should give different defaults based on NODE_ENV', function () {
-          var contact;
-          contact = configLib.create({ NODE_ENV: 'development' }).contact;
-          var defaultDev = contact.mail.to();
-
-          contact = configLib.create({ NODE_ENV: 'production' }).contact;
-          var defaultProd = contact.mail.to();
+        it('should give different defaults based on NODE_ENV', () => {
+          const defaultDev =
+            configLib.create({ NODE_ENV: 'development' }).contact.mail.to();
+          const defaultProd =
+            configLib.create({ NODE_ENV: 'production' }).contact.mail.to();
 
           expect(defaultDev).to.be.a('string').that.is.not.empty;
           expect(defaultProd).to.be.a('string').that.is.not.empty;
           expect(defaultDev).to.not.equal(defaultProd);
         });
 
-        it('should return MAIL_TO if defined', function () {
+        it('should return MAIL_TO if defined', () => {
           process.env.MAIL_TO = theMailTo;
-          var contact = configLib.create({ NODE_ENV: 'development' }).contact;
+          const contact = configLib.create({ NODE_ENV: 'development' }).contact;
 
           expect(contact.mail.to()).to.equal(theMailTo);
         });
       });
 
-      describe('mailFrom', function () {
-        var theMailFrom = 'this@that';
+      describe('mailFrom', () => {
+        const theMailFrom = 'this@that';
 
-        before(function () {
+        before(() => {
           // just in case this is hanging around in a local env
           delete process.env.MAIL_FROM;
         });
 
-        afterEach(function () {
+        afterEach(() => {
           delete process.env.MAIL_FROM;
         });
 
-        it('should give different defaults based on NODE_ENV', function () {
-          var contact;
-          contact = configLib.create({ NODE_ENV: 'development' }).contact;
-          var defaultDev = contact.mail.from();
-
-          contact = configLib.create({ NODE_ENV: 'production' }).contact;
-          var defaultProd = contact.mail.from();
+        it('should give different defaults based on NODE_ENV', () => {
+          const defaultDev =
+            configLib.create({ NODE_ENV: 'development' }).contact.mail.from();
+          const defaultProd =
+            configLib.create({ NODE_ENV: 'production' }).contact.mail.from();
 
           expect(defaultDev).to.be.a('string').that.is.not.empty;
           expect(defaultProd).to.be.a('string').that.is.not.empty;
           expect(defaultDev).to.not.equal(defaultProd);
         });
 
-        it('should return MAIL_FROM if defined', function () {
+        it('should return MAIL_FROM if defined', () => {
           process.env.MAIL_FROM = theMailFrom;
-          var contact = configLib.create({ NODE_ENV: 'development' }).contact;
+          const contact = configLib.create({ NODE_ENV: 'development' }).contact;
 
           expect(contact.mail.from()).to.equal(theMailFrom);
         });
       });
     });
 
-    describe('queue', function () {
-      describe('queue.name', function () {
-        var queueName = 'correct_queue';
+    describe('queue', () => {
+      describe('queue.name', () => {
+        const queueName = 'correct_queue';
 
-        before(function () {
+        before(() => {
           // just in case this is hanging around in the local env
           delete process.env.QUEUE_NAME;
         });
 
-        afterEach(function () {
+        afterEach(() => {
           delete process.env.QUEUE_NAME;
         });
 
-        it('should exist and have a default', function () {
+        it('should exist and have a default', () => {
           expect(config.contact.queue.name).to.be.a('function');
           expect(config.contact.queue.name()).to.be.a('string').that.is.not.empty;
         });
 
-        it('should return QUEUE_NAME if defined', function () {
+        it('should return QUEUE_NAME if defined', () => {
           process.env.QUEUE_NAME = queueName;
           expect(config.contact.queue.name()).to.equal(queueName);
         });
       });
 
-      describe('queue.url', function () {
-        var queueUrl = 'amqp://impossible:56754';
+      describe('queue.url', () => {
+        const queueUrl = 'amqp://impossible:56754';
 
-        before(function () {
+        before(() => {
           // just in case this is hanging around in the local env
           delete process.env.QUEUE_URL;
           delete process.env.CLOUDAMQP_URL;
         });
 
-        afterEach(function () {
+        afterEach(() => {
           delete process.env.QUEUE_URL;
           delete process.env.CLOUDAMQP_URL;
         });
 
-        it('should exist and have a default', function () {
+        it('should exist and have a default', () => {
           expect(config.contact.queue.url).to.be.a('function');
           expect(config.contact.queue.url()).to.be.a('string').that.is.not.empty;
           expect(config.contact.queue.url()).to.not.equal(queueUrl);
         });
 
-        it('should give different defaults based on NODE_ENV', function () {
+        it('should give different defaults based on NODE_ENV', () => {
           process.env.CLOUDAMQP_URL = queueUrl;
 
-          config = configLib.create({ NODE_ENV: 'development' });
-          var defaultDev = config.contact.queue.url();
+          const defaultDev =
+            configLib.create({ NODE_ENV: 'development' }).contact.queue.url();
 
-          config = configLib.create({ NODE_ENV: 'production' });
-          var defaultProd = config.contact.queue.url();
+          const defaultProd =
+            configLib.create({ NODE_ENV: 'production' }).contact.queue.url();
 
           expect(defaultDev).to.be.a('string').that.is.not.empty;
           expect(defaultProd).to.be.a('string').that.is.not.empty;
@@ -478,7 +472,7 @@ describe('configs', function () {
           expect(defaultProd).to.not.equal(defaultDev);
         });
 
-        it('should return QUEUE_URL if defined', function () {
+        it('should return QUEUE_URL if defined', () => {
           process.env.QUEUE_URL = queueUrl;
           expect(config.contact.queue.url()).to.equal(queueUrl);
         });
@@ -486,37 +480,36 @@ describe('configs', function () {
     });
   });
 
-  describe('data', function () {
-    describe('FRED', function () {
-      it('decorates FRED url', function () {
-        var config = configLib.create().data;
-        var decoration = config.FRED.branchify('');
-        var url = config.FRED.url();
+  describe('data', () => {
+    describe('FRED', () => {
+      it('decorates FRED url', () => {
+        const config = configLib.create().data;
+        const decoration = config.FRED.branchify('');
+        const url = config.FRED.url();
         expect(url).to.contain(decoration);
       });
 
-      it('changes decoration by environment', function () {
-        var config1 = configLib.create({ NODE_ENV: 'production' }).data;
-        var decoration1 = config1.FRED.branchify('');
-
-        var config2 = configLib.create({ NODE_ENV: 'development' }).data;
-        var decoration2 = config2.FRED.branchify('');
+      it('changes decoration by environment', () => {
+        const decoration1 =
+          configLib.create({ NODE_ENV: 'production' }).data.FRED.branchify('');
+        const decoration2 =
+          configLib.create({ NODE_ENV: 'development' }).data.FRED.branchify('');
 
         expect(decoration1).to.not.equal(decoration2);
       });
     });
   });
 
-  describe('push', function () {
-    var theApiKey = 'A1S2D3F4G5H6J7K8L9';
+  describe('push', () => {
+    const theApiKey = 'A1S2D3F4G5H6J7K8L9';
 
-    before(function () {
+    before(() => {
       // just in case this is hanging around in the local env
       delete process.env.PUSH_API_KEY;
       delete process.env.GCM_API_KEY;
     });
 
-    afterEach(function () {
+    afterEach(() => {
       delete process.env.PUSH_API_KEY;
       delete process.env.GCM_API_KEY;
     });
@@ -525,18 +518,18 @@ describe('configs', function () {
       return configLib.create().push.service.apiKey();
     }
 
-    it('should return undefined if no env vars', function () {
+    it('should return undefined if no env vars', () => {
       expect(getApiKey()).to.be.undefined;
     });
 
-    it('should return a value for PUSH_API_KEY first', function () {
+    it('should return a value for PUSH_API_KEY first', () => {
       process.env.PUSH_API_KEY = theApiKey;
       process.env.GCM_API_KEY = 'thisisbad';
 
       expect(getApiKey()).to.equal(theApiKey);
     });
 
-    it('should return GCM_API_KEY if PUSH_API_KEY not defined', function () {
+    it('should return GCM_API_KEY if PUSH_API_KEY not defined', () => {
       process.env.GCM_API_KEY = theApiKey;
 
       assert.isUndefined(process.env.PUSH_API_KEY);

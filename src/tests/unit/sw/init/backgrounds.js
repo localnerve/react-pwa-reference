@@ -3,25 +3,23 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global Promise, after, before, describe, it */
-'use strict';
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
-
-describe('sw/init/backgrounds', function () {
-  var toolbox, backgrounds, treoMock,
-    mockFetchUnexpected = new Error('unexpected mockFetch results'),
-    imageService = 'https://some-service',
-    backgroundUrls = {
-      '1.jpg': imageService + '/some/path/1.jpg',
-      '2.jpg': imageService + '/some/path/2.jpg'
-    },
-    payload = {
-      BackgroundStore: {
-        backgroundUrls: backgroundUrls,
-        imageServiceUrl: imageService
-      }
-    };
+describe('sw/init/backgrounds', () => {
+  const mockFetchUnexpected = new Error('unexpected mockFetch results');
+  const imageService = 'https://some-service';
+  const backgroundUrls = {
+    '1.jpg': imageService + '/some/path/1.jpg',
+    '2.jpg': imageService + '/some/path/2.jpg'
+  };
+  const payload = {
+    BackgroundStore: {
+      backgroundUrls: backgroundUrls,
+      imageServiceUrl: imageService
+    }
+  };
+  let toolbox, backgrounds, treoMock;
 
   before('sw/init/backgrounds', function () {
     this.timeout(5000);
@@ -40,7 +38,7 @@ describe('sw/init/backgrounds', function () {
     backgrounds = require('application/client/sw/init/backgrounds').default;
   });
 
-  after(function () {
+  after(() => {
     toolbox.mockTeardown();
     mocks.swUtilsIdbTreo.end();
     mocks.swToolbox.end();
@@ -56,20 +54,20 @@ describe('sw/init/backgrounds', function () {
     backgrounds(payload);
   }
 
-  it('should add a single route to router', function () {
+  it('should add a single route to router', () => {
     runTest();
 
     expect(toolbox.router.routes.size).to.equal(1);
   });
 
-  it('should handle all imageService requests', function (done) {
-    var response = { test: 'yepper' };
+  it('should handle all imageService requests', (done) => {
+    const response = { test: 'yepper' };
     runTest(response);
 
-    Promise.all(Object.keys(backgroundUrls).map(function (key) {
-      return toolbox.mockFetch(backgroundUrls[key], 'GET');
-    })).then(function (results) {
-      results.forEach(function (res) {
+    Promise.all(Object.keys(backgroundUrls).map(
+      key => toolbox.mockFetch(backgroundUrls[key], 'GET')
+    )).then((results) => {
+      results.forEach((res) => {
         expect(res).to.eql(response);
       });
 
@@ -78,27 +76,27 @@ describe('sw/init/backgrounds', function () {
       } else {
         done(mockFetchUnexpected);
       }
-    }).catch(function (error) {
+    }).catch((error) => {
       done(error || mockFetchUnexpected);
     });
   });
 
-  it('should prefetch requests not current', function (done) {
-    var response = { test: 'yessir' };
-    var keys = Object.keys(backgroundUrls);
+  it('should prefetch requests not current', (done) => {
+    const response = { test: 'yessir' };
+    const keys = Object.keys(backgroundUrls);
     runTest(response);
 
     toolbox.mockFetch(backgroundUrls[keys[0]], 'GET')
-      .then(function (res) {
+      .then((res) => {
         expect(res).to.eql(response);
       })
-      .then(function () {
+      .then(() => {
         // keys[1] should have been cached as a side-effect.
-        toolbox.uncache(backgroundUrls[keys[1]]).then(function (deleted) {
+        toolbox.uncache(backgroundUrls[keys[1]]).then((deleted) => {
           done(deleted ? null : new Error('notCurrent request was not cached'));
         });
       })
-      .catch(function (error) {
+      .catch((error) => {
         done(error || mockFetchUnexpected);
       });
   });

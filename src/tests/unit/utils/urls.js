@@ -3,17 +3,17 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it, before */
-'use strict';
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
+import urlm from 'utils/urls';
 
-var urlm = require('utils/urls');
+describe('urls', () => {
+  describe('hostname method', () => {
+    const sigRepl = 'SNAME';
+    const hostRepl = 'HOST';
+    const testUrlCount = 13;
 
-describe('urls', function () {
-  describe('hostname method', function () {
-    var sigRepl = 'SNAME', hostRepl = 'HOST', testUrlCount = 13;
-
-    var hostTemplates = [
+    const hostTemplates = [
       'this.'+sigRepl+'.com',
       sigRepl+'.com',
       '123456.'+sigRepl+'.com',
@@ -28,7 +28,7 @@ describe('urls', function () {
       '123456.'+sigRepl+'.com:3000',
       '123456.'+sigRepl+'.com'
     ];
-    var testUrlTemplates = [
+    const testUrlTemplates = [
       'https://'+hostRepl+'/something/?',
       'http://'+hostRepl,
       'http://'+hostRepl,
@@ -43,12 +43,12 @@ describe('urls', function () {
       '//'+hostRepl+'/something',
       'http://'+hostRepl+'/12x12/something/http://another.host.com/image/0.jpg'
     ];
-    var significantNames = [];
-    var hosts = [];
-    var testUrls = [];
+    const significantNames = [];
+    const hosts = [];
+    const testUrls = [];
 
-    before(function () {
-      var i;
+    before(() => {
+      let i;
 
       for (i = 0; i < testUrlCount; i++) {
         significantNames.push('significant-'+i);
@@ -61,27 +61,28 @@ describe('urls', function () {
       }
     });
 
-    describe('getHostname', function () {
-      it('should retrieve hostname from urls', function () {
-        testUrls.forEach(function (url, index) {
-          expect(urlm.getHostname(url)).to.eql(hosts[index].replace(/\:.+$/, ''));
+    describe('getHostname', () => {
+      it('should retrieve hostname from urls', () => {
+        testUrls.forEach((url, index) => {
+          expect(urlm.getHostname(url)).to.eql(hosts[index].replace(/:.+$/, ''));
         });
       });
     });
 
-    describe('getSignificantHostname', function () {
-      it('should retrieve signicant hostname from urls', function () {
-        testUrls.forEach(function (url, index) {
+    describe('getSignificantHostname', () => {
+      it('should retrieve signicant hostname from urls', () => {
+        testUrls.forEach((url, index) => {
           expect(urlm.getSignificantHostname(url)).to.eql(significantNames[index]);
         });
       });
     });
   });
 
-  describe('path method', function () {
-    var test1 = 'search', test2 = 'search-item.html';
-    var pathRepl = 'RPATH';
-    var pathTemplates = [
+  describe('path method', () => {
+    const test1 = 'search';
+    const test2 = 'search-item.html';
+    const pathRepl = 'RPATH';
+    const pathTemplates = [
       'https://www.google.com:3000/dir/1/2/RPATH?arg=0-a&arg1=1-b&arg3-c#hash',
       'https://www.google.com:3000/dir/1/2/RPATH/?arg=0-a&arg1=1-b&arg3-c#hash',
       'https://www.google.com:3000/dir/1/2/RPATH#hash',
@@ -94,29 +95,29 @@ describe('urls', function () {
       'RPATH',
       'RPATH/'
     ];
-    var paths1 = [];
-    var paths2 = [];
+    const paths1 = [];
+    const paths2 = [];
 
-    before(function () {
-      pathTemplates.forEach(function (path) {
+    before(() => {
+      pathTemplates.forEach((path) => {
         paths1.push(path.replace(pathRepl, test1));
       });
-      pathTemplates.forEach(function (path) {
+      pathTemplates.forEach((path) => {
         paths2.push(path.replace(pathRepl, test2));
       });
     });
 
-    describe('getLastPathSegment', function () {
-      it('should retrieve the last path segment from urls, paths, files: Simple segment', function () {
-        paths1.forEach(function (path) {
-          var last = urlm.getLastPathSegment(path);
+    describe('getLastPathSegment', () => {
+      it('should retrieve the last path segment from urls, paths, files: Simple segment', () => {
+        paths1.forEach((path) => {
+          const last = urlm.getLastPathSegment(path);
           expect(last).to.eql(test1);
         });
       });
 
-      it('should retrieve the last path segment from urls, paths, files: Delimited segment', function () {
-        paths2.forEach(function (path) {
-          var last = urlm.getLastPathSegment(path);
+      it('should retrieve the last path segment from urls, paths, files: Delimited segment', () => {
+        paths2.forEach((path) => {
+          const last = urlm.getLastPathSegment(path);
           expect(last).to.eql(test2);
         });
       });

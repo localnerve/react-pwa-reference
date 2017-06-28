@@ -20,7 +20,9 @@ const statsKey = 'stats';
 export function statsPluginOptions (settings) {
   return {
     assetsJson: settings.src.assetsJson,
+    /* eslint-disable no-useless-escape */
     CHUNK_REGEX: /^([A-Za-z0-9_\-]+)\..*/
+    /* eslint-enable no-useless-escape */
   };
 }
 
@@ -60,7 +62,7 @@ export function statsPlugin (self, options, statsJson) {
       // If assetsJsonFile exists, merge output
       if (fs.existsSync(assetsJsonFile)) {
         const previousOutput = JSON.parse(
-         fs.readFileSync(assetsJsonFile, { encoding: 'utf8' })
+          fs.readFileSync(assetsJsonFile, { encoding: 'utf8' })
         );
         output = merge(previousOutput, output);
       }

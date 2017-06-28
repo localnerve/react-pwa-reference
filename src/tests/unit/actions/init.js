@@ -3,36 +3,35 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it, beforeEach */
-'use strict';
 
-var expect = require('chai').expect;
-
-var createMockActionContext = require('fluxible/utils').createMockActionContext;
-var initAction = require('application/actions/init').init;
-var BackgroundStore = require('application/stores/BackgroundStore').BackgroundStore;
+import { expect } from 'chai';
+import { createMockActionContext } from 'fluxible/utils';
+import { init as initAction } from 'application/actions/init';
+import { BackgroundStore } from 'application/stores/BackgroundStore';
 
 describe('init action', function () {
-  var context, params = {
-      backgrounds: {
-        serviceUrl: 'https://lorempixel.com',
-        backgrounds: ['1', '2']
-      }
-    };
+  const params = {
+    backgrounds: {
+      serviceUrl: 'https://lorempixel.com',
+      backgrounds: ['1', '2']
+    }
+  };
+  let context;
 
   // create the action context wired to BackgroundStore
-  beforeEach(function () {
+  beforeEach(() => {
     context = createMockActionContext({
       stores: [ BackgroundStore ]
     });
   });
 
-  it('should update the background store', function (done) {
-    context.executeAction(initAction, params, function (err) {
+  it('should update the background store', (done) => {
+    context.executeAction(initAction, params, (err) => {
       if (err) {
         return done(err);
       }
 
-      var store = context.getStore(BackgroundStore);
+      const store = context.getStore(BackgroundStore);
 
       expect(store.getImageServiceUrl()).to.equal(params.backgrounds.serviceUrl);
       expect(Object.keys(store.backgroundUrls)).to.have.length(2);

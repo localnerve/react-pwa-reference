@@ -3,21 +3,20 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global Promise, after, before, beforeEach, describe, it */
-'use strict';
 
-var expect = require('chai').expect;
-var _ = require('lodash');
-var syncable = require('utils/syncable');
-var mocks = require('test/mocks');
-var Self = require('test/mocks/self');
+import { expect } from 'chai';
+import _ from 'lodash';
+import syncable from 'utils/syncable';
+import mocks from 'test/mocks';
+import Self from 'test/mocks/self';
 
-describe('sw/sync/serviceable', function () {
-  var index, treoMock, toolboxMock, self,
-    subscriptionId = '123456789',
-    unexpectedFlowError = new Error('unexpected flow');
+describe('sw/sync/serviceable', () => {
+  const subscriptionId = '123456789';
+  const unexpectedFlowError = new Error('unexpected flow');
 
-  var serviceable;
-  var dehydratedRequests;
+  let index, treoMock, toolboxMock, self;
+  let serviceable;
+  let dehydratedRequests;
 
   before('sw/sync/serviceable setup', function () {
     this.timeout(5000);
@@ -47,7 +46,7 @@ describe('sw/sync/serviceable', function () {
     serviceable = require('application/client/sw/sync/serviceable');
   });
 
-  after('sw/sync/serviceable teardown', function () {
+  after('sw/sync/serviceable teardown', () => {
     delete global.Request;
     delete global.Response;
     delete global.Blob;
@@ -62,7 +61,7 @@ describe('sw/sync/serviceable', function () {
     // the side-effect output
     dehydratedRequests = [];
 
-    treoMock.setReporter(function (method, key, request) {
+    treoMock.setReporter((method, key, request) => {
       if (method === 'put') {
         // allow the body to determine fake ordering via fake timestamp.
         request.timestamp = request.body.timestamp || request.timestamp;
@@ -72,15 +71,15 @@ describe('sw/sync/serviceable', function () {
       }
     });
 
-    return Promise.all(bodies.map(function (body) {
-      return index.deferRequest('/api', new global.Request('someurl', {
+    return Promise.all(bodies.map((body) =>
+      index.deferRequest('/api', new global.Request('someurl', {
         body: body
-      }));
-    }));
+      }))
+    ));
   }
 
-  describe('getRequests', function () {
-    it('should get contact and topic requests', function (done) {
+  describe('getRequests', () => {
+    it('should get contact and topic requests', (done) => {
       createDehydratedRequests([
         syncable.contact({
           some1: 'body1'
@@ -90,18 +89,18 @@ describe('sw/sync/serviceable', function () {
           tag: 'someTopic'
         }, subscriptionId, syncable.ops.updateTopics)
       ])
-        .then(function () {
+        .then(() => {
           return serviceable.getRequests(dehydratedRequests);
         })
-        .then(function (serviceableRequests) {
-          var diff = _.xor(dehydratedRequests, serviceableRequests);
+        .then((serviceableRequests) => {
+          const diff = _.xor(dehydratedRequests, serviceableRequests);
 
           expect(diff.length).to.equal(0);
           done();
         });
     });
 
-    it('should get both contact and unsubscribe requests', function (done) {
+    it('should get both contact and unsubscribe requests', (done) => {
       createDehydratedRequests([
         syncable.contact({
           some1: 'body1'
@@ -110,18 +109,18 @@ describe('sw/sync/serviceable', function () {
           some2: 'body2'
         }, subscriptionId, syncable.ops.unsubscribe)
       ])
-        .then(function () {
+        .then(() => {
           return serviceable.getRequests(dehydratedRequests);
         })
-        .then(function (serviceableRequests) {
-          var diff = _.xor(dehydratedRequests, serviceableRequests);
+        .then((serviceableRequests) => {
+          const diff = _.xor(dehydratedRequests, serviceableRequests);
 
           expect(diff.length).to.equal(0);
           done();
         });
     });
 
-    it('should get unsubscribe requests over topics requests', function (done) {
+    it('should get unsubscribe requests over topics requests', (done) => {
       createDehydratedRequests([
         syncable.push({
           some1: 'body1'
@@ -130,10 +129,10 @@ describe('sw/sync/serviceable', function () {
           some2: 'body2'
         }, subscriptionId, syncable.ops.unsubscribe)
       ])
-        .then(function () {
+        .then(() => {
           return serviceable.getRequests(dehydratedRequests);
         })
-        .then(function (serviceableRequests) {
+        .then((serviceableRequests) => {
           expect(serviceableRequests.length).to.equal(1);
           expect(serviceableRequests[0].fallback.operation)
             .to.equal(syncable.ops.unsubscribe);
@@ -142,9 +141,10 @@ describe('sw/sync/serviceable', function () {
     });
   });
 
-  describe('pruneRequests', function () {
-    it('should remove unserviceable requests', function (done) {
-      var updateTopicsTime = 1001, calledDel = 0;
+  describe('pruneRequests', () => {
+    it('should remove unserviceable requests', (done) => {
+      const updateTopicsTime = 1001;
+      let calledDel = 0;
 
       createDehydratedRequests([
         syncable.push({
@@ -156,12 +156,12 @@ describe('sw/sync/serviceable', function () {
           timestamp: updateTopicsTime + 1
         }, subscriptionId, syncable.ops.unsubscribe)
       ])
-        .then(function () {
+        .then(() => {
           return serviceable.getRequests(dehydratedRequests);
         })
-        .then(function (serviceableRequests) {
+        .then((serviceableRequests) => {
           // Replace previous reporter to listen for 'del'
-          treoMock.setReporter(function (method, key) {
+          treoMock.setReporter((method, key) => {
             if (method === 'del') {
               // should've deleted updateTopics as unserviceable since it
               // received unsubscribe later (updateTopicsTime + 1).
@@ -172,14 +172,14 @@ describe('sw/sync/serviceable', function () {
 
           return serviceable.pruneRequests(dehydratedRequests, serviceableRequests);
         })
-        .then(function () {
+        .then(() => {
           expect(calledDel).to.equal(1);
           done();
         });
     });
   });
 
-  describe('pruneRequestsByPolicy', function () {
+  describe('pruneRequestsByPolicy', () => {
     /**
      * Remove a dehydrateRequest from dehydratedRequests if it matches
      * the given timestamp.
@@ -190,7 +190,7 @@ describe('sw/sync/serviceable', function () {
     function removeMatchingDehydratedRequest (timestamp) {
       var matchingRequest;
 
-      dehydratedRequests = dehydratedRequests.reduce(function (prev, curr) {
+      dehydratedRequests = dehydratedRequests.reduce((prev, curr) => {
         if (curr.timestamp === timestamp) {
           matchingRequest = curr;
           return prev;
@@ -202,14 +202,14 @@ describe('sw/sync/serviceable', function () {
       return matchingRequest;
     }
 
-    it('should remove prior matching contact requests by policy', function (done) {
-      var calledDel = 0,
-        contactKey = 'test1@email',
-        contactTime = 1001,
-        contactTimesToDelete = [
-          contactTime,
-          contactTime + 1
-        ];
+    it('should remove prior matching contact requests by policy', (done) => {
+      let calledDel = 0;
+      const contactKey = 'test1@email';
+      const contactTime = 1001;
+      const contactTimesToDelete = [
+        contactTime,
+        contactTime + 1
+      ];
 
       createDehydratedRequests([
         syncable.contact({
@@ -225,12 +225,12 @@ describe('sw/sync/serviceable', function () {
           timestamp: contactTime + 2 // 'successful'
         }, contactKey)
       ])
-        .then(function () {
+        .then(() => {
           return removeMatchingDehydratedRequest(contactTime + 2);
         })
-        .then(function (reqContact) {
+        .then((reqContact) => {
           // Replace previous reporter to listen for 'del'
-          treoMock.setReporter(function (method, key) {
+          treoMock.setReporter((method, key) => {
             if (method === 'del') {
               expect(contactTimesToDelete.indexOf(key) !== -1).to.be.true;
               calledDel++;
@@ -241,32 +241,32 @@ describe('sw/sync/serviceable', function () {
             dehydratedRequests, reqContact.fallback
           );
         })
-        .then(function () {
+        .then(() => {
           expect(calledDel).to.equal(dehydratedRequests.length);
           done();
         });
     });
 
-    describe('push requests', function () {
-      var calledDel,
-        pushTime = 1001,
-        pushTimesToDelete = [
-          pushTime,
-          pushTime + 1,
-          pushTime + 2,
-          pushTime + 3,
-          pushTime + 4
-        ],
-        pushTimesToIgnore = [
-          pushTime + 5,
-          pushTime + 6,
-          pushTime + 7,
-          pushTime + 8,
-          pushTime + 9
-        ],
-        pushTimeSuccess = pushTime + 10;
+    describe('push requests', () => {
+      let calledDel;
+      const pushTime = 1001;
+      const pushTimesToDelete = [
+        pushTime,
+        pushTime + 1,
+        pushTime + 2,
+        pushTime + 3,
+        pushTime + 4
+      ];
+      const pushTimesToIgnore = [
+        pushTime + 5,
+        pushTime + 6,
+        pushTime + 7,
+        pushTime + 8,
+        pushTime + 9
+      ];
+      const pushTimeSuccess = pushTime + 10;
 
-      beforeEach(function () {
+      beforeEach(() => {
         calledDel = 0;
       });
 
@@ -282,10 +282,10 @@ describe('sw/sync/serviceable', function () {
        * @returns {Promise} resolves to undefined on completion.
        */
       function shouldRemove (timestamp, done, deleted) {
-        var reqPush = removeMatchingDehydratedRequest(timestamp);
+        const reqPush = removeMatchingDehydratedRequest(timestamp);
 
         // Replace previous reporter to listen for 'del'
-        treoMock.setReporter(function (method, key) {
+        treoMock.setReporter((method, key) => {
           if (method === 'del') {
             expect(pushTimesToDelete.indexOf(key) !== -1).to.be.true;
             calledDel++;
@@ -295,16 +295,16 @@ describe('sw/sync/serviceable', function () {
         return serviceable.pruneRequestsByPolicy(
           dehydratedRequests, reqPush.fallback, reqPush
         )
-          .then(function () {
+          .then(() => {
             expect(calledDel).to.equal(deleted || dehydratedRequests.length);
             done();
           })
-          .catch(function (error) {
+          .catch((error) => {
             done(error || unexpectedFlowError);
           });
       }
 
-      it('successful subscribe should remove all', function (done) {
+      it('successful subscribe should remove all', (done) => {
         createDehydratedRequests([
           syncable.push({
             some1: 'body1',
@@ -318,12 +318,12 @@ describe('sw/sync/serviceable', function () {
             some3: 'body3',
             timestamp: pushTimeSuccess
           }, subscriptionId, syncable.ops.subscribe)
-        ]).then(function () {
+        ]).then(() => {
           shouldRemove(pushTimeSuccess, done);
         });
       });
 
-      it('successful unsubscribe should remove all', function (done) {
+      it('successful unsubscribe should remove all', (done) => {
         createDehydratedRequests([
           syncable.push({
             some1: 'body1',
@@ -338,13 +338,12 @@ describe('sw/sync/serviceable', function () {
             timestamp: pushTimeSuccess
           }, subscriptionId, syncable.ops.unsubscribe)
         ])
-          .then(function () {
+          .then(() => {
             shouldRemove(pushTimeSuccess, done);
           });
       });
 
-      it('successful subscribe should remove all except updateSubscription',
-      function (done) {
+      it('successful subscribe should remove all except updateSubscription', (done) => {
         createDehydratedRequests([
           syncable.push({
             some1: 'body1',
@@ -359,14 +358,13 @@ describe('sw/sync/serviceable', function () {
             timestamp: pushTimeSuccess
           }, subscriptionId, syncable.ops.subscribe)
         ])
-          .then(function () {
+          .then(() => {
             shouldRemove(pushTimeSuccess, done, 1);
           });
       });
 
-      it('successful updateTopics should remove unsub and updateTopics with same tag',
-      function (done) {
-        var updateTopicsTag = 'push-update-topic';
+      it('successful updateTopics should remove unsub and updateTopics with same tag', (done) => {
+        const updateTopicsTag = 'push-update-topic';
 
         createDehydratedRequests([
           syncable.push({
@@ -445,19 +443,20 @@ describe('sw/sync/serviceable', function () {
             timestamp: pushTimeSuccess
           }, subscriptionId, syncable.ops.updateTopics)
         ])
-          .then(function () {
+          .then(() => {
             shouldRemove(pushTimeSuccess, done, 2);
           });
       });
     });
 
-    it('should resolve to undefined if no policy found', function (done) {
-      var calledDel = 0, invalidType = 'invalid';
+    it('should resolve to undefined if no policy found', (done) => {
+      let calledDel = 0;
+      const invalidType = 'invalid';
 
       expect(Object.keys(syncable.types).indexOf(invalidType)).to.equal(-1);
 
       // Replace previous reporter to listen for 'del'
-      treoMock.setReporter(function (method) {
+      treoMock.setReporter((method) => {
         if (method === 'del') {
           calledDel++;
         }
@@ -466,7 +465,7 @@ describe('sw/sync/serviceable', function () {
       serviceable.pruneRequestsByPolicy(null, {
         type: invalidType
       })
-        .then(function (result) {
+        .then((result) => {
           expect(result).to.be.undefined;
           expect(calledDel).to.equal(0);
           done();
@@ -474,82 +473,82 @@ describe('sw/sync/serviceable', function () {
     });
   });
 
-  describe('updatePushSubscription', function () {
-    beforeEach(function () {
+  describe('updatePushSubscription', () => {
+    beforeEach(() => {
       treoMock.setReporter(null);
       treoMock.setValue(null);
     });
 
-    it('should do nothing if falsy subscriptionId supplied', function (done) {
-      var calledAll = 0;
+    it('should do nothing if falsy subscriptionId supplied', (done) => {
+      let calledAll = 0;
 
       // Replace previous reporter to listen for 'all'
-      treoMock.setReporter(function (method) {
+      treoMock.setReporter((method) => {
         if (method === 'all') {
           calledAll++;
         }
       });
 
       serviceable.updatePushSubscription(false)
-        .then(function () {
+        .then(() => {
           expect(calledAll).to.equal(0);
           done();
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
 
-    it('should not update if params not found in request', function (done) {
-      var calledPut = 0;
+    it('should not update if params not found in request', (done) => {
+      let calledPut = 0;
 
       createDehydratedRequests([
         syncable.push({
           subscriptionId: subscriptionId
         }, subscriptionId, syncable.ops.subscribe)
-      ]).then(function () {
+      ]).then(() => {
         treoMock.setValue(dehydratedRequests);
 
         // Replace previous reporter to listen for 'put'
-        treoMock.setReporter(function (method) {
+        treoMock.setReporter((method) => {
           if (method === 'put') {
             calledPut++;
           }
         });
 
         serviceable.updatePushSubscription(subscriptionId)
-          .then(function () {
+          .then(() => {
             expect(calledPut).to.equal(0);
             done();
           })
-          .catch(function (error) {
+          .catch((error) => {
             done(error || unexpectedFlowError);
           });
       });
     });
 
-    it('should update if params and subscriptionId found in request',
-    function (done) {
-      var property = require('utils/property');
-      var calledPut = 0, putParams;
-      var testObject = syncable.push({
+    it('should update if params and subscriptionId found in request', (done) => {
+      const property = require('utils/property');
+      let calledPut = 0;
+      let putParams;
+      const testObject = syncable.push({
         params: {
           subscriptionId: subscriptionId
         }
       }, subscriptionId, syncable.ops.subscribe);
 
-      var preUpdateTestObject = Object.assign({}, testObject);
+      const preUpdateTestObject = Object.assign({}, testObject);
       preUpdateTestObject.params = {
         subscriptionId: subscriptionId + '-offbyone'
       };
 
       createDehydratedRequests([
         preUpdateTestObject
-      ]).then(function () {
+      ]).then(() => {
         treoMock.setValue(dehydratedRequests);
 
         // Replace previous reporter to listen for 'put'
-        treoMock.setReporter(function (method, key, value) {
+        treoMock.setReporter((method, key, value) => {
           if (method === 'put') {
             calledPut++;
             putParams = property.find('params', value);
@@ -557,16 +556,16 @@ describe('sw/sync/serviceable', function () {
         });
 
         // Make sure params are different as a precondition
-        var preParams = property.find('params', dehydratedRequests[0]);
+        const preParams = property.find('params', dehydratedRequests[0]);
         expect(preParams).to.exist.and.not.eql(testObject.params);
 
         serviceable.updatePushSubscription(subscriptionId)
-          .then(function () {
+          .then(() => {
             expect(calledPut).to.equal(1);
             expect(putParams).to.eql(testObject.params);
             done();
           })
-          .catch(function (error) {
+          .catch((error) => {
             done(error || unexpectedFlowError);
           });
       });

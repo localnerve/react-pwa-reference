@@ -3,27 +3,25 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global describe, it, beforeEach */
-'use strict';
 
-var expect = require('chai').expect;
+import { expect } from 'chai';
+import { createMockActionContext } from 'fluxible/utils';
+import MockService from 'fluxible-plugin-fetchr/utils/MockServiceManager';
+import { ContactStore } from 'application/stores/ContactStore';
+import { contact as contactAction } from 'application/actions/contact';
+import serviceMail from 'test/mocks/service-mail';
 
-var createMockActionContext = require('fluxible/utils').createMockActionContext;
-var MockService = require('fluxible-plugin-fetchr/utils/MockServiceManager');
-var ContactStore = require('application/stores/ContactStore').ContactStore;
-var contactAction = require('application/actions/contact').contact;
-var serviceMail = require('test/mocks/service-mail');
+describe('contact action', () => {
+  let context;
 
-describe('contact action', function () {
-  var context;
-
-  var fields = {
+  const fields = {
     name: 'alex',
     email: 'alex@test.domain',
     message: 'the truth about seafood is it\'s people'
   };
 
   function getContactData () {
-    var store = context.getStore(ContactStore);
+    const store = context.getStore(ContactStore);
     return {
       fields: store.getContactFields(),
       failure: store.getContactFailure()
@@ -38,27 +36,27 @@ describe('contact action', function () {
     context.executeAction(contactAction, { fields: getFields() }, callback);
   }
 
-  beforeEach(function () {
+  beforeEach(() => {
     context = createMockActionContext({
       stores: [ ContactStore ]
     });
     context.service = new MockService();
-    context.service.setService('contact', function (method, params, body, config, callback) {
+    context.service.setService('contact', (method, params, body, config, callback) => {
       serviceMail.send(params, callback);
     });
   });
 
-  it('should update the ContactStore with one field', function (done) {
-    var partialFields = {
+  it('should update the ContactStore with one field', (done) => {
+    const partialFields = {
       email: fields.email
     };
 
-    context.executeAction(contactAction, { fields: partialFields }, function (err) {
+    context.executeAction(contactAction, { fields: partialFields }, (err) => {
       if (err) {
         return done(err);
       }
 
-      var data = getContactData();
+      const data = getContactData();
 
       expect(data.fields.name).to.equal('');
       expect(data.fields.email).to.deep.equal(partialFields.email);
@@ -69,13 +67,13 @@ describe('contact action', function () {
     });
   });
 
-  it('should update the ContactStore with all fields', function (done) {
-    populateStore(function (err) {
+  it('should update the ContactStore with all fields', (done) => {
+    populateStore((err) => {
       if (err) {
         return done(err);
       }
 
-      var data = getContactData();
+      const data = getContactData();
 
       expect(data.fields).to.deep.equal(fields);
       expect(data.failure).to.be.false;
@@ -84,13 +82,13 @@ describe('contact action', function () {
     });
   });
 
-  it('should send and clear the ContactStore when complete, success', function (done) {
-    context.executeAction(contactAction, { fields: getFields(), complete: true }, function (err) {
+  it('should send and clear the ContactStore when complete, success', (done) => {
+    context.executeAction(contactAction, { fields: getFields(), complete: true }, (err) => {
       if (err) {
         return done(err);
       }
 
-      var data = getContactData();
+      const data = getContactData();
 
       expect(data.fields.name).to.equal('');
       expect(data.fields.email).to.equal('');
@@ -101,21 +99,21 @@ describe('contact action', function () {
     });
   });
 
-  it('should update the ContactStore and send when complete, failure', function (done) {
-    populateStore(function (err) {
+  it('should update the ContactStore and send when complete, failure', (done) => {
+    populateStore((err) => {
       if (err) {
         return done(err);
       }
 
-      var mockFields = getFields();
+      const mockFields = getFields();
       mockFields.emulateError = true;
 
-      context.executeAction(contactAction, { fields: mockFields, complete: true }, function (err) {
+      context.executeAction(contactAction, { fields: mockFields, complete: true }, (err) => {
         if (err) {
           return done(err);
         }
 
-        var data = getContactData();
+        const data = getContactData();
 
         expect(data.fields).to.deep.equal(fields);
         expect(data.failure).to.be.true;

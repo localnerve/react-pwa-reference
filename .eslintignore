@@ -4,3 +4,4 @@ reports
 tmp
 output
 src/application/client/sw/precache.js
+src/tests/node_modules/test/fixtures

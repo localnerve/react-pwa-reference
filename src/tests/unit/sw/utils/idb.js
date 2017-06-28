@@ -3,13 +3,12 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global after, afterEach, before, describe, it */
-'use strict';
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('sw/utils/idb', function () {
-  var treoMock, idb;
+describe('sw/utils/idb', () => {
+  let treoMock, idb;
 
   before('setup sw/utils/idb', function () {
     this.timeout(5000);
@@ -21,11 +20,11 @@ describe('sw/utils/idb', function () {
     treoMock.setValue('some value');
   });
 
-  after(function () {
+  after(() => {
     mocks.swUtilsIdbTreo.end();
   });
 
-  it('should export expected things', function () {
+  it('should export expected things', () => {
     expect(idb.stores).to.be.an('object').that.is.not.empty;
     expect(idb).to.respondTo('all');
     expect(idb).to.respondTo('batch');
@@ -34,31 +33,31 @@ describe('sw/utils/idb', function () {
     expect(idb).to.respondTo('put');
   });
 
-  describe('method', function () {
-    var method = 'get';
-    var storeName;
+  describe('method', () => {
+    const method = 'get';
+    let storeName;
 
-    before(function () {
+    before(() => {
       storeName = Object.keys(idb.stores)[0];
     });
 
-    afterEach(function () {
+    afterEach(() => {
       expect(treoMock.status.getCloseCount()).to.equal(1);
     });
 
-    it('should execute successfully', function (done) {
-      idb[method](storeName).then(function (value) {
+    it('should execute successfully', (done) => {
+      idb[method](storeName).then((value) => {
         expect(value).to.be.a('string').that.is.not.empty;
         done();
       });
     });
 
-    it('should fail successfully', function (done) {
+    it('should fail successfully', (done) => {
       idb[method](storeName, 'emulateError')
-        .then(function () {
+        .then(() => {
           done(new Error('expected failure'));
         })
-        .catch(function (error) {
+        .catch((error) => {
           expect(error.message).to.be.an('string').that.is.not.empty;
           done();
         });

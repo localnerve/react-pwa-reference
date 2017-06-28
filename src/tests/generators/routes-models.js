@@ -63,8 +63,7 @@ export function run (params, done) {
       // Prepare models file output - models cached by main resource fetch
       contents = template.replace(replacement, JSON.stringify(
         cache.get('models').content
-        )
-      );
+      ));
 
       // Compute the output file location
       const outputModels = require.resolve(path.join(

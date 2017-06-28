@@ -2,46 +2,43 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
- /* global beforeEach, describe, it */
-'use strict';
+/* global beforeEach, describe, it */
+import { expect } from 'chai';
+import cache from 'application/server/services/data/cache-interface';
+import cacheResources from 'test/fixtures/cache-resources';
 
-var expect = require('chai').expect;
+describe('data/cache-interface', () => {
+  const models = cacheResources.models;
 
-var cache = require('application/server/services/data/cache-interface');
-var cacheResources = require('test/fixtures/cache-resources');
-
-describe('data/cache-interface', function () {
-  var models = cacheResources.models;
-
-  describe('put', function () {
-    it('should throw if undefined params supplied', function () {
-      expect(function () {
+  describe('put', () => {
+    it('should throw if undefined params supplied', () => {
+      expect(() => {
         cache.put(undefined, false);
       }).to.throw(Error);
     });
 
-    it('should throw if empty params supplied', function () {
-      expect(function () {
+    it('should throw if empty params supplied', () => {
+      expect(() => {
         cache.put(cacheResources.nothing, true);
       }).to.throw(Error);
     });
 
-    it('should throw if no data supplied', function () {
-      expect(function () {
+    it('should throw if no data supplied', () => {
+      expect(() => {
         cache.put(cacheResources.noData, cacheResources.noData.data);
       }).to.throw(Error);
     });
 
-    it('should throw if bad format supplied', function () {
-      expect(function () {
+    it('should throw if bad format supplied', () => {
+      expect(() => {
         cache.put(cacheResources.badFormat, cacheResources.badFormat.data);
       }).to.throw(Error);
     });
 
-    it('should format json if no format supplied', function () {
+    it('should format json if no format supplied', () => {
       cache.put(cacheResources.noFormat, cacheResources.noFormat.data);
 
-      var res = cache.get(cacheResources.noFormat.resource);
+      const res = cache.get(cacheResources.noFormat.resource);
 
       expect(res).to.be.an('object');
       expect(res).to.have.property('models', undefined);
@@ -49,10 +46,10 @@ describe('data/cache-interface', function () {
         .that.deep.equals(cacheResources.jsonData.test);
     });
 
-    it('should put models as expected', function () {
+    it('should put models as expected', () => {
       cache.put(models, models.data);
 
-      var res = cache.get(models.resource);
+      const res = cache.get(models.resource);
 
       expect(res).to.be.an('object');
       expect(res).to.have.property('models', undefined);
@@ -60,12 +57,12 @@ describe('data/cache-interface', function () {
         .that.deep.equals(cacheResources.validModels.models);
     });
 
-    it('should put valid data with no models', function () {
-      var validNone = cacheResources.markup.validNone;
+    it('should put valid data with no models', () => {
+      const validNone = cacheResources.markup.validNone;
 
       cache.put(validNone, validNone.data);
 
-      var res = cache.get(validNone.resource);
+      const res = cache.get(validNone.resource);
 
       expect(res).to.be.an('object');
       expect(res).to.have.property('models', undefined);
@@ -73,12 +70,12 @@ describe('data/cache-interface', function () {
         .that.deep.equals(cacheResources.markupData);
     });
 
-    it('should put valid data with single, valid model', function () {
-      var validSingle = cacheResources.markup.validSingle;
+    it('should put valid data with single, valid model', () => {
+      const validSingle = cacheResources.markup.validSingle;
 
       cache.put(validSingle, validSingle.data);
 
-      var res = cache.get(validSingle.resource);
+      const res = cache.get(validSingle.resource);
 
       expect(res).to.be.an('object');
       expect(res).to.have.property('models')
@@ -89,12 +86,12 @@ describe('data/cache-interface', function () {
         .that.deep.equals(cacheResources.markupData);
     });
 
-    it('should put valid data with multiple, valid model', function () {
-      var validMulti = cacheResources.markup.validMulti;
+    it('should put valid data with multiple, valid model', () => {
+      const validMulti = cacheResources.markup.validMulti;
 
       cache.put(validMulti, validMulti.data);
 
-      var res = cache.get(validMulti.resource);
+      const res = cache.get(validMulti.resource);
 
       expect(res).to.be.an('object');
       expect(res).to.have.property('models')
@@ -103,12 +100,12 @@ describe('data/cache-interface', function () {
         .that.deep.equals(cacheResources.markupData);
     });
 
-    it('should have undefined model if invalid model reference supplied', function () {
-      var invalid = cacheResources.markup.invalid;
+    it('should have undefined model if invalid model reference supplied', () => {
+      const invalid = cacheResources.markup.invalid;
 
       cache.put(invalid, invalid.data);
 
-      var res = cache.get(invalid.resource);
+      const res = cache.get(invalid.resource);
 
       expect(res).to.be.an('object');
       expect(res).to.have.nested.property('models.InvalidModel', undefined);
@@ -117,13 +114,13 @@ describe('data/cache-interface', function () {
     });
   });
 
-  describe('get', function () {
-    it('should return undefined for miss', function () {
+  describe('get', () => {
+    it('should return undefined for miss', () => {
       expect(cache.get('bogus')).to.be.undefined;
     });
 
-    it('should return valid for hit', function () {
-      var res = cache.get(models.resource);
+    it('should return valid for hit', () => {
+      const res = cache.get(models.resource);
 
       expect(res).to.be.an('object');
       expect(res).to.have.property('models', undefined);
@@ -132,27 +129,27 @@ describe('data/cache-interface', function () {
     });
   });
 
-  describe('find', function () {
-    var res;
-    var notFoundValue = 'notFound';
+  describe('find', () => {
+    let res;
+    const notFoundValue = 'notFound';
 
     // assert 'put' cache state preconditions exist.
-    beforeEach('find', function () {
+    beforeEach('find', () => {
       res = cache.get(cacheResources.noFormat.resource);
       expect(res.content.resource).to.equal(cacheResources.jsonData.test.resource);
     });
 
-    it('should return undefined if bad input', function () {
+    it('should return undefined if bad input', () => {
       expect(cache.find()).to.be.undefined;
     });
 
-    it('should find valid item', function () {
-      var result = cache.find(cacheResources.jsonData.test.resource);
+    it('should find valid item', () => {
+      const result = cache.find(cacheResources.jsonData.test.resource);
       expect(result).to.eql(res.content);
     });
 
-    it('should not find valid item', function () {
-      var result = cache.find(notFoundValue);
+    it('should not find valid item', () => {
+      const result = cache.find(notFoundValue);
       expect(result).to.be.undefined;
     });
   });

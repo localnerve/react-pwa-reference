@@ -3,16 +3,16 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global Promise, after, afterEach, before, beforeEach, describe, it */
-'use strict';
 
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
+import { expect } from 'chai';
+import mocks from 'test/mocks';
 
-describe('sw/utils/customHelpers', function () {
-  var toolbox, globalFetch, GlobalRequest, globalCacheStorage, treoMock;
-  var requestUrl = 'someurl', requestCacheUrl = requestUrl + '-cache';
-  var unexpectedFlowError = new Error('Unexpected flow occurred');
-  var customHelpers;
+describe('sw/utils/customHelpers', () => {
+  let toolbox, globalFetch, GlobalRequest, globalCacheStorage, treoMock;
+  const requestUrl = 'someurl';
+  const requestCacheUrl = requestUrl + '-cache';
+  const unexpectedFlowError = new Error('Unexpected flow occurred');
+  let customHelpers;
 
   before('sw/utils/customHelpers', function () {
     this.timeout(5000);
@@ -42,7 +42,7 @@ describe('sw/utils/customHelpers', function () {
       require('application/client/sw/node_modules/sw/utils/customHelpers');
   });
 
-  after('sw/utils/customHelpers', function () {
+  after('sw/utils/customHelpers', () => {
     delete global.response;
     delete global.fetch;
     toolbox.mockTeardown();
@@ -51,14 +51,14 @@ describe('sw/utils/customHelpers', function () {
     mocks.swData.end();
   });
 
-  afterEach(function () {
+  afterEach(() => {
     globalFetch.reset();
     globalFetch.setEmulateError(false);
     globalFetch.setMockResponse(undefined);
   });
 
   function createRequests (method) {
-    var reqOptions = {
+    const reqOptions = {
       method: method || 'GET',
       body: {
         some: 'body'
@@ -74,49 +74,48 @@ describe('sw/utils/customHelpers', function () {
     global.caches = globalCacheStorage.create(options);
   }
 
-  describe('fetchAndCache', function () {
+  describe('fetchAndCache', () => {
     // Test run helper
     function runTest (options, method) {
-      var reqs = createRequests(method);
+      const reqs = createRequests(method);
       return customHelpers.fetchAndCache(reqs.reqNet, reqs.reqCache, options);
     }
 
-    it('should handle fetch error as expected', function (done) {
+    it('should handle fetch error as expected', (done) => {
       globalFetch.setEmulateError(true);
 
-      runTest().then(function () {
+      runTest().then(() => {
         done(unexpectedFlowError);
-      }).catch(function (error) {
+      }).catch((error) => {
         expect(error).to.be.an.instanceof(Error);
         done();
       });
     });
 
-    it('should handle fetch error response as expected', function (done) {
-      var calledTest = 0;
+    it('should handle fetch error response as expected', (done) => {
+      let calledTest = 0;
 
       runTest({
         successResponses: {
-          test: function () {
+          test: () => {
             calledTest++;
             return false;
           }
         }
-      }).then(function () {
+      }).then(() => {
         done(unexpectedFlowError);
-      }).catch(function (error) {
+      }).catch((error) => {
         expect(calledTest).to.equal(1);
         expect(error).to.be.an.instanceof(global.Response);
         done();
       });
     });
 
-    it('should call successHandler as specified, successHandler can reject',
-    function (done) {
-      var calledSuccessHandler = 0;
+    it('should call successHandler as specified, successHandler can reject', (done) => {
+      let calledSuccessHandler = 0;
 
       runTest({
-        successHandler: function (reqNet, response, reqCache) {
+        successHandler: (reqNet, response, reqCache) => {
           expect(reqNet).to.be.an.instanceof(GlobalRequest);
           expect(reqNet.url).to.equal(requestUrl);
           expect(reqCache).to.be.an.instanceof(GlobalRequest);
@@ -125,18 +124,18 @@ describe('sw/utils/customHelpers', function () {
           calledSuccessHandler++;
           return Promise.reject(response);
         }
-      }).then(function () {
+      }).then(() => {
         done(unexpectedFlowError);
-      }).catch(function (error) {
+      }).catch((error) => {
         expect(calledSuccessHandler).to.equal(1);
         expect(error).to.be.an.instanceof(global.Response);
         done();
       });
     });
 
-    it('should allow successHandler to substitute a response', function (done) {
-      var calledSuccessHandler = 0;
-      var subResponse = new global.Response({
+    it('should allow successHandler to substitute a response', (done) => {
+      let calledSuccessHandler = 0;
+      const subResponse = new global.Response({
         some: 'super-special-sub-response'
       }, {
         status: 200
@@ -144,44 +143,44 @@ describe('sw/utils/customHelpers', function () {
 
       // Define post requests to avoid running cache code.
       runTest({
-        successHandler: function () {
+        successHandler: () => {
           calledSuccessHandler++;
           return Promise.resolve(subResponse);
         }
-      }, 'POST').then(function (response) {
+      }, 'POST').then((response) => {
         expect(calledSuccessHandler).to.equal(1);
         expect(response).to.eql(subResponse);
         done();
-      }).catch(function (error) {
+      }).catch((error) => {
         done(error || unexpectedFlowError);
       });
     });
 
-    describe('CacheStorage', function () {
-      beforeEach(function () {
+    describe('CacheStorage', () => {
+      beforeEach(() => {
         toolbox.mockSetup();
       });
 
-      afterEach(function () {
+      afterEach(() => {
         toolbox.mockTeardown();
         delete global.caches;
       });
 
-      it('should fail caches.open as expected', function (done) {
+      it('should fail caches.open as expected', (done) => {
         setupCacheStorage({ openFail: true });
 
-        runTest().then(function () {
+        runTest().then(() => {
           done(unexpectedFlowError);
-        }).catch(function (error) {
+        }).catch((error) => {
           expect(error).to.be.an.instanceof(Error);
           done();
         });
       });
 
       it('should handle no previous response, call cacheHandler as specified' +
-      ' AND cacheHandler can substitute response', function (done) {
-        var calledCacheHandler = 0;
-        var subResponse = new global.Response({
+      ' AND cacheHandler can substitute response', (done) => {
+        let calledCacheHandler = 0;
+        const subResponse = new global.Response({
           some: 'ch-substituted-response-body'
         });
 
@@ -192,7 +191,7 @@ describe('sw/utils/customHelpers', function () {
         });
 
         runTest({
-          cacheHandler: function (cache, reqCache, prevResp, newResp) {
+          cacheHandler: (cache, reqCache, prevResp, newResp) => {
             expect(cache).to.be.an.instanceof(globalCacheStorage.Cache);
             expect(reqCache).to.be.an.instanceof(GlobalRequest);
             expect(reqCache.url).to.equal(requestCacheUrl);
@@ -201,32 +200,30 @@ describe('sw/utils/customHelpers', function () {
             calledCacheHandler++;
             return Promise.resolve(subResponse);
           }
-        }).then(function (response) {
+        }).then((response) => {
           expect(calledCacheHandler).to.equal(1);
           expect(response).to.eql(subResponse);
           done();
-        }).catch(function (error) {
+        }).catch((error) => {
           done(error || unexpectedFlowError);
         });
       });
 
-      it('should get previous response and give to cacheHandler',
-      function (done) {
-        var calledCacheHandler = 0;
-        var prevResponse = new global.Response({
+      it('should get previous response and give to cacheHandler', (done) => {
+        let calledCacheHandler = 0;
+        const prevResponse = new global.Response({
           some: 'ch-previous-response'
         });
 
-        var cacheNames = {};
+        const cacheNames = {};
         cacheNames[toolbox.options.cache.name] = new globalCacheStorage.Cache();
         cacheNames[toolbox.options.cache.name].put(requestCacheUrl, prevResponse);
         setupCacheStorage({
           cacheNames: cacheNames
         });
 
-
         runTest({
-          cacheHandler: function (cache, reqCache, prevResp, newResp) {
+          cacheHandler: (cache, reqCache, prevResp, newResp) => {
             expect(cache).to.be.an.instanceof(globalCacheStorage.Cache);
             expect(reqCache).to.be.an.instanceof(GlobalRequest);
             expect(reqCache.url).to.equal(requestCacheUrl);
@@ -235,17 +232,16 @@ describe('sw/utils/customHelpers', function () {
             calledCacheHandler++;
             return Promise.resolve(newResp);
           }
-        }).then(function () {
+        }).then(() => {
           expect(calledCacheHandler).to.equal(1);
           done();
-        }).catch(function (error) {
+        }).catch((error) => {
           done(error || unexpectedFlowError);
         });
       });
 
-      it('should store new response, no cacheHandler, no successHandler',
-      function (done) {
-        var newResponse = new global.Response({
+      it('should store new response, no cacheHandler, no successHandler', (done) => {
+        const newResponse = new global.Response({
           some: 'new-response'
         }, {
           status: 200
@@ -254,31 +250,31 @@ describe('sw/utils/customHelpers', function () {
         globalFetch.setMockResponse(newResponse);
         setupCacheStorage();
 
-        runTest().then(function (response) {
+        runTest().then((response) => {
           expect(response).to.eql(newResponse);
           done();
-        }).catch(function (error) {
+        }).catch((error) => {
           done(error || unexpectedFlowError);
         });
       });
     });
   });
 
-  describe('contentRace', function () {
-    var calledPostMessage, getReqs, cacheResponse, cacheResponseIdentical,
+  describe('contentRace', () => {
+    let calledPostMessage, getReqs, cacheResponse, cacheResponseIdentical,
       networkResponse;
 
-    before('contentRace', function () {
+    before('contentRace', () => {
       toolbox.mockSetup();
       global.clients = {
-        matchAll: function () {
+        matchAll: () => {
           return Promise.resolve([{
             url: {
-              indexOf: function () {
+              indexOf: () => {
                 return 0;
               }
             },
-            postMessage: function () {
+            postMessage: () => {
               calledPostMessage++;
             }
           }]);
@@ -286,12 +282,12 @@ describe('sw/utils/customHelpers', function () {
       };
     });
 
-    after('contentRace', function () {
+    after('contentRace', () => {
       delete global.clients;
       toolbox.mockTeardown();
     });
 
-    beforeEach('contentRace', function () {
+    beforeEach('contentRace', () => {
       calledPostMessage = 0;
       getReqs = createRequests('GET');
 
@@ -305,7 +301,7 @@ describe('sw/utils/customHelpers', function () {
 
       cacheResponseIdentical = networkResponse.clone();
 
-      var cacheNames = {};
+      const cacheNames = {};
       cacheNames[toolbox.options.cache.name] = new globalCacheStorage.Cache();
       cacheNames[toolbox.options.cache.name].put(requestCacheUrl, cacheResponse);
       setupCacheStorage({
@@ -315,7 +311,7 @@ describe('sw/utils/customHelpers', function () {
       globalFetch.setMockResponse(networkResponse);
     });
 
-    afterEach('contentRace', function () {
+    afterEach('contentRace', () => {
       calledPostMessage = 0;
     });
 
@@ -323,28 +319,27 @@ describe('sw/utils/customHelpers', function () {
       options = options || {};
 
       return promise
-        .then(function (response) {
+        .then((response) => {
           if (!options.ignoreCacheResponse) {
             expect(response).to.eql(cacheResponse);
           }
           return global.caches.open(toolbox.options.cache.name);
         })
-        .then(function (cache) {
+        .then((cache) => {
           return cache.match(requestCacheUrl);
         })
-        .then(function (response) {
+        .then((response) => {
           if (!options.ignoreNetworkResponse) {
             expect(response).to.eql(networkResponse);
           }
         });
     }
 
-    it('should respond from cache and update cache with new response',
-    function (done) {
+    it('should respond from cache and update cache with new response', (done) => {
       testCacheAndNetwork(
         customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache)
       )
-        .then(function () {
+        .then(() => {
           // Cache responded, but wait for network to completely resolve to
           // inspect side effects like postMessage.
           setTimeout(() => {
@@ -353,17 +348,16 @@ describe('sw/utils/customHelpers', function () {
             done();
           }, 100);
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
 
-    it('should call updateHandler as specified', function (done) {
-      var calledUpdateHandler = 0;
+    it('should call updateHandler as specified', (done) => {
+      let calledUpdateHandler = 0;
 
       testCacheAndNetwork(
-        customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache,
-        function (req, res) {
+        customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache, (req, res) => {
           expect(req).to.be.an.instanceof(GlobalRequest);
           expect(req).to.eql(getReqs.reqCache);
           expect(res).to.be.an.instanceof(global.Response);
@@ -371,7 +365,7 @@ describe('sw/utils/customHelpers', function () {
           calledUpdateHandler++;
         })
       )
-        .then(function () {
+        .then(() => {
           // wait to inspect side effect evidence
           setTimeout(() => {
             expect(calledPostMessage).to.equal(0);
@@ -379,74 +373,70 @@ describe('sw/utils/customHelpers', function () {
             done();
           }, 100);
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
 
-    it('should not call updateHandler if no difference', function (done) {
-      var calledUpdateHandler = 0;
+    it('should not call updateHandler if no difference', (done) => {
+      let calledUpdateHandler = 0;
 
       global.caches.open(toolbox.options.cache.name)
-        .then(function (cache) {
+        .then((cache) => {
           // Make previously cached response identical to networkResponse.
           return cache.put(requestCacheUrl, cacheResponseIdentical);
         })
-        .then(function () {
+        .then(() => {
           return testCacheAndNetwork(
-            customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache,
-            function () {
+            customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache, () => {
               calledUpdateHandler++;
             }), {
               ignoreCacheResponse: true
             }
           );
         })
-        .then(function () {
+        .then(() => {
           // wait to inspect side effect evidence
           setTimeout(() => {
             expect(calledUpdateHandler).to.equal(0);
             done();
           }, 100)
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
 
-    it('should handle no previous cached response, not call updateHandler',
-    function (done) {
-      var calledUpdateHandler = 0;
+    it('should handle no previous cached response, not call updateHandler', (done) => {
+      let calledUpdateHandler = 0;
 
       global.caches.open(toolbox.options.cache.name)
-        .then(function (cache) {
+        .then((cache) => {
           // Remove previously cached response.
           return cache.put(requestCacheUrl, undefined);
         })
-        .then(function () {
+        .then(() => {
           return testCacheAndNetwork(
-            customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache,
-            function () {
+            customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache, () => {
               calledUpdateHandler++;
             }), {
               ignoreCacheResponse: true
             }
           );
         })
-        .then(function () {
+        .then(() => {
           // wait to inspect the side effect evidence
           setTimeout(() => {
             expect(calledUpdateHandler).to.equal(0);
             done();
           }, 100)
         })
-        .catch(function (error) {
+        .catch((error) => {
           done(error || unexpectedFlowError);
         });
     });
 
-    it('should handle both no cached response AND bad network response',
-    function (done) {
+    it('should handle both no cached response AND bad network response', (done) => {
       globalFetch.setMockResponse(new global.Response({
         body: 'bad'
       }, {
@@ -454,11 +444,11 @@ describe('sw/utils/customHelpers', function () {
       }));
 
       global.caches.open(toolbox.options.cache.name)
-        .then(function (cache) {
+        .then((cache) => {
           // Remove previously cached response.
           return cache.put(requestCacheUrl, undefined);
         })
-        .then(function () {
+        .then(() => {
           return testCacheAndNetwork(
             customHelpers.contentRace(getReqs.reqNet, getReqs.reqCache), {
               ignoreCacheResponse: true,
@@ -466,10 +456,10 @@ describe('sw/utils/customHelpers', function () {
             }
           );
         })
-        .then(function () {
+        .then(() => {
           done(unexpectedFlowError);
         })
-        .catch(function () {
+        .catch(() => {
           done();
         });
     });

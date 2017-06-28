@@ -45,21 +45,20 @@ function getPushRequests (dehydratedRequests) {
 
   if ('pushManager' in self.registration) {
     return self.registration.pushManager.getSubscription().then((subscribed) => {
-      const
-        updateSubRequests = filters.latest(
-          dehydratedRequests, syncable.types.push, [
-            syncable.ops.updateSubscription
-          ]
-        ),
-        subUnsubRequests = filters.latest(
-          dehydratedRequests, syncable.types.push, [
-            syncable.ops.subscribe,
-            syncable.ops.unsubscribe
-          ]
-        ),
-        actionableSubscribe = subUnsubRequests.length > 0 &&
-          subUnsubRequests[0].fallback.operation === syncable.ops.subscribe,
-        actionableUnsubscribe = subUnsubRequests.length > 0 &&
+      const updateSubRequests = filters.latest(
+        dehydratedRequests, syncable.types.push, [
+          syncable.ops.updateSubscription
+        ]
+      );
+      const subUnsubRequests = filters.latest(
+        dehydratedRequests, syncable.types.push, [
+          syncable.ops.subscribe,
+          syncable.ops.unsubscribe
+        ]
+      );
+      const actionableSubscribe = subUnsubRequests.length > 0 &&
+          subUnsubRequests[0].fallback.operation === syncable.ops.subscribe;
+      const actionableUnsubscribe = subUnsubRequests.length > 0 &&
           subUnsubRequests[0].fallback.operation === syncable.ops.unsubscribe;
 
       // [1] unconditionally add updateSubscription requests

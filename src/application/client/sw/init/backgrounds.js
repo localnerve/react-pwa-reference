@@ -15,7 +15,7 @@ const debug = debugLib('init:backgrounds');
  * Escape a string for usage in a regular expression.
  */
 function regexEscape(s) {
-  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
 /**
@@ -57,7 +57,7 @@ function precacheBackgrounds (backgroundUrls, request, values, options) {
 
     if (current && background && current !== background) {
       // build the request for the next background
-      const reCurrent = new RegExp('(' + regexEscape(current) + ')(\/)?$');
+      const reCurrent = new RegExp('(' + regexEscape(current) + ')(/)?$');
       const notCurrent = request.url.replace(reCurrent, background + '$2');
       const reqNotCurrent = new Request(notCurrent, {
         mode: 'no-cors' // these are from a cdn
