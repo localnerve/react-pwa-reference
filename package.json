@@ -73,7 +73,7 @@
     "babel-register": "6.24.1",
     "cannibalizr": "~0.1.5",
     "chai": "4.0.2",
-    "chai-as-promised": "7.0.0",
+    "chai-as-promised": "7.1.0",
     "colors": "1.1.2",
     "coveralls": "2.13.1",
     "del": "3.0.0",
