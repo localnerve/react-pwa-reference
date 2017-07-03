@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.2.17",
+  "version": "0.2.18",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -60,7 +60,7 @@
     "report-dir": "reports/coverage"
   },
   "devDependencies": {
-    "async-lock": "0.3.10",
+    "async-lock": "1.0.0",
     "autoprefixer": "7.1.1",
     "babel-cli": "6.24.1",
     "babel-core": "6.25.0",
@@ -73,7 +73,7 @@
     "babel-register": "6.24.1",
     "cannibalizr": "~0.1.5",
     "chai": "4.0.2",
-    "chai-as-promised": "7.0.0",
+    "chai-as-promised": "7.1.0",
     "colors": "1.1.2",
     "coveralls": "2.13.1",
     "del": "3.0.0",
@@ -92,7 +92,7 @@
     "gulp-sass": "3.1.0",
     "gulp-svgmin": "1.2.4",
     "gulp-webpagetest": "1.1.1",
-    "jsdom": "11.0.0",
+    "jsdom": "11.1.0",
     "json-loader": "0.5.4",
     "lodash-webpack-plugin": "0.11.4",
     "mkdirp": "0.5.1",
