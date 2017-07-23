@@ -88,7 +88,7 @@
     "gulp-imagemin": "3.3.0",
     "gulp-nodemon": "2.2.1",
     "gulp-postcss": "7.0.0",
-    "gulp-rev": "^7.0.0",
+    "gulp-rev": "^8.0.0",
     "gulp-sass": "3.1.0",
     "gulp-svgmin": "1.2.4",
     "gulp-webpagetest": "1.1.1",
