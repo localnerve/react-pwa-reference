@@ -4,7 +4,7 @@
  *
  * Only rendered on the server
  */
-/*eslint react/no-danger:0 */
+/* eslint-disable react/no-danger-with-children */
 import React from 'react';
 import PropTypes from 'prop-types';
 import path from 'path';
@@ -153,7 +153,7 @@ const html = provideContext(
 
     return {
       currentPageTitle: pageTitle,
-      imageServiceHost: imageServiceUrl.replace(/https?\:/, '')
+      imageServiceHost: imageServiceUrl.replace(/https?:/, '')
     };
   })
 );

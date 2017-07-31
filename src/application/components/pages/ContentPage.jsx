@@ -30,7 +30,7 @@ class ContentPage extends React.Component {
     return spinnerChange || contentChange;
   }
 
-  /*eslint-disable react/no-danger */
+  /* eslint-disable react/no-danger-with-children */
   renderContent () {
     if (this.props.spinner) {
       return (
@@ -43,7 +43,7 @@ class ContentPage extends React.Component {
       );
     }
   }
-  /*eslint-enable react/no-danger */
+  /* eslint-enable react/no-danger-with-children */
 }
 
 export default ContentPage;

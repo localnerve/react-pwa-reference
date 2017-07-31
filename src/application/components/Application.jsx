@@ -216,10 +216,9 @@ const application = provideContext(
           }
         };
       }
-    )
-  , {
-    enableScroll: false
-  })
+    ), {
+      enableScroll: false
+    })
 );
 
 export default application;
