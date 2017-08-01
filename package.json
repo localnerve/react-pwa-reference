@@ -116,7 +116,7 @@
     "compression": "1.7.0",
     "connect-modrewrite": "0.10.1",
     "cookie-parser": "1.4.3",
-    "cross-env": "5.0.1",
+    "cross-env": "5.0.2",
     "csurf": "1.9.0",
     "debug": "github:localnerve/debug#worker-support",
     "diff-match-patch": "1.0.0",
