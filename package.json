@@ -111,7 +111,7 @@
   },
   "dependencies": {
     "amqplib": "0.5.1",
-    "body-parser": "1.18.0",
+    "body-parser": "1.18.1",
     "classnames": "2.2.5",
     "compression": "1.7.0",
     "connect-modrewrite": "0.10.1",
