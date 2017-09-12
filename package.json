@@ -149,7 +149,7 @@
     "superagent": "3.6.0",
     "sw-toolbox": "3.6.0",
     "treo": "0.5.1",
-    "web-push": "3.2.2"
+    "web-push": "3.2.3"
   },
   "engines": {
     "node": ">= 6.x"
