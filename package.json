@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.2.36",
+  "version": "0.2.37",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -77,7 +77,7 @@
     "colors": "1.1.2",
     "coveralls": "2.13.1",
     "del": "3.0.0",
-    "eslint": "4.6.0",
+    "eslint": "4.6.1",
     "eslint-plugin-react": "7.3.0",
     "fg-loadcss": "1.3.1",
     "fontfaceobserver": "2.0.12",
@@ -149,7 +149,7 @@
     "superagent": "3.6.0",
     "sw-toolbox": "3.6.0",
     "treo": "0.5.1",
-    "web-push": "3.2.2"
+    "web-push": "3.2.3"
   },
   "engines": {
     "node": ">= 6.x"
