@@ -125,7 +125,7 @@
     "debug": "2.6.8",
     "diff-match-patch": "1.0.0",
     "es6-promise": "4.1.1",
-    "express": "4.15.3",
+    "express": "5.0.0-alpha.6",
     "express-error-handler": "localnerve/express-error-handler",
     "fluxible": "1.4.0",
     "fluxible-addons-react": "0.2.13",
