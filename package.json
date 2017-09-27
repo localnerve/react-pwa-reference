@@ -148,7 +148,7 @@
     "react-transition-group": "~1.2.0",
     "remarkable": "1.7.1",
     "serialize-javascript": "1.4.0",
-    "serve-favicon": "2.4.4",
+    "serve-favicon": "2.4.5",
     "sitemap-xml": "localnerve/sitemap-xml",
     "superagent": "3.6.0",
     "sw-toolbox": "3.6.0",
