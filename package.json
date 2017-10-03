@@ -136,7 +136,7 @@
     "lodash": "4.17.4",
     "morgan": "1.9.0",
     "nconf": "0.8.5",
-    "nodemailer": "4.1.1",
+    "nodemailer": "4.1.2",
     "object-assign": "4.1.1",
     "prop-types": "~15.5.4",
     "react": "~15.6.1",
