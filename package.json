@@ -150,7 +150,7 @@
     "serialize-javascript": "1.4.0",
     "serve-favicon": "2.4.5",
     "sitemap-xml": "localnerve/sitemap-xml",
-    "superagent": "3.6.2",
+    "superagent": "3.6.3",
     "sw-toolbox": "3.6.0",
     "treo": "0.5.1",
     "web-push": "3.2.3"
