@@ -16,14 +16,14 @@ describe('data/fetch', () => {
   before(function () {
     this.timeout(5000);
 
-    mocks.superAgent.begin();
+    mocks.requestLib.begin();
     fetch = require('application/server/services/data/fetch');
     cache = require('./cache-interface');
-    request = require('superagent');
+    request = require('request');
   });
 
   after(() => {
-    mocks.superAgent.end();
+    mocks.requestLib.end();
   });
 
   beforeEach(() => {

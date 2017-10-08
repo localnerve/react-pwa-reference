@@ -3,7 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global Promise */
-import request from 'superagent';
+import request from 'request';
 import debugLib from 'debug';
 import configs from 'configs';
 import cache from './cache-interface';
@@ -29,41 +29,51 @@ export function fetchOne (params, callback) {
     params.url = config.FRED.branchify(params.url);
   }
 
-  request.get(params.url)
-    .set('User-Agent', 'superagent')
-    .set('Accept', config.FRED.mediaType())
-    .end((err, res) => {
-      if (err) {
-        debug(`GET failed for ${params.url}: ${err}`);
-        return callback(err);
+  request.get({
+    url: params.url,
+    json: true,
+    headers: {
+      'User-Agent': 'fred-client',
+      'Accept': config.FRED.mediaType()
+    }
+  }, (err, res, body) => {
+    if (err) {
+      debug(
+        `GET failed for ${params.url} [${res ? res.statusCode : 0}]: ${err}`
+      );
+      return callback(err);
+    }
+
+    const msgSuccess = (
+      res && res.statusCode >= 200 && res.statusCode < 300 &&
+      Object.prototype.toString.call(body) === '[object Object]'
+    );
+    const content =  msgSuccess && body.content;
+
+    if (content) {
+      debug(`Content successfully retrieved for ${params.url}`);
+
+      cache.put(
+        params,
+        Buffer.from(content, config.FRED.contentEncoding()).toString()
+      );
+      const resource = cache.get(params.resource);
+
+      if (resource) {
+        return callback(null, resource);
       }
+      return callback(
+        new Error(
+          `Requested resource ${params.resource} not found for ${params.url}`
+        )
+      );
+    }
 
-      let resource;
-      const content = res.body && res.body.content;
-
-      if (content) {
-        debug(`Content successfully retrieved for ${params.url}`);
-
-        cache.put(
-          params, new Buffer(content, config.FRED.contentEncoding()).toString()
-        );
-
-        resource = cache.get(params.resource);
-
-        if (resource) {
-          return callback(null, resource);
-        }
-
-        return callback(
-          new Error(
-            `Requested resource ${params.resource} not found for ${params.url}`
-          )
-        );
-      }
-
-      debug(`Content not found for ${params.url}`, res.body);
-      return callback(new Error(`Content not found for ${params.url}`));
-    });
+    debug(`Content not fetched for ${params.url}[${res.statusCode}]`, body);
+    return callback(
+      new Error(`Content not fetched for ${params.url}[${res.statusCode}]`)
+    );
+  });
 }
 
 /**
