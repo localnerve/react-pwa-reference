@@ -2,6 +2,7 @@
  * Copyright (c) 2016, 2017 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
+import path from 'path';
 import webpack from 'webpack';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import uglifyPluginFactory from './plugins/uglify';
@@ -36,11 +37,13 @@ export default function mainConfig (settings, type) {
       publicPath: `${settings.web.scripts}/`
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.(js|jsx)$/,
-          exclude: /^\/node_modules/,
-          loader: 'babel-loader'
+          include: [
+            `${path.resolve(settings.src.baseDir)}`
+          ],
+          use: 'babel-loader'
         }
       ]
     },

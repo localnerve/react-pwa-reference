@@ -3,13 +3,15 @@
     "lodash"
   ],
   "presets": [
-    "es2015",
+    "env",
     "react"
   ],
   "ignore": [
-    "react-pwa-boilerplate/node_modules/**",
-    "reports/*",
-    "dist/*"
+    "assets/**",
+    "dist/**",
+    "output/**",
+    "reports/**",
+    "tmp/**"
   ],
   "env": {
     "cover": {
