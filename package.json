@@ -142,7 +142,7 @@
     "react": "~16.0.0",
     "react-dom": "~16.0.0",
     "react-element-size-reporter": "~0.5.1",
-    "react-modal": "3.0.0",
+    "react-modal": "3.0.2",
     "react-spinner": "0.2.7",
     "react-swipe": "github:localnerve/react-swipe#v4.3.0",
     "react-transition-group": "~1.2.0",
