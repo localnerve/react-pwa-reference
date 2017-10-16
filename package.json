@@ -120,7 +120,7 @@
     "compression": "1.7.1",
     "connect-modrewrite": "0.10.1",
     "cookie-parser": "1.4.3",
-    "cross-env": "5.0.5",
+    "cross-env": "5.1.0",
     "csurf": "1.9.0",
     "debug": "2.6.9",
     "diff-match-patch": "1.0.0",
