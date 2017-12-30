@@ -89,7 +89,7 @@
     "gulp": "gulpjs/gulp#6d71a65",
     "gulp-clean-css": "3.9.0",
     "gulp-if": "2.0.2",
-    "gulp-imagemin": "4.0.0",
+    "gulp-imagemin": "4.1.0",
     "gulp-nodemon": "2.2.1",
     "gulp-postcss": "7.0.0",
     "gulp-rev": "^8.0.0",
