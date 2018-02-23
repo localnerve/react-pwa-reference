@@ -152,7 +152,7 @@
     "sitemap-xml": "localnerve/sitemap-xml",
     "sw-toolbox": "3.6.0",
     "treo": "0.5.1",
-    "web-push": "3.2.5"
+    "web-push": "3.3.0"
   },
   "engines": {
     "node": ">= 6.x"
