@@ -108,7 +108,7 @@
     "rimraf": "2.6.2",
     "sw-precache": "5.2.1",
     "wd": "^1.3.0",
-    "webpack": "~3.11.0",
+    "webpack": "~4.0.0",
     "webpack-bundle-size-analyzer": "2.7.0",
     "xml2js": "^0.4.16"
   },
