@@ -64,7 +64,7 @@
     ]
   },
   "devDependencies": {
-    "async-lock": "1.1.1",
+    "async-lock": "1.1.2",
     "autoprefixer": "8.0.0",
     "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
