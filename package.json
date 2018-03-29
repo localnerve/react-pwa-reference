@@ -148,7 +148,7 @@
     "remarkable": "1.7.1",
     "request": "2.85.0",
     "serialize-javascript": "1.4.0",
-    "serve-favicon": "2.4.5",
+    "serve-favicon": "2.5.0",
     "sitemap-xml": "localnerve/sitemap-xml",
     "sw-toolbox": "3.6.0",
     "treo": "0.5.1",
