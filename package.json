@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.4.37",
+  "version": "0.5.0",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -137,9 +137,9 @@
     "nconf": "0.9.1",
     "nodemailer": "4.6.4",
     "object-assign": "4.1.1",
-    "prop-types": "~15.6.0",
-    "react": "~16.2.0",
-    "react-dom": "~16.2.0",
+    "prop-types": "~15.6.1",
+    "react": "~16.3.0",
+    "react-dom": "~16.3.0",
     "react-element-size-reporter": "~0.5.1",
     "react-modal": "3.3.2",
     "react-spinner": "0.2.7",
@@ -155,6 +155,6 @@
     "web-push": "3.3.0"
   },
   "engines": {
-    "node": ">= 6.x"
+    "node": "8.x"
   }
 }
