@@ -38,7 +38,7 @@ deploy:
     - master
     - production
     repo: localnerve/react-pwa-reference
-    node: 6
+    node: 8
 after_deploy:
 - npm install
 - curl -i $DEPLOY_URL
