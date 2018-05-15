@@ -107,7 +107,7 @@
     "precommit-hook": "3.0.0",
     "rimraf": "2.6.2",
     "sw-precache": "5.2.1",
-    "wd": "1.6.1",
+    "wd": "1.7.0",
     "webpack": "~3.11.0",
     "webpack-bundle-size-analyzer": "2.7.0",
     "xml2js": "^0.4.16"
