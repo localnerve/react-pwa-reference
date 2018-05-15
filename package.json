@@ -146,7 +146,7 @@
     "react-swipe": "github:localnerve/react-swipe#v4.3.0",
     "react-transition-group": "~1.2.0",
     "remarkable": "1.7.1",
-    "request": "2.85.0",
+    "request": "2.86.0",
     "serialize-javascript": "1.5.0",
     "serve-favicon": "2.5.0",
     "sitemap-xml": "localnerve/sitemap-xml",
