@@ -96,7 +96,7 @@
     "gulp-sass": "^4.0.0",
     "gulp-svgmin": "1.2.4",
     "gulp-webpagetest": "1.1.1",
-    "jsdom": "11.10.0",
+    "jsdom": "11.11.0",
     "json-loader": "0.5.7",
     "lodash-webpack-plugin": "0.11.5",
     "mkdirp": "0.5.1",
