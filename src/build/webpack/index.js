@@ -2,6 +2,7 @@
  * Copyright (c) 2016 - 2018 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
+/* eslint-disable no-console */
 import path from 'path';
 import webpack from 'webpack';
 import inlineConfig from './inline';
@@ -39,6 +40,20 @@ export default function webpackTaskFactory (group, settings, target) {
 
     webpack(configFactories.map((configFactory) => {
       return configFactory(settings, target);
-    }), done);
+    }), (err, stats) => {
+      if (err) {
+        console.error('webpack error', err);
+      }
+
+      const info = stats.toJson();
+      if (stats.hasErrors()) {
+        console.error('webpack compile errors:', info.errors);
+      }
+      if (stats.hasWarnings()) {
+        console.warn('webpack compile warnings:', info.warnings);
+      }
+
+      done(err);
+    });
   };
 }

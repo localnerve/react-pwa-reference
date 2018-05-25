@@ -5,6 +5,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
+import makeMode from './utils/mode';
 import uglifyPluginFactory from './plugins/uglify';
 import { statsPlugin, statsPluginOptions } from './plugins/stats';
 
@@ -18,16 +19,13 @@ import { statsPlugin, statsPluginOptions } from './plugins/stats';
 export default function mainConfig (settings, type) {
   const devtoolModuleFilenameTemplate = 'webpack:///main/[resource-path]';
   const reactDOMServerStub = 'utils/react/reactDOMServer';
-  const additionalPlugins = [];
   const definitions = {
-    DEBUG: type === 'dev',
-    'process.env': {
-      NODE_ENV: JSON.stringify(type === 'dev' ? 'development' : 'production')
-    }
+    DEBUG: type === 'dev'
   };
   const statsOptions = statsPluginOptions(settings);
 
   const config = {
+    mode: makeMode(type),
     resolve: {
       extensions: ['.js', '.jsx']
     },
@@ -43,7 +41,7 @@ export default function mainConfig (settings, type) {
           include: [
             `${path.resolve(settings.src.baseDir)}`
           ],
-          use: 'babel-loader'
+          loader: 'babel-loader'
         }
       ]
     },
@@ -52,8 +50,6 @@ export default function mainConfig (settings, type) {
         collections: true
       }),
       new webpack.DefinePlugin(definitions),
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.NormalModuleReplacementPlugin(
         /es6-promise/, require.resolve('es6-promise')
       ),
@@ -74,14 +70,16 @@ export default function mainConfig (settings, type) {
       ),
       new webpack.NormalModuleReplacementPlugin(
         /^react-?$/, require.resolve('react')
-      )
+      ),
+      function () {
+        const statsFile = type === 'prod' ? 'webpack-stats-main.json' : false;
+        return statsPlugin(this, statsOptions, statsFile);
+      }
     ],
     node: {
       setImmediate: false
     },
-    stats: {
-      colors: true
-    }
+    stats: 'verbose'
   };
 
   if (type === 'dev') {
@@ -91,7 +89,11 @@ export default function mainConfig (settings, type) {
     config.output.filename = '[name].[chunkhash].min.js';
     config.output.chunkFilename = '[name].[chunkhash].min.js';
     if (type === 'prod') {
-      additionalPlugins.push(uglifyPluginFactory());
+      config.optimization = {
+        minimizer: [
+          uglifyPluginFactory()
+        ]
+      };
     }
   }
 
@@ -99,13 +101,6 @@ export default function mainConfig (settings, type) {
     config.output.devtoolModuleFilenameTemplate = devtoolModuleFilenameTemplate;
     config.devtool = 'source-map';
   }
-
-  Array.prototype.push.apply(config.plugins, additionalPlugins.concat(
-    function () {
-      const statsFile = type === 'prod' ? 'webpack-stats-main.json' : false;
-      return statsPlugin(this, statsOptions, statsFile);
-    }
-  ));
 
   return config;
 }
