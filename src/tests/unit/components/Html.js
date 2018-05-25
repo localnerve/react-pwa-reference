@@ -133,7 +133,7 @@ describe('html component', () => {
     const component =
       testUtils.scryRenderedDOMComponentsWithTag(htmlComponent, 'script');
 
-    expect(component.length).to.equal(5);
+    expect(component.length).to.equal(4);
     expect(component[0].textContent).to.equal(testProps.trackingSnippet);
     expect(
       component[1].getAttribute('src')
@@ -143,7 +143,9 @@ describe('html component', () => {
     ).to.equal(testProps.swMainScript);
     expect(component[2].textContent).to.equal(testProps.inlineScript);
     expect(component[3].textContent).to.equal(testProps.state);
+    /*
     expect(component[4].textContent).to.be.empty;
     expect(component[4].getAttribute('src')).to.equal(testProps.mainScript);
+    */
   });
 });

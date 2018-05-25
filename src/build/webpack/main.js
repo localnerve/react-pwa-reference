@@ -32,7 +32,10 @@ export default function mainConfig (settings, type) {
     entry: `./${settings.src.clientEntry}`,
     output: {
       path: settings.webpack.absoluteOutputPath,
-      publicPath: `${settings.web.scripts}/`
+      publicPath: `${settings.web.scripts}/`,
+      library: 'AppMain',
+      libraryTarget: 'window',
+      libraryExport: 'default'
     },
     module: {
       rules: [
