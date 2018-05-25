@@ -2,7 +2,7 @@
  * Copyright (c) 2016 - 2018 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-import webpack from 'webpack';
+import makeMode from './utils/mode';
 import uglifyPluginFactory from './plugins/uglify';
 import { statsPlugin, statsPluginOptions } from './plugins/stats';
 
@@ -18,6 +18,7 @@ export default function swMainConfig (settings, type) {
   const statsOptions = statsPluginOptions(settings);
 
   const config = {
+    mode: makeMode(type),
     entry: {
       sw: `./${settings.src.serviceWorker.entry}`
     },
@@ -28,22 +29,25 @@ export default function swMainConfig (settings, type) {
       filename: '[name].js'
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.json$/,
           exclude: /^\/node_modules/,
-          loader: 'json-loader'
+          type: 'json'
         },
         {
+          test: /\.js$/,
           exclude: /(^\/node_modules|\.json$)/,
           loader: 'babel-loader'
         }
       ]
     },
     target: 'webworker',
+    stats: 'verbose',
     plugins: [
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurrenceOrderPlugin()
+      function () {
+        return statsPlugin(this, statsOptions);
+      }
     ]
   };
 
@@ -51,12 +55,12 @@ export default function swMainConfig (settings, type) {
     config.devtool = 'source-map';
     config.output.devtoolModuleFilenameTemplate = devtoolModuleFilenameTemplate;
   } else {
-    config.plugins.push(uglifyPluginFactory());
+    config.optimization = {
+      minimizer: [
+        uglifyPluginFactory()
+      ]
+    };
   }
-
-  config.plugins.push(function () {
-    return statsPlugin(this, statsOptions);
-  });
 
   return config;
 }

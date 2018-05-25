@@ -2,7 +2,7 @@
  * Copyright (c) 2016 - 2018 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-import webpack from 'webpack';
+import makeMode from './utils/mode';
 import uglifyPluginFactory from './plugins/uglify';
 import { statsPlugin, statsPluginOptions } from './plugins/stats';
 
@@ -15,10 +15,10 @@ import { statsPlugin, statsPluginOptions } from './plugins/stats';
  */
 export default function swRegConfig (settings, type) {
   const devtoolModuleFilenameTemplate = 'webpack:///sw-reg/[resource-path]';
-  const additionalPlugins = [];
   const statsOptions = statsPluginOptions(settings);
 
   const config = {
+    mode: makeMode(type),
     entry: {
       swReg: `./${settings.src.serviceWorker.registration}`
     },
@@ -27,7 +27,7 @@ export default function swRegConfig (settings, type) {
       publicPath: settings.web.scripts
     },
     module: {
-      loaders: [
+      rules: [
         {
           test: /\.js$/,
           exclude: /^\/node_modules/,
@@ -35,9 +35,11 @@ export default function swRegConfig (settings, type) {
         }
       ]
     },
+    stats: 'verbose',
     plugins: [
-      new webpack.optimize.DedupePlugin(),
-      new webpack.optimize.OccurrenceOrderPlugin()
+      function () {
+        return statsPlugin(this, statsOptions);
+      }
     ]
   };
 
@@ -51,14 +53,12 @@ export default function swRegConfig (settings, type) {
     config.output.devtoolModuleFilenameTemplate = devtoolModuleFilenameTemplate;
     config.devtool = 'source-map';
   } else {
-    additionalPlugins.push(uglifyPluginFactory());
+    config.optimization = {
+      minimizer: [
+        uglifyPluginFactory()
+      ]
+    };
   }
-
-  Array.prototype.push.apply(config.plugins, additionalPlugins.concat(
-    function () {
-      return statsPlugin(this, statsOptions);
-    }
-  ));
 
   return config;
 }
