@@ -19,6 +19,8 @@ import { statsPlugin, statsPluginOptions } from './plugins/stats';
 export default function mainConfig (settings, type) {
   const devtoolModuleFilenameTemplate = 'webpack:///main/[resource-path]';
   const reactDOMServerStub = 'utils/react/reactDOMServer';
+  const objectAssignMock = 'utils/polyfills/object-assign';
+  const es6PromiseMock = 'utils/polyfills/es6-promise';
   const definitions = {
     DEBUG: type === 'dev'
   };
@@ -32,7 +34,10 @@ export default function mainConfig (settings, type) {
     entry: `./${settings.src.clientEntry}`,
     output: {
       path: settings.webpack.absoluteOutputPath,
-      publicPath: `${settings.web.scripts}/`
+      publicPath: `${settings.web.scripts}/`,
+      library: 'AppMain',
+      libraryTarget: 'window',
+      libraryExport: 'default'
     },
     module: {
       rules: [
@@ -51,7 +56,7 @@ export default function mainConfig (settings, type) {
       }),
       new webpack.DefinePlugin(definitions),
       new webpack.NormalModuleReplacementPlugin(
-        /es6-promise/, require.resolve('es6-promise')
+        /es6-promise/, require.resolve(es6PromiseMock)
       ),
       new webpack.NormalModuleReplacementPlugin(
         /for-each/, require.resolve('lodash/forEach')
@@ -60,10 +65,10 @@ export default function mainConfig (settings, type) {
         /is-function/, require.resolve('lodash/isFunction')
       ),
       new webpack.NormalModuleReplacementPlugin(
-        /lodash\.assign/, require.resolve('object-assign')
+        /lodash\.assign/, require.resolve(objectAssignMock)
       ),
       new webpack.NormalModuleReplacementPlugin(
-        /object-assign/, require.resolve('object-assign')
+        /object-assign/, require.resolve(objectAssignMock)
       ),
       new webpack.NormalModuleReplacementPlugin(
         /ReactDOMServer/, require.resolve(reactDOMServerStub)

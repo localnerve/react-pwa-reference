@@ -44,6 +44,7 @@ function renderApp (req, res, context, app, props) {
   props.otherStyles = settings.web.css.other;
   props.swRegistrationScript = settings.web.assets.swRegScript();
   props.swMainScript = '/' + settings.web.assets.swMainScript(true);
+  props.polyfills = settings.web.polyfills;
 
   debug('Creating app state');
   state = app.dehydrate(context);

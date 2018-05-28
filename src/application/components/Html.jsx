@@ -21,6 +21,7 @@ class Html extends React.Component {
       inlineStyles: PropTypes.string.isRequired,
       trackingSnippet: PropTypes.string.isRequired,
       inlineScript: PropTypes.string.isRequired,
+      polyfills: PropTypes.array.isRequred,
       markup: PropTypes.string.isRequired,
       state: PropTypes.string.isRequired,
       mainScript: PropTypes.string.isRequired,
@@ -130,12 +131,15 @@ class Html extends React.Component {
               </symbol>
             </defs>
           </svg>
-          <script dangerouslySetInnerHTML={{__html: this.props.inlineScript}}></script>
+          <script
+            data-main-script={this.props.mainScript}
+            data-polyfills={this.props.polyfills}
+            dangerouslySetInnerHTML={{__html: this.props.inlineScript}}>
+          </script>
           <section id="application" className="app-frame"
             dangerouslySetInnerHTML={{__html: this.props.markup}}>
           </section>
           <script dangerouslySetInnerHTML={{__html: this.props.state}}></script>
-          <script src={this.props.mainScript}></script>
         </body>
       </html>
     );
