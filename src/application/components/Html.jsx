@@ -56,6 +56,8 @@ class Html extends React.Component {
           <meta httpEquiv="x-dns-prefetch-control" content="on" />
           <link rel="dns-prefetch" href="//fonts.gstatic.com" />
           <link rel="preconnect" href="//fonts.gstatic.com" />
+          <link rel="dns-prefetch" href="//cdn.polyfill.io" />
+          <link rel="preconnect" href="//cdn.polyfill.io" />
           <link rel="dns-prefetch" href={this.props.imageServiceHost} />
           <link rel="preconnect" href={this.props.imageServiceHost} />
           <meta name="mobile-web-app-capable" content="yes" />
@@ -134,6 +136,7 @@ class Html extends React.Component {
           <script
             data-main-script={this.props.mainScript}
             data-polyfills={this.props.polyfills}
+            data-polyfill-host='cdn.polyfill.io'
             dangerouslySetInnerHTML={{__html: this.props.inlineScript}}>
           </script>
           <section id="application" className="app-frame"

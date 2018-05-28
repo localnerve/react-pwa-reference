@@ -25,8 +25,9 @@ docEl.className = docEl.className.replace('no-js', '');
 // Polyfill and main load script
 //
 const polyfills = document.currentScript.dataset.polyfills;
+const polyfillHost = document.currentScript.dataset.polyfillHost;
 const urls = [
-  `https://cdn.polyfill.io/v2/polyfill.js?features=${polyfills}`,
+  `https://${polyfillHost}/v2/polyfill.js?features=${polyfills}`,
   document.currentScript.dataset.mainScript // main is last
 ];
 
