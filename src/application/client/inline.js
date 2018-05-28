@@ -22,7 +22,8 @@ const docEl = document.documentElement;
 docEl.className = docEl.className.replace('no-js', '');
 
 // --------------------------------------------------
-// Polyfill and load main script
+// Polyfill and main load script
+//
 const polyfills = document.currentScript.dataset.polyfills;
 const urls = [
   `https://cdn.polyfill.io/v2/polyfill.js?features=${polyfills}`,
@@ -36,7 +37,8 @@ function load (s, url) {
     }
   };
   s.onerror = function () {
-    console.error('INLINE got error');
+    load.count++;
+    console.warn('polyfill failure');
   }
   s.setAttribute('async', true);
   s.setAttribute('defer', true);
