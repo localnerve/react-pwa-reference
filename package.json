@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -71,7 +71,7 @@
     "babel-eslint": "8.2.3",
     "babel-loader": "7.1.4",
     "babel-plugin-istanbul": "4.1.6",
-    "babel-plugin-lodash": "3.3.2",
+    "babel-plugin-lodash": "3.3.3",
     "babel-preset-env": "1.6.1",
     "babel-preset-react": "6.24.1",
     "babel-register": "6.26.0",
