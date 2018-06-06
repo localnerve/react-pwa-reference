@@ -107,7 +107,7 @@
     "rimraf": "2.6.2",
     "sw-precache": "5.2.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
-    "wd": "1.8.1",
+    "wd": "1.9.0",
     "webpack": "^4.8.3",
     "webpack-bundle-size-analyzer": "2.7.0",
     "xml2js": "^0.4.16"
