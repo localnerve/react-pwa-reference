@@ -21,7 +21,7 @@ class Html extends React.Component {
       inlineStyles: PropTypes.string.isRequired,
       trackingSnippet: PropTypes.string.isRequired,
       inlineScript: PropTypes.string.isRequired,
-      polyfills: PropTypes.array.isRequred,
+      polyfills: PropTypes.array.isRequired,
       markup: PropTypes.string.isRequired,
       state: PropTypes.string.isRequired,
       mainScript: PropTypes.string.isRequired,

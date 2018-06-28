@@ -19,6 +19,9 @@ describe('html component', () => {
 
   const testProps = {
     mainScript: 'path/to/mainScript',
+    polyfills: [
+      'somefeature'
+    ],
     trackingSnippet: 'window["SomeTrackingCode"] = 0;',
     inlineStyles: '@charset "UTF-8";',
     inlineScript: 'window["MyTest"] = 0;',
@@ -142,10 +145,12 @@ describe('html component', () => {
       component[1].getAttribute('data-service-worker')
     ).to.equal(testProps.swMainScript);
     expect(component[2].textContent).to.equal(testProps.inlineScript);
+    expect(
+      component[2].getAttribute('data-main-script')
+    ).to.equal(testProps.mainScript);
+    expect(
+      component[2].getAttribute('data-polyfills')
+    ).to.equal(testProps.polyfills[0]);
     expect(component[3].textContent).to.equal(testProps.state);
-    /*
-    expect(component[4].textContent).to.be.empty;
-    expect(component[4].getAttribute('src')).to.equal(testProps.mainScript);
-    */
   });
 });
