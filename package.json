@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -126,7 +126,7 @@
     "express": "4.16.0",
     "express-error-handler": "localnerve/express-error-handler",
     "fluxible": "1.4.0",
-    "fluxible-addons-react": "0.2.14",
+    "fluxible-addons-react": "0.2.15",
     "fluxible-plugin-fetchr": "0.3.11",
     "fluxible-router": "1.5.1",
     "glob": "7.1.2",
