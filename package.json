@@ -121,7 +121,7 @@
     "cookie-parser": "1.4.3",
     "cross-env": "5.2.0",
     "csurf": "1.9.0",
-    "debug": "2.6.9",
+    "debug": "3.2.1",
     "diff-match-patch": "1.0.0",
     "express": "4.16.0",
     "express-error-handler": "localnerve/express-error-handler",
