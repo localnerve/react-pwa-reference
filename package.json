@@ -131,7 +131,7 @@
     "fluxible-router": "1.5.1",
     "glob": "7.1.3",
     "inherits": "2.0.3",
-    "lodash": "4.17.9",
+    "lodash": "4.17.11",
     "morgan": "1.9.1",
     "nconf": "0.9.1",
     "nodemailer": "4.6.8",
