@@ -42,6 +42,14 @@ export default function mainConfig (settings, type) {
     module: {
       rules: [
         {
+          test: /\.js$/,
+          loader: 'string-replace-loader',
+          options: {
+            search: '__TEST__',
+            replace: '""'
+          }
+        },
+        {
           test: /\.(js|jsx)$/,
           include: [
             `${path.resolve(settings.src.baseDir)}`

@@ -4,13 +4,11 @@
  *
  * The development startup entry point.
  */
-'use strict';
+const basePath = require('path').basename(__dirname);
 
-require('babel-register')({
+require('@babel/register')({
   ignore: [
-    new RegExp(
-      require('path').basename(__dirname) + '/node_modules/.*'
-    )
+    new RegExp(`${basePath}/node_modules/.*`)
   ]
 });
 

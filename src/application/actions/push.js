@@ -9,7 +9,7 @@ import syncable from 'utils/syncable';
 import messages from 'utils/messages';
 
 const debug = debugLib('actions:push');
-const __DEV__ = process.env.NODE_ENV !== 'production';
+const __test__ = __TEST__; // eslint-disable-line no-undef, webpack supplied
 
 /**
  * The send push action.
@@ -77,7 +77,7 @@ export function subscribe (context, payload, done) {
         endpoint: subscription.endpoint
       };
 
-      if (__DEV__) {
+      if (__test__) {
         params.emulateError = payload && payload.emulateError;
       }
 
@@ -208,7 +208,7 @@ export function unsubscribe (context, payload, done) {
           subscriptionId: getSubscriptionId(subscription)
         };
 
-        if (__DEV__) {
+        if (__test__) {
           params.emulateError = payload && payload.emulateError;
         }
 

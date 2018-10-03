@@ -37,6 +37,14 @@ export default function swMainConfig (settings, type) {
         },
         {
           test: /\.js$/,
+          loader: 'string-replace-loader',
+          options: {
+            search: '__TEST__',
+            replace: '""'
+          }
+        },
+        {
+          test: /\.js$/,
           exclude: /(^\/node_modules|\.json$)/,
           loader: 'babel-loader'
         }
