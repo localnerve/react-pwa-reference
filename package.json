@@ -109,7 +109,7 @@
     "string-replace-loader": "^2.1.1",
     "sw-precache": "5.2.1",
     "terser-webpack-plugin": "^1.1.0",
-    "wd": "1.10.3",
+    "wd": "1.11.0",
     "webpack": "^4.16.5",
     "webpack-bundle-size-analyzer": "2.7.0",
     "xml2js": "^0.4.16"
