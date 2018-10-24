@@ -138,7 +138,7 @@
     "nconf": "0.9.1",
     "nodemailer": "4.6.8",
     "prop-types": "~15.6.1",
-    "react": "~16.5.1",
+    "react": "~16.6.0",
     "react-dom": "~16.5.1",
     "react-element-size-reporter": "~0.6.1",
     "react-modal": "3.6.1",
