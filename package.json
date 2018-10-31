@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -87,7 +87,7 @@
     "fg-loadcss": "2.0.1",
     "fontfaceobserver": "2.0.12",
     "foundation-apps": "localnerve/foundation-apps",
-    "gulp": "gulpjs/gulp#4.0",
+    "gulp": "^4.0.0",
     "gulp-clean-css": "3.10.0",
     "gulp-if": "2.0.2",
     "gulp-imagemin": "4.1.0",
