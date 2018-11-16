@@ -111,7 +111,7 @@
     "terser-webpack-plugin": "^1.1.0",
     "wd": "1.11.0",
     "webpack": "^4.24.0",
-    "webpack-bundle-size-analyzer": "2.7.0",
+    "webpack-bundle-size-analyzer": "3.0.0",
     "xml2js": "^0.4.16"
   },
   "dependencies": {
