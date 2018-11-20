@@ -17,17 +17,22 @@
  */
 /*eslint-disable no-console */
 /* global console, require, process */
-var spawn = require('child_process').spawn;
+const spawn = require('child_process').spawn;
 
-require('babel-register');
+require('@babel/register')({
+  presets: [
+    '@babel/env'
+  ],
+  ignore: []
+});
 
-var mail = require('application/server/services/mail');
-var contact = require('configs').create().contact;
+const mail = require('application/server/services/mail');
+const contact = require('configs').create().contact;
 
-var workerProcess = 'application/server/workers/contact/bin/contact';
-var workTime = 10000;
+const workerProcess = 'application/server/workers/contact/bin/contact';
+const workTime = 10000;
 
-var prereqs = contact.mail.username() && contact.mail.password() &&
+const prereqs = contact.mail.username() && contact.mail.password() &&
   contact.mail.service();
 
 if (!prereqs) {
@@ -35,11 +40,11 @@ if (!prereqs) {
     'mail service environmental prerequisites missing. Check environment.'
   );
   console.error('mail config');
-  console.error('service  = ' + contact.mail.service());
-  console.error('to       = ' + contact.mail.to());
-  console.error('from     = ' + contact.mail.from());
-  console.error('username = ' + contact.mail.username());
-  console.error('password = ' + contact.mail.password());
+  console.error(`service  = ${contact.mail.service()}`);
+  console.error(`to       = ${contact.mail.to()}`);
+  console.error(`from     = ${contact.mail.from()}`);
+  console.error(`username = ${contact.mail.username()}`);
+  console.error(`password = ${contact.mail.password()}`);
   process.exit();
 }
 
@@ -52,10 +57,10 @@ mail.send({
     throw err;
   }
 
-  var cp = spawn(require.resolve(workerProcess));
+  const cp = spawn(require.resolve(workerProcess));
 
   cp.on('close', function () {
-    console.log(workerProcess + ' complete');
+    console.log(`${workerProcess} complete`);
     process.exit();
   });
 

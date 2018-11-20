@@ -5,5 +5,10 @@
  *
  * Uses environment variables listed in configs/contact/index.js
  */
-require('babel-register');
+require('@babel/register')({
+  presets: [
+    '@babel/env'
+  ],
+  ignore: []
+});
 require('application/server/services/mail').worker();
