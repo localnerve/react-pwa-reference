@@ -84,7 +84,7 @@
     "del": "3.0.0",
     "eslint": "5.0.1",
     "eslint-plugin-react": "^7.10.0",
-    "fg-loadcss": "2.0.1",
+    "fg-loadcss": "2.1.0",
     "fontfaceobserver": "2.0.12",
     "foundation-apps": "localnerve/foundation-apps",
     "gulp": "^4.0.0",
