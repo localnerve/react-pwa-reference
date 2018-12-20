@@ -139,7 +139,7 @@
     "nodemailer": "4.7.0",
     "prop-types": "~15.6.1",
     "react": "~16.7.0",
-    "react-dom": "~16.6.3",
+    "react-dom": "~16.7.0",
     "react-element-size-reporter": "~0.6.1",
     "react-modal": "3.8.1",
     "react-spinner": "0.2.7",
