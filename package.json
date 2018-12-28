@@ -136,7 +136,7 @@
     "lodash": "4.17.11",
     "morgan": "1.9.1",
     "nconf": "0.9.1",
-    "nodemailer": "4.7.0",
+    "nodemailer": "5.0.0",
     "prop-types": "~15.6.1",
     "react": "~16.7.0",
     "react-dom": "~16.7.0",
