@@ -48,10 +48,11 @@ class Html extends React.Component {
     });
 
     return (
-      <html className="no-js">
+      <html lang="en-US" className="no-js">
         <head>
           <meta charSet="utf-8" />
           <title>{this.props.currentPageTitle}</title>
+          <meta name="description" content="Contactor Reference Application, alex@localnerve.com, 207-370-8005" />
           <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
           <meta httpEquiv="x-dns-prefetch-control" content="on" />
           <link rel="dns-prefetch" href="//fonts.gstatic.com" />
