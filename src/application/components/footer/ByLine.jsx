@@ -18,6 +18,8 @@ class ByLine extends React.Component {
       ` ${this.props.author.name}`, ''
     );
 
+    /* eslint-disable react/jsx-no-target-blank */
+    /* rel=noopener is desired, author.url wants referrer */
     return (
       <div className="grid-row-spaced footer-line by-line">
         <span className="by-line-items">
@@ -25,7 +27,7 @@ class ByLine extends React.Component {
             {byLine}
           </span>
           <span>
-            <a href={this.props.author.url} target="_blank">
+            <a href={this.props.author.url} target="_blank" rel="noopener">
               {this.props.author.name}
             </a>
           </span>
@@ -38,6 +40,7 @@ class ByLine extends React.Component {
         </span>
       </div>
     );
+    /* eslint-enable */
   }
 }
 
