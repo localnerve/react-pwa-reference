@@ -137,7 +137,7 @@
     "morgan": "1.9.1",
     "nconf": "0.9.1",
     "nodemailer": "5.1.1",
-    "prop-types": "~15.6.1",
+    "prop-types": "~15.7.1",
     "react": "~16.8.1",
     "react-dom": "~16.8.1",
     "react-element-size-reporter": "~0.6.1",
