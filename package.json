@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.10.14",
+  "version": "0.10.15",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -48,6 +48,7 @@
     "test:debug": "npm run build:output -- -s inline && npm run _test -- --debug-brk",
     "test:inspect": "npm run test:debug -- --inspect",
     "test:func": "node src/tests/functional/run-parallel '--reporter spec src/tests/functional/main.js'",
+    "test:contact": "cross-env BABEL_DISABLE_CACHE=1 node src/tests/workers/contact/contact.js",
     "validate": "npm ls"
   },
   "pre-commit": [
@@ -136,7 +137,7 @@
     "lodash": "4.17.11",
     "morgan": "1.9.1",
     "nconf": "0.9.1",
-    "nodemailer": "6.0.0",
+    "nodemailer": "6.1.0",
     "prop-types": "~15.7.1",
     "react": "~16.8.1",
     "react-dom": "~16.8.1",
