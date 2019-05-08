@@ -36,81 +36,83 @@ describe('data/cache-interface', () => {
     });
 
     it('should format json if no format supplied', () => {
-      cache.put(cacheResources.noFormat, cacheResources.noFormat.data);
+      return cache.put(cacheResources.noFormat, cacheResources.noFormat.data)
+        .then(() => {
+          const res = cache.get(cacheResources.noFormat.resource);
 
-      const res = cache.get(cacheResources.noFormat.resource);
-
-      expect(res).to.be.an('object');
-      expect(res).to.have.property('models', undefined);
-      expect(res).to.have.property('content')
-        .that.deep.equals(cacheResources.jsonData.test);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('models', undefined);
+          expect(res).to.have.property('content')
+            .that.deep.equals(cacheResources.jsonData.test);
+        });
     });
 
     it('should put models as expected', () => {
-      cache.put(models, models.data);
+      return cache.put(models, models.data).then(() => {
+        const res = cache.get(models.resource);
 
-      const res = cache.get(models.resource);
-
-      expect(res).to.be.an('object');
-      expect(res).to.have.property('models', undefined);
-      expect(res).to.have.property('content')
-        .that.deep.equals(cacheResources.validModels.models);
+        expect(res).to.be.an('object');
+        expect(res).to.have.property('models', undefined);
+        expect(res).to.have.property('content')
+          .that.deep.equals(cacheResources.validModels.models);
+      });
     });
 
     it('should put valid data with no models', () => {
       const validNone = cacheResources.markup.validNone;
 
-      cache.put(validNone, validNone.data);
+      return cache.put(validNone, validNone.data)
+        .then(() => {
+          const res = cache.get(validNone.resource);
 
-      const res = cache.get(validNone.resource);
-
-      expect(res).to.be.an('object');
-      expect(res).to.have.property('models', undefined);
-      expect(res).to.have.property('content')
-        .that.deep.equals(cacheResources.markupData);
+          expect(res).to.be.an('object');
+          expect(res).to.have.property('models', undefined);
+          expect(res).to.have.property('content')
+            .that.deep.equals(cacheResources.markupData);
+        });
     });
 
     it('should put valid data with single, valid model', () => {
       const validSingle = cacheResources.markup.validSingle;
 
-      cache.put(validSingle, validSingle.data);
+      return cache.put(validSingle, validSingle.data).then(() => {
+        const res = cache.get(validSingle.resource);
 
-      const res = cache.get(validSingle.resource);
-
-      expect(res).to.be.an('object');
-      expect(res).to.have.property('models')
-        .that.deep.equals({
-          ValidModel1: cacheResources.validModels.models.ValidModel1
-        });
-      expect(res).to.have.property('content')
-        .that.deep.equals(cacheResources.markupData);
+        expect(res).to.be.an('object');
+        expect(res).to.have.property('models')
+          .that.deep.equals({
+            ValidModel1: cacheResources.validModels.models.ValidModel1
+          });
+        expect(res).to.have.property('content')
+          .that.deep.equals(cacheResources.markupData);
+      });
     });
 
     it('should put valid data with multiple, valid model', () => {
       const validMulti = cacheResources.markup.validMulti;
 
-      cache.put(validMulti, validMulti.data);
+      return cache.put(validMulti, validMulti.data).then(() => {
+        const res = cache.get(validMulti.resource);
 
-      const res = cache.get(validMulti.resource);
-
-      expect(res).to.be.an('object');
-      expect(res).to.have.property('models')
-        .that.deep.equals(cacheResources.validModels.models);
-      expect(res).to.have.property('content')
-        .that.deep.equals(cacheResources.markupData);
+        expect(res).to.be.an('object');
+        expect(res).to.have.property('models')
+          .that.deep.equals(cacheResources.validModels.models);
+        expect(res).to.have.property('content')
+          .that.deep.equals(cacheResources.markupData);
+      });
     });
 
     it('should have undefined model if invalid model reference supplied', () => {
       const invalid = cacheResources.markup.invalid;
 
-      cache.put(invalid, invalid.data);
+      return cache.put(invalid, invalid.data).then(() => {
+        const res = cache.get(invalid.resource);
 
-      const res = cache.get(invalid.resource);
-
-      expect(res).to.be.an('object');
-      expect(res).to.have.nested.property('models.InvalidModel', undefined);
-      expect(res).to.have.property('content')
-        .that.deep.equals(cacheResources.markupData);
+        expect(res).to.be.an('object');
+        expect(res).to.have.nested.property('models.InvalidModel', undefined);
+        expect(res).to.have.property('content')
+          .that.deep.equals(cacheResources.markupData);
+      });
     });
   });
 

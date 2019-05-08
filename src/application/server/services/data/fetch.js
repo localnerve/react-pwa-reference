@@ -56,17 +56,19 @@ export function fetchOne (params, callback) {
       cache.put(
         params,
         Buffer.from(content, config.FRED.contentEncoding()).toString()
-      );
-      const resource = cache.get(params.resource);
+      ).then(() => {
+        const resource = cache.get(params.resource);
 
-      if (resource) {
-        return callback(null, resource);
-      }
-      return callback(
-        new Error(
+        if (resource) {
+          return callback(null, resource);
+        }
+
+        return callback(new Error(
           `Requested resource ${params.resource} not found for ${params.url}`
-        )
-      );
+        ));
+      }).catch(callback);
+
+      return;
     }
 
     debug(`Content not fetched for ${params.url}[${res.statusCode}]`, body);

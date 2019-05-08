@@ -2,6 +2,7 @@
  * Copyright (c) 2016 - 2019 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
+/* global Promise */
 import debugLib from 'debug';
 import utils from './utils';
 import markdown from './markdown';
@@ -44,12 +45,15 @@ const formatToCache = {
    */
   markup: function (params, data) {
     writeToCache(params, data);
+    return Promise.resolve();
   },
   /**
    * Format Mardown to markup then write to cache.
    */
   markdown: function (params, data) {
-    writeToCache(params, markdown(data));
+    return markdown(data).then(html => {
+      writeToCache(params, html);
+    });
   },
   /**
    * For Json data, write each top-level key as a separate resource to the cache.
@@ -63,6 +67,7 @@ const formatToCache = {
         models: params.models
       }, obj[key]);
     });
+    return Promise.resolve();
   }
 };
 
@@ -146,7 +151,7 @@ export function put (params, data) {
     throw new Error('Invalid arguments to cache put');
   }
 
-  formatToCache[params.format || 'json'](params, data);
+  return formatToCache[params.format || 'json'](params, data);
 }
 
 export default {

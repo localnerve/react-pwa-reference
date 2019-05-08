@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.10.17",
+  "version": "0.11.0",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -146,7 +146,8 @@
     "react-spinner": "0.2.7",
     "react-swipe": "github:localnerve/react-swipe#v4.3.1",
     "react-transition-group": "1.2.0",
-    "remarkable": "1.7.1",
+    "remark": "^10.0.1",
+    "remark-html": "^9.0.0",
     "request": "2.88.0",
     "serialize-javascript": "1.7.0",
     "serve-favicon": "2.5.0",
