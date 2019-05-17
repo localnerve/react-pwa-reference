@@ -126,7 +126,7 @@
     "csurf": "1.10.0",
     "debug": "2.6.9",
     "diff-match-patch": "1.0.0",
-    "express": "4.16.0",
+    "express": "4.17.0",
     "express-error-handler": "localnerve/express-error-handler",
     "fluxible": "1.4.0",
     "fluxible-addons-react": "0.2.16",
