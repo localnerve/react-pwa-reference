@@ -7,8 +7,7 @@
  * Uses a custom 'fastest' sw-toolbox route handler and a higher level TTL cache
  * to keep requests down and response as fast as possible.
  */
-/* global Promise, Request, URL, location, clients, MessageChannel, setTimeout,
-   clearTimeout, caches */
+/* global Promise, Request, location, clients, MessageChannel, caches */
 import toolbox from 'sw-toolbox';
 import debugLib from 'sw/utils/debug';
 import { contentRace } from 'sw/utils/customHelpers';

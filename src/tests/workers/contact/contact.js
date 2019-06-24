@@ -16,7 +16,6 @@
  * Must manually verify mail and queue status is as expected.
  */
 /*eslint-disable no-console */
-/* global console, require, process */
 const spawn = require('child_process').spawn;
 
 require('@babel/register')({

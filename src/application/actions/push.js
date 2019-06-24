@@ -9,7 +9,7 @@ import syncable from 'utils/syncable';
 import messages from 'utils/messages';
 
 const debug = debugLib('actions:push');
-const __test__ = __TEST__; // eslint-disable-line no-undef, webpack supplied
+const __test__ = __TEST__; // eslint-disable-line no-undef
 
 /**
  * The send push action.

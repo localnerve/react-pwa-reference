@@ -3,7 +3,7 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* eslint no-console:0 */
-/* global Promise, describe, it, before, beforeEach, afterEach, require */
+/* global Promise, describe, it, before, beforeEach, afterEach */
 
 import { expect } from 'chai';
 import { assert } from 'chai';

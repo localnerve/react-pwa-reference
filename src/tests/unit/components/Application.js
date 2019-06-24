@@ -2,7 +2,7 @@
  * Copyright (c) 2016 - 2019 Alex Grant (@localnerve), LocalNerve LLC
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
-/* global Promise, require, after, describe, it, before, beforeEach */
+/* global Promise, after, describe, it, before, beforeEach */
 import { expect } from 'chai';
 import { start as testDomStart, stop as testDomStop } from 'test/utils/testdom';
 import { createFluxibleRouteTransformer } from 'utils';

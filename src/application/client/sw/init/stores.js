@@ -4,7 +4,7 @@
  *
  * Special handling for Flux Stores saved in IndexedDB 'init.stores' ObjectStore.
  */
-/* global Promise, Response, Blob, JSON */
+/* global Promise, Response, Blob */
 import debugLib from 'sw/utils/debug';
 import * as idb from 'sw/utils/idb';
 import * as apiHelpers from 'sw/utils/api';

@@ -5,3 +5,4 @@ tmp
 output
 src/application/client/sw/precache.js
 src/tests/node_modules/test/fixtures
+src/node_modules/application

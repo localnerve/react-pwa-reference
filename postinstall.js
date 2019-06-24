@@ -4,7 +4,6 @@
  *
  * The universal postinstall script.
  */
-/* global require, console */
 /*eslint-disable no-console */
 'use strict';
 

@@ -44,7 +44,7 @@ export const ContentStore = createStore({
    * @param {Object} page.data - The page data, containing models and content.
    */
   receivePageContent: function (page) {
-    if (!page || !page.hasOwnProperty('resource')) {
+    if (!page || !Object.prototype.hasOwnProperty.call(page, 'resource')) {
       return;
     }
 

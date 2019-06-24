@@ -65,7 +65,7 @@ export const ModalStore = createStore({
    * @param {Object} payload.component - The new component.
    */
   updateComponent: function (payload) {
-    if (!payload || !payload.hasOwnProperty('resource')) {
+    if (!payload || !Object.prototype.hasOwnProperty.call(payload, 'resource')) {
       return;
     }
 
