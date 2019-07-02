@@ -145,7 +145,7 @@
     "react-modal": "3.8.2",
     "react-spinner": "0.2.7",
     "react-swipe": "github:localnerve/react-swipe#v4.3.1",
-    "react-transition-group": "1.2.0",
+    "react-transition-group": "4.2.1",
     "remark": "^10.0.1",
     "remark-html": "^9.0.0",
     "request": "2.88.0",
