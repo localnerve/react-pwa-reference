@@ -55,11 +55,7 @@ function sass (settings, prod) {
       outputStyle: prod ? 'compressed' : 'nested'
     }).on('error', gulpSass.logError))
     .pipe(
-      gulpPostcss([
-        autoprefixer({
-          browsers: ['last 2 versions', '> 2% in US']
-        })
-      ])
+      gulpPostcss([ autoprefixer() ])
     )
     .pipe(
       gulpIf(prod, gulpCssClean({
