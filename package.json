@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.11.8",
+  "version": "0.11.9",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -116,7 +116,7 @@
     "xml2js": "^0.4.16"
   },
   "dependencies": {
-    "amqplib": "0.5.3",
+    "amqplib": "0.5.5",
     "body-parser": "1.19.0",
     "classnames": "2.2.6",
     "compression": "1.7.4",
