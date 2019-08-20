@@ -149,7 +149,7 @@
     "remark": "^11.0.0",
     "remark-html": "^10.0.0",
     "request": "2.88.0",
-    "serialize-javascript": "1.7.0",
+    "serialize-javascript": "1.8.0",
     "serve-favicon": "2.5.0",
     "sitemap-xml": "localnerve/sitemap-xml",
     "sw-toolbox": "3.6.0",
