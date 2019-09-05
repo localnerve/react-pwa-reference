@@ -109,7 +109,7 @@
     "rimraf": "2.6.3",
     "string-replace-loader": "^2.1.1",
     "sw-precache": "5.2.1",
-    "terser-webpack-plugin": "^1.1.0",
+    "terser-webpack-plugin": "^2.0.0",
     "wd": "1.11.3",
     "webpack": "^4.36.1",
     "webpack-bundle-size-analyzer": "~3.0.0",
