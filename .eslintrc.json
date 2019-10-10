@@ -22,5 +22,10 @@
     }],
     "quotes": [2, "single"],
     "dot-notation": [2, {"allowKeywords": true}]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
