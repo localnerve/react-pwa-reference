@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.11.11",
+  "version": "0.11.12",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -137,7 +137,7 @@
     "lodash": "4.17.15",
     "morgan": "1.9.1",
     "nconf": "0.9.1",
-    "nodemailer": "6.3.0",
+    "nodemailer": "6.3.1",
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
