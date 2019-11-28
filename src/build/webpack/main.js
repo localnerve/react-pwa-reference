@@ -73,6 +73,9 @@ export default function mainConfig (settings, type) {
         /is-function/, require.resolve('lodash/isFunction')
       ),
       new webpack.NormalModuleReplacementPlugin(
+        /lodash.debounce/, require.resolve('lodash/debounce')
+      ),
+      new webpack.NormalModuleReplacementPlugin(
         /lodash\.assign/, require.resolve(objectAssignMock)
       ),
       new webpack.NormalModuleReplacementPlugin(
