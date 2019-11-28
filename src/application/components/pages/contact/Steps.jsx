@@ -5,7 +5,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import noop from 'lodash/noop';
 
 class ContactSteps extends React.Component {
   static get propTypes () {
@@ -39,7 +38,7 @@ class ContactSteps extends React.Component {
         <li className={cx({
           'result-message': true,
           failure: this.props.failure
-        })} onClick={this.props.failure ? this.props.retry : noop}>
+        })} onClick={this.props.failure ? this.props.retry : ()=>{}}>
           <span>{this.props.resultMessage}</span>
         </li>
       );
