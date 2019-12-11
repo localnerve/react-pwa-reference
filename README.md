@@ -47,6 +47,7 @@ Just Node 8.
 | `npm run config:prod` | dump the production config to console |
 | `npm run dev` | lint, build assets, start the server, verbose, NODE_ENV=development, offline NOT supported |
 | `npm run dev:analyze` | analyze webpack stats file and dump bundle size analysis to console |
+| `npm run dev:analyzer` | analyze webpack stats file visually |
 | `npm run dev:ccss` | build css assets, watch and recompile sass on change |
 | `npm run dev:debug` | lint, build assets, start/debug server, NODE_ENV=development, wait debugger attach |
 | `npm run dev:inspect` | like `dev:debug`, but use node --inspect, best w/Node 7+ |
@@ -61,3 +62,7 @@ Just Node 8.
 | `npm run test:debug` | build with source maps, start the test suite, wait debugger attach |
 | `npm run test:inspect` | like `test:debug`, but use node --inspect, best w/Node 7+ |
 | `npm run test:func` | used by CI to run functional tests against selenium grid |
+| `npm run test:contact` | use to manually test the contact worker after nodemailer update |
+
+## Fun Facts
+1. [webpack.github.io/analyse/#modules](http://webpack.github.io/analyse/#modules) still works on webpack stats files to visualize the module dependency graph.
