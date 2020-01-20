@@ -144,7 +144,7 @@
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-element-size-reporter": "^0.7.3",
+    "react-element-size-reporter": "^0.8.1",
     "react-modal": "3.11.1",
     "react-spinner": "0.2.7",
     "react-swipe": "github:localnerve/react-swipe#v4.3.1",
