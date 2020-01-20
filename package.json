@@ -99,7 +99,7 @@
     "gulp-sass": "^4.0.2",
     "gulp-svgmin": "2.2.0",
     "gulp-webpagetest": "1.1.1",
-    "jsdom": "^15.1.1",
+    "jsdom": "^16.0.1",
     "lodash-webpack-plugin": "0.11.5",
     "mkdirp": "0.5.1",
     "mocha": "^6.2.1",
