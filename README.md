@@ -16,7 +16,7 @@
 This project is an evolution of [flux-react-example](https://github.com/localnerve/flux-react-example) and [flux-react-example-sw](https://github.com/localnerve/flux-react-example-sw) that adds evolved tooling and organization. It's a rather complete, performance minded reference PWA that uses data-driven routes and content from an attached service. The data service driving the app is this [Github repo](https://github.com/localnerve/fred).
 
 ## Environment Prerequisites
-Just Node 8.  
+Just Node 10.  
 <small>Some development dependencies of this project have binary installs (node-sass, image manipulators), so YMMV.</small>
 
 ## Stack
