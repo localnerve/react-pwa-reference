@@ -31,7 +31,7 @@ export function sendMail (input, callback) {
         const q = contact.queue.name();
 
         return ch.assertQueue(q).then(() => {
-          ch.sendToQueue(q, new Buffer(JSON.stringify(input)));
+          ch.sendToQueue(q, Buffer.from(JSON.stringify(input)));
           debug('AMQP message sent', input);
         });
       });

@@ -3,16 +3,15 @@
  * Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
  */
 /* global Promise, after, before, describe, it */
-'use strict';
 
-var _ = require('lodash');
-var expect = require('chai').expect;
-var mocks = require('test/mocks');
-var urlm = require('utils/urls');
+const _ = require('lodash');
+const expect = require('chai').expect;
+const mocks = require('test/mocks');
+const urlm = require('utils/urls');
 
-describe('sw/assets', function () {
-  var data, toolbox, assets,
-    mockFetchUnexpected = new Error('unexpected mockFetch results');
+describe('sw/assets', () => {
+  let data, toolbox, assets;
+  const mockFetchUnexpected = new Error('unexpected mockFetch results');
 
   before('setup sw/assets', function () {
     this.timeout(5000);
@@ -26,20 +25,20 @@ describe('sw/assets', function () {
     assets = require('application/client/sw/assets');
   });
 
-  after(function () {
+  after(() => {
     toolbox.mockTeardown();
     mocks.swData.end();
     mocks.swToolbox.end();
     delete global.Request;
   });
 
-  it('should populate precache with data assets', function () {
+  it('should populate precache with data assets', () => {
     toolbox.mockSetup();
     assets.setupAssetRequests();
 
-    var diff = _.xor(
+    const diff = _.xor(
       data.assets,
-      toolbox.options.preCacheItems.map(function (req) {
+      toolbox.options.preCacheItems.map((req) => {
         expect(req).to.be.a('string').that.is.not.empty;
         return req;
       })
@@ -48,28 +47,28 @@ describe('sw/assets', function () {
     expect(diff.length).to.equal(0);
   });
 
-  it('should populate route map as expected', function () {
+  it('should populate route map as expected', () => {
     toolbox.mockSetup();
     assets.setupAssetRequests();
 
-    var hostnames = _.uniq(data.assets.map(function (asset) {
+    const hostnames = _.uniq(data.assets.map((asset) => {
       return urlm.getHostname(asset);
     }));
 
     expect(toolbox.router.routes.size).to.equal(hostnames.length);
   });
 
-  it('should handle asset requests successfully', function (done) {
-    var response = { test: 'yep' };
+  it('should handle asset requests successfully', (done) => {
+    const response = { test: 'yep' };
 
     toolbox.mockSetup(response);
     assets.setupAssetRequests();
 
     // fetch all the assets and check the responses.
-    Promise.all(data.assets.map(function (asset) {
+    Promise.all(data.assets.map((asset) => {
       return toolbox.mockFetch(asset, 'GET');
-    })).then(function (results) {
-      results.forEach(function (res) {
+    })).then((results) => {
+      results.forEach((res) => {
         expect(res).to.eql(response);
       });
 
@@ -78,23 +77,23 @@ describe('sw/assets', function () {
       } else {
         done(mockFetchUnexpected);
       }
-    }).catch(function (error) {
+    }).catch((error) => {
       done(error || mockFetchUnexpected);
     });
   });
 
   // questionable utility
-  it('should not handle bogus request', function (done) {
+  it('should not handle bogus request', (done) => {
     toolbox.mockSetup();
     assets.setupAssetRequests();
 
     Promise.all([
       'http://bogushost1/somepath1',
       'http://bogushost2/somepath2'
-    ].map(function (url) {
+    ].map((url) => {
       return toolbox.mockFetch(url, 'GET');
-    })).then(function (results) {
-      results.forEach(function (res) {
+    })).then((results) => {
+      results.forEach((res) => {
         expect(res).to.be.undefined;
       });
 
@@ -103,7 +102,7 @@ describe('sw/assets', function () {
       } else {
         done(mockFetchUnexpected);
       }
-    }).catch(function (error) {
+    }).catch((error) => {
       done (error || mockFetchUnexpected);
     });
   });
