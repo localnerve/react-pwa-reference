@@ -19,9 +19,12 @@ export default function imageminTaskFactory (settings) {
       cwd: settings.assets.images
     })
       .pipe(
-        gulpImagemin({
-          progressive: true
-        })
+        gulpImagemin([
+          gulpImagemin.gifsicle(),
+          gulpImagemin.mozjpeg({ quality: 60, progressive: true }),
+          gulpImagemin.optipng(),
+          gulpImagemin.svgo()
+        ])
       )
       .pipe(
         gulp.dest(settings.dist.images)
