@@ -152,7 +152,7 @@
     "remark": "^11.0.1",
     "remark-html": "^10.0.0",
     "request": "2.88.2",
-    "serialize-javascript": "2.1.2",
+    "serialize-javascript": "3.0.0",
     "serve-favicon": "2.5.0",
     "sitemap-xml": "github:localnerve/sitemap-xml",
     "sw-toolbox": "3.6.0",
