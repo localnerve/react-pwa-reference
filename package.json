@@ -90,7 +90,7 @@
     "fontfaceobserver": "2.1.0",
     "foundation-apps": "github:localnerve/foundation-apps",
     "gulp": "^4.0.2",
-    "gulp-clean-css": "~4.2.0",
+    "gulp-clean-css": "~4.3.0",
     "gulp-if": "3.0.0",
     "gulp-imagemin": "~7.1.0",
     "gulp-nodemon": "2.5.0",
