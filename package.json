@@ -73,7 +73,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/register": "^7.6.2",
     "async-lock": "1.2.2",
-    "autoprefixer": "9.7.5",
+    "autoprefixer": "9.7.6",
     "babel-eslint": "^10.0.3",
     "babel-loader": "^8.0.6",
     "babel-plugin-istanbul": "^6.0.0",
