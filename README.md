@@ -1,7 +1,5 @@
 # react-pwa-reference
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/localnerve/react-pwa-reference.svg)](https://greenkeeper.io/)
-
 [![Build Status](https://secure.travis-ci.org/localnerve/react-pwa-reference.svg?branch=master)](http://travis-ci.org/localnerve/react-pwa-reference)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f2f6921b42144bf78487753e2eb70cf5)](https://www.codacy.com/app/alex/react-pwa-reference?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=localnerve/react-pwa-reference&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/localnerve/react-pwa-reference/badge.svg?branch=master)](https://coveralls.io/github/localnerve/react-pwa-reference?branch=master)
