@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.13.9",
+  "version": "0.13.10",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -113,12 +113,12 @@
     "terser-webpack-plugin": "^3.0.1",
     "wd": "1.12.0",
     "webpack": "^4.43.0",
-    "webpack-bundle-analyzer": "^3.7.0",
+    "webpack-bundle-analyzer": "^3.8.0",
     "webpack-bundle-size-analyzer": "~3.1.0",
     "xml2js": "^0.4.23"
   },
   "dependencies": {
-    "amqplib": "0.5.5",
+    "amqplib": "0.5.6",
     "body-parser": "1.19.0",
     "classnames": "2.2.6",
     "compression": "1.7.4",
