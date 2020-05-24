@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '10'
+- '12'
 env:
   global:
   - CXX=g++-4.8
@@ -38,7 +38,7 @@ deploy:
     - master
     - production
     repo: localnerve/react-pwa-reference
-    node: 10
+    node: 12
 after_deploy:
 - npm install
 - curl -i $DEPLOY_URL

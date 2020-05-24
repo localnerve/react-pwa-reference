@@ -23,6 +23,7 @@ See:
 
 ## Other Styles
 "Other styles" are any other styles in src/application/client/styles that produce build output in the dist/ directory. These are supportive styles that are required by the application, but not needed on initial render. These files will get loaded and rendered in non-render-blocking fashion, thanks to an [inline script](https://github.com/localnerve/react-pwa-reference/blob/master/src/application/client/inline.js) that uses fg-loadcss.
+  * **UPDATE (07/2019)** Note Filament Group usage update with [simpler async load ideas](https://www.filamentgroup.com/lab/load-css-simpler)
 
 See:
 1. The otherStyles collection, [config.settings.outputFiles.css.other](https://github.com/localnerve/react-pwa-reference/blob/master/src/node_modules/configs/settings/index.js), is the source of the otherStyles prop in initial render. This feeds fg-loadcss.
