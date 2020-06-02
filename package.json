@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -152,7 +152,7 @@
     "remark": "^12.0.0",
     "remark-html": "^11.0.2",
     "request": "2.88.2",
-    "serialize-javascript": "3.0.0",
+    "serialize-javascript": "3.1.0",
     "serve-favicon": "2.5.0",
     "sitemap-xml": "github:localnerve/sitemap-xml",
     "sw-toolbox": "3.6.0",
