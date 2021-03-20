@@ -1,10 +1,11 @@
 # react-pwa-reference
 
+![Verify](https://github.com/localnerve/react-pwa-reference/workflows/Verify/badge.svg)
 [![Build Status](https://secure.travis-ci.org/localnerve/react-pwa-reference.svg?branch=master)](http://travis-ci.org/localnerve/react-pwa-reference)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/f2f6921b42144bf78487753e2eb70cf5)](https://www.codacy.com/app/alex/react-pwa-reference?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=localnerve/react-pwa-reference&amp;utm_campaign=Badge_Grade)
 [![Coverage Status](https://coveralls.io/repos/github/localnerve/react-pwa-reference/badge.svg?branch=master)](https://coveralls.io/github/localnerve/react-pwa-reference?branch=master)
 [![Known Vulnerabilities](https://snyk.io/test/github/localnerve/react-pwa-reference/badge.svg)](https://snyk.io/test/github/localnerve/react-pwa-reference)
-![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)
+![Maintenance](https://img.shields.io/maintenance/yes/2021.svg)
 [![Dependency Status](https://david-dm.org/localnerve/react-pwa-reference.svg)](https://david-dm.org/localnerve/react-pwa-reference)
 [![devDependency Status](https://david-dm.org/localnerve/react-pwa-reference/dev-status.svg)](https://david-dm.org/localnerve/react-pwa-reference#info=devDependencies)
 
@@ -14,8 +15,8 @@
 This project is an evolution of [flux-react-example](https://github.com/localnerve/flux-react-example) and [flux-react-example-sw](https://github.com/localnerve/flux-react-example-sw) that adds evolved tooling and organization. It's a rather complete, performance minded reference PWA that uses data-driven routes and content from an attached service. The data service driving the app is this [Github repo](https://github.com/localnerve/fred).
 
 ## Environment Prerequisites
-Just Node 12.  
-<small>Some development dependencies of this project have binary installs (node-sass, image manipulators), so YMMV.</small>
+Just Node 12+  
+<sub><sup>Some development dependencies of this project have binary installs (node-sass, image manipulators), so YMMV.</sup></sub>
 
 ## Stack
 * **N**ode
@@ -23,7 +24,7 @@ Just Node 12.
 * **R**eact (Facebook)
 * **F**luxible (Yahoo)
 * sw-toolbox, sw-precache (Google)
-* babel6, gulp4, webpack, eslint, mocha/chai, sass
+* babel, gulp, webpack, eslint, mocha/chai, sass
 
 ## Setup
 1. `git clone https://github.com/localnerve/react-pwa-reference`
