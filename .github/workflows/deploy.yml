@@ -23,7 +23,6 @@ jobs:
         node-version: '12'
     - name: Echo Input
       run: |
-        echo github.ref=${{ github.ref }}
         echo DEPLOY_URL=$DEPLOY_URL
         echo APP_NAME=$APP_NAME
     - name: Install Dependencies
@@ -36,9 +35,9 @@ jobs:
       uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        heroku_app_name: $APP_NAME
+        heroku_app_name: ${{ env.APP_NAME }}
         heroku_email: 'alex@localnerve.com'
-        healthcheck: ${{ format('https://{0}.herokuapp.com', $APP_NAME) }}
+        healthcheck: ${{ format('https://{0}.herokuapp.com', env.APP_NAME) }}
         delay: 5
         rollbackonhealthcheckfailed: true
     - name: GET Through External URL
