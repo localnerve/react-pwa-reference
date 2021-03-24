@@ -9,7 +9,8 @@ import gulpPostcss from 'gulp-postcss';
 import gulpIf from 'gulp-if';
 import gulpCssClean from 'gulp-clean-css';
 import autoprefixer from 'autoprefixer';
-import assetFunctions from 'node-sass-asset-functions';
+import dartSass from 'sass';
+import assetFunctions from '@localnerve/sass-asset-functions';
 
 /**
  * Minimize svgs.
@@ -37,6 +38,8 @@ function svgmin (settings) {
  * @param {Boolean} prod - True if production, false otherwise.
  */
 function sass (settings, prod) {
+  gulpSass.compiler = dartSass;
+
   return gulp.src('*.scss', {
     cwd: settings.src.styles
   })
@@ -52,7 +55,7 @@ function sass (settings, prod) {
         settings.src.components,
         'node_modules/react-spinner'
       ],
-      outputStyle: prod ? 'compressed' : 'nested'
+      outputStyle: prod ? 'compressed' : 'expanded'
     }).on('error', gulpSass.logError))
     .pipe(
       gulpPostcss([ autoprefixer() ])

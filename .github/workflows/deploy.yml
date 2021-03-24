@@ -1,0 +1,48 @@
+name: Deploy
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - 'release**'
+      - 'stage**'
+      - 'master'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_URL = ${{ (contains(github.ref, 'release') && 'https://pwa.localnerve.net') || 'https://pwa-stage.localnerve.net' }}
+      APP_NAME = ${{ (contains(github.ref, 'release') && 'pwa') || 'pwa-stage' }}
+
+    if: github.event.pull_request.merged
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Node
+      uses: actions/setup-node@v2.1.4
+      with:
+        node-version: '12'
+    - name: Echo Input
+      run: |
+        echo github.ref=${{ github.ref }}
+        echo DEPLOY_URL=$DEPLOY_URL
+        echo APP_NAME=$APP_NAME
+    - name: Install Dependencies
+      run: npm install
+    - name: Run Build
+      run: npm run build:server
+    - name: Pre-deploy clean-up
+      run: rm -rf node_modules/
+    - name: Deploy to Heroku
+      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        heroku_app_name: $APP_NAME
+        heroku_email: 'alex@localnerve.com'
+        healthcheck: ${{ format('https://{0}.herokuapp.com', $APP_NAME) }}
+        delay: 5
+        rollbackonhealthcheckfailed: true
+    - name: GET Through External URL
+      if: ${{ success() }}
+      run: |
+        echo DEPLOY_URL=$DEPLOY_URL
+        curl -i $DEPLOY_URL
