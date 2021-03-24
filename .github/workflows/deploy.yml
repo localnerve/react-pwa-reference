@@ -16,6 +16,9 @@ jobs:
 
     if: github.event.pull_request.merged
     steps:
+    - name: Get Branch Name
+      id: get_branch
+      run: echo ::set-output name=BRANCH_NAME::${GITHUB_REF/refs\/heads\//}
     - uses: actions/checkout@v2
     - name: Setup Node
       uses: actions/setup-node@v2.1.4
@@ -37,11 +40,12 @@ jobs:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ env.APP_NAME }}
         heroku_email: 'alex@localnerve.com'
+        branch: ${{ steps.get_branch.outputs.BRANCH_NAME }}
         healthcheck: ${{ format('https://{0}.herokuapp.com', env.APP_NAME) }}
         delay: 5
         rollbackonhealthcheckfailed: true
     - name: GET Through External URL
       if: ${{ success() }}
       run: |
-        echo DEPLOY_URL=$DEPLOY_URL
+        echo GET '$DEPLOY_URL'
         curl -i $DEPLOY_URL
