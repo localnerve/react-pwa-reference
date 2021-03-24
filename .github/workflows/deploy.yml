@@ -11,8 +11,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      DEPLOY_URL = ${{ (contains(github.ref, 'release') && 'https://pwa.localnerve.net') || 'https://pwa-stage.localnerve.net' }}
-      APP_NAME = ${{ (contains(github.ref, 'release') && 'pwa') || 'pwa-stage' }}
+      DEPLOY_URL: ${{ (contains(github.ref, 'release') && 'https://pwa.localnerve.net') || 'https://pwa-stage.localnerve.net' }}
+      APP_NAME: ${{ (contains(github.ref, 'release') && 'pwa') || 'pwa-stage' }}
 
     if: github.event.pull_request.merged
     steps:
