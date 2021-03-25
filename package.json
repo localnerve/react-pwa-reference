@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.14.5",
+  "version": "0.14.6",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -149,7 +149,7 @@
     "react-element-size-reporter": "^0.8.4",
     "react-modal": "3.11.2",
     "react-spinner": "0.2.7",
-    "react-swipe": "github:localnerve/react-swipe#v4.3.1",
+    "react-swipe": "github:localnerve/react-swipe#v4.3.2",
     "react-transition-group": "1.2.1",
     "remark": "^13.0.0",
     "remark-html": "^13.0.1",
@@ -162,6 +162,6 @@
     "web-push": "3.3.5"
   },
   "engines": {
-    "node": ">= 12"
+    "node": "12"
   }
 }
