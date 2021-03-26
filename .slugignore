@@ -1,15 +1,9 @@
 .nyc_output
-/src
+.vscode
 /assets
 /reports
-/output/node_modules/application
-/output/tests
-/output/application/client
-.babelrc
-.eslint*
 .jshint*
 start.js
-gulpfile*.js
 webpack*.json
 README.md
 LICENSE.md
