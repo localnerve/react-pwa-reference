@@ -4,8 +4,10 @@
  *
  * The universal postinstall script.
  */
+/* global Promise */
 /*eslint-disable no-console */
 const fs = require('fs');
+const { spawn } = require('child_process');
 
 /**
  * Create the appliction symlink, fail quietly if exists.
@@ -32,4 +34,57 @@ function applicationSymLink (type) {
   }
 }
 
-['src', 'output'].forEach((type) => applicationSymLink(type));
+/**
+ * Link 'src' and 'output' to application.
+ */
+function linkTypes () {
+  ['src', 'output'].forEach(type => applicationSymLink(type));
+}
+
+/**
+ * Conditionally build the application if on Heroku.
+ *
+ * @returns Promise resolves on success, rejects otherwise.
+ */
+function conditionalBuild () {
+  const shouldBuild = 'DYNO' in process.env;
+
+  if (shouldBuild) {
+    return new Promise((resolve, reject) => {
+      const cp = spawn('npm', ['run', 'build:server']);
+
+      let rejectSentinel = true;
+      const rejectCall = arg => {
+        if (rejectSentinel) {
+          rejectSentinel = false;
+          reject(`Application build failed: ${arg}`);
+        }
+      }
+
+      cp.on('exit', (code, signal) => {
+        const error = code || signal;
+        if (error) {
+          return rejectCall(`code '${code}', signal '${signal}'`);
+        }
+        resolve();
+      });
+
+      cp.on('error', rejectCall);
+    });
+  }
+
+  return Promise.resolve();
+}
+
+/**
+ * Run the post install
+ */
+function postInstall () {
+  conditionalBuild()
+    .then(linkTypes)
+    .catch(e => {
+      console.error(e);
+    })
+}
+
+postInstall();

@@ -28,14 +28,8 @@ jobs:
       run: |
         echo DEPLOY_URL=$DEPLOY_URL
         echo APP_NAME=$APP_NAME
-    - name: Build
+    - name: Install Dependencies
       run: npm install
-    - name: Run Build
-      run: npm run build:server
-    - name: Pre-deploy
-      if: ${{ success() }}
-      run: |
-        echo 'skipping'
     - name: Deploy to Heroku
       if: ${{ success() }}
       uses: akhileshns/heroku-deploy@v3.12.12
