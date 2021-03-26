@@ -28,14 +28,17 @@ jobs:
       run: |
         echo DEPLOY_URL=$DEPLOY_URL
         echo APP_NAME=$APP_NAME
-    - name: Install Dependencies
+    - name: Build
       run: npm install
     - name: Run Build
       run: npm run build:server
-    - name: Pre-deploy clean-up
-      run: rm -rf node_modules/
+    - name: Pre-deploy
+      if: ${{ success() }}
+      run: |
+        echo 'skipping'
     - name: Deploy to Heroku
-      uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
+      if: ${{ success() }}
+      uses: akhileshns/heroku-deploy@v3.12.12
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: ${{ env.APP_NAME }}
@@ -44,7 +47,7 @@ jobs:
         healthcheck: ${{ format('https://{0}.herokuapp.com', env.APP_NAME) }}
         delay: 5
         rollbackonhealthcheckfailed: true
-    - name: GET Through External URL
+    - name: Post-deploy
       if: ${{ success() }}
       run: |
         echo GET '$DEPLOY_URL'
