@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.14.6",
+  "version": "0.14.7",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -43,6 +43,7 @@
     "lint": "eslint .",
     "perfbudget": "gulp perfbudget",
     "postinstall": "node ./postinstall.js",
+    "prestart": "cross-env NODE_ENV=production node ./prestart.js",
     "start": "cross-env NODE_ENV=production node ./output/application/server/index.js",
     "test": "npm run build:output && npm run _test",
     "test:cover": "rimraf .nyc_output/ && cross-env BABEL_ENV=cover npm run build:output && cross-env NYC_CWD=output nyc --reporter=lcov npm run _test",

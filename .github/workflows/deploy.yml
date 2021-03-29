@@ -40,7 +40,6 @@ jobs:
         branch: ${{ steps.get_branch.outputs.BRANCH_NAME }}
         healthcheck: ${{ format('https://{0}.herokuapp.com', env.APP_NAME) }}
         delay: 5
-        rollbackonhealthcheckfailed: true
     - name: Post-deploy
       if: ${{ success() }}
       run: |
