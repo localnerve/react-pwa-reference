@@ -39,9 +39,10 @@ function applicationSymLink (type) {
 /**
  * Link 'src' and 'output' to application.
  */
-function linkTypes () {
+async function linkTypes () {
   console.log('*** SymLinks ***');
   ['src', 'output'].forEach(type => applicationSymLink(type));
+  return Promise.resolve();
 }
 
 /**
@@ -49,7 +50,7 @@ function linkTypes () {
  *
  * @returns Promise resolves on success, rejects otherwise.
  */
-function conditionalBuild () {
+async function conditionalBuild () {
   const shouldBuild = 'DYNO' in process.env;
 
   if (shouldBuild) {
@@ -92,11 +93,11 @@ function conditionalBuild () {
  */
 async function postInstall () {
   console.log('*** Post Install Script ***');
+  await linkTypes();
   return conditionalBuild()
-    .then(linkTypes)
     .catch(e => {
       console.error(e);
-    })
+    });
 }
 
 postInstall();
