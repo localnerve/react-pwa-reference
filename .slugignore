@@ -1,6 +1,5 @@
 .nyc_output
 .vscode
-/assets
 /reports
 .jshint*
 start.js
