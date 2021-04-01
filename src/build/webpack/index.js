@@ -33,27 +33,29 @@ export default function webpackTaskFactory (group, settings, target) {
   return function taskWebpack (done) {
     const configFactories = configFactoryGroups[group];
 
-    // webpack 2 needs an absolute output path.
+    // force dist.scripts absolute output path
     const absoluteOutputPath = path.join(process.cwd(), settings.dist.scripts);
     settings.webpack = settings.webpack || {};
     settings.webpack.absoluteOutputPath = absoluteOutputPath;
 
-    webpack(configFactories.map((configFactory) => {
-      return configFactory(settings, target);
-    }), (err, stats) => {
-      if (err) {
-        console.error('webpack error', err);
+    // multi-compiler invocation
+    webpack(
+      configFactories.map(configFactory => configFactory(settings, target)),
+      (err, stats) => {
+        if (err) {
+          console.error('webpack error', err);
+        }
+        if (stats) {
+          const info = stats.toJson();
+          if (stats.hasErrors()) {
+            console.error('webpack compile errors:', info.errors);
+          }
+          if (stats.hasWarnings()) {
+            console.warn('webpack compile warnings:', info.warnings);
+          }
+        }
+        done(err);
       }
-
-      const info = stats.toJson();
-      if (stats.hasErrors()) {
-        console.error('webpack compile errors:', info.errors);
-      }
-      if (stats.hasWarnings()) {
-        console.warn('webpack compile warnings:', info.warnings);
-      }
-
-      done(err);
-    });
+    );
   };
 }

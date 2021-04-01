@@ -1,6 +1,6 @@
 # support matrix
+# do not add/mix 'node' in here or it will break support for client bundle dynamic import chunks in webpack 5
 
 last 1 version
 > 1% in US
-maintained node versions
 not dead

@@ -30,16 +30,13 @@ export default function inlineConfig (settings, type) {
         }
       ]
     },
-    stats: 'verbose'
-  };
-
-  if (type === 'prod') {
-    config.optimization = {
+    stats: 'verbose',
+    optimization: type === 'prod' ? {
       minimizer: [
         uglifyPluginFactory()  
-      ]
-    };
-  }
+      ]      
+    } : undefined
+  };
 
   return config;
 }
