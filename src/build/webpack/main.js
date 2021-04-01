@@ -7,7 +7,7 @@ import webpack from 'webpack';
 import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 import makeMode from './utils/mode';
 import uglifyPluginFactory from './plugins/uglify';
-import { statsPlugin, statsPluginOptions } from './plugins/stats';
+import statsPluginFactory from './plugins/stats';
 
 /**
  * Generate the webpack config for the main application bundle.
@@ -24,7 +24,7 @@ export default function mainConfig (settings, type) {
   const definitions = {
     DEBUG: type === 'dev'
   };
-  const statsOptions = statsPluginOptions(settings);
+  const statsFile = type === 'prod' ? 'webpack-stats-main.json' : false;
 
   const config = {
     mode: makeMode(type),
@@ -35,9 +35,13 @@ export default function mainConfig (settings, type) {
     output: {
       path: settings.webpack.absoluteOutputPath,
       publicPath: `${settings.web.scripts}/`,
-      library: 'AppMain',
-      libraryTarget: 'window',
-      libraryExport: 'default'
+      filename: type === 'prod' ? '[name].[chunkhash].min.js' : '[name].js',
+      chunkFilename: type === 'prod' ? '[name].[chunkhash].min.js' : '[name].js',
+      library: {
+        name: 'AppMain',
+        type: 'window',
+        export: 'default'
+      }
     },
     module: {
       rules: [
@@ -73,7 +77,7 @@ export default function mainConfig (settings, type) {
         /is-function/, require.resolve('lodash/isFunction')
       ),
       new webpack.NormalModuleReplacementPlugin(
-        /lodash.debounce/, require.resolve('lodash/debounce')
+        /lodash\.debounce/, require.resolve('lodash/debounce')
       ),
       new webpack.NormalModuleReplacementPlugin(
         /lodash\.assign/, require.resolve(objectAssignMock)
@@ -87,30 +91,17 @@ export default function mainConfig (settings, type) {
       new webpack.NormalModuleReplacementPlugin(
         /^react-?$/, require.resolve('react')
       ),
-      function () {
-        const statsFile = type === 'prod' ? 'webpack-stats-main.json' : false;
-        return statsPlugin(this, statsOptions, statsFile);
-      }
+      statsPluginFactory(settings, statsFile)
     ],
-    node: {
-      setImmediate: false
-    },
     stats: 'verbose'
   };
 
-  if (type === 'dev') {
-    config.output.filename = '[name].js';
-    config.output.chunkFilename = '[name].js';
-  } else {
-    config.output.filename = '[name].[chunkhash].min.js';
-    config.output.chunkFilename = '[name].[chunkhash].min.js';
-    if (type === 'prod') {
-      config.optimization = {
-        minimizer: [
-          uglifyPluginFactory()
-        ]
-      };
-    }
+  if (type === 'prod') {
+    config.optimization = {
+      minimizer: [
+        uglifyPluginFactory()
+      ]
+    };
   }
 
   if (type !== 'prod') {

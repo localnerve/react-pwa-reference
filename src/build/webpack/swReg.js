@@ -4,7 +4,7 @@
  */
 import makeMode from './utils/mode';
 import uglifyPluginFactory from './plugins/uglify';
-import { statsPlugin, statsPluginOptions } from './plugins/stats';
+import statsPluginFactory from './plugins/stats';
 
 /**
  * Generate the webpack config for the service worker registration bundle.
@@ -15,7 +15,6 @@ import { statsPlugin, statsPluginOptions } from './plugins/stats';
  */
 export default function swRegConfig (settings, type) {
   const devtoolModuleFilenameTemplate = 'webpack:///sw-reg/[resource-path]';
-  const statsOptions = statsPluginOptions(settings);
 
   const config = {
     mode: makeMode(type),
@@ -24,7 +23,10 @@ export default function swRegConfig (settings, type) {
     },
     output: {
       path: settings.webpack.absoluteOutputPath,
-      publicPath: settings.web.scripts
+      filename: type === 'prod' ? '[name].[chunkhash].min.js' : '[name].js',
+      publicPath: settings.web.scripts,
+      devtoolModuleFilenameTemplate: type === 'prod'
+        ? undefined : devtoolModuleFilenameTemplate
     },
     module: {
       rules: [
@@ -35,30 +37,17 @@ export default function swRegConfig (settings, type) {
         }
       ]
     },
+    devtool: type === 'prod' ? undefined : 'source-map',
     stats: 'verbose',
     plugins: [
-      function () {
-        return statsPlugin(this, statsOptions);
-      }
-    ]
-  };
-
-  if (type === 'dev') {
-    config.output.filename = '[name].js';
-  } else {
-    config.output.filename = '[name].[chunkhash].min.js';
-  }
-
-  if (type !== 'prod') {
-    config.output.devtoolModuleFilenameTemplate = devtoolModuleFilenameTemplate;
-    config.devtool = 'source-map';
-  } else {
-    config.optimization = {
+      statsPluginFactory(settings, false)
+    ],
+    optimization: type === 'prod' ? {
       minimizer: [
         uglifyPluginFactory()
-      ]
-    };
-  }
+      ]      
+    } : undefined
+  };
 
   return config;
 }

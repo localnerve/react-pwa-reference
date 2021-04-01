@@ -4,7 +4,7 @@
  */
 import makeMode from './utils/mode';
 import uglifyPluginFactory from './plugins/uglify';
-import { statsPlugin, statsPluginOptions } from './plugins/stats';
+import statsPluginFactory from './plugins/stats';
 
 /**
  * Generate the service worker main script bundle.
@@ -15,7 +15,6 @@ import { statsPlugin, statsPluginOptions } from './plugins/stats';
  */
 export default function swMainConfig (settings, type) {
   const devtoolModuleFilenameTemplate = 'webpack:///sw/[resource-path]';
-  const statsOptions = statsPluginOptions(settings);
 
   const config = {
     mode: makeMode(type),
@@ -26,7 +25,9 @@ export default function swMainConfig (settings, type) {
       path: settings.webpack.absoluteOutputPath,
       publicPath: settings.web.scripts,
       // One name to rule them all
-      filename: '[name].js'
+      filename: '[name].js',
+      devtoolModuleFilenameTemplate: type === 'prod'
+        ? undefined : devtoolModuleFilenameTemplate
     },
     module: {
       rules: [
@@ -50,25 +51,18 @@ export default function swMainConfig (settings, type) {
         }
       ]
     },
+    devtool: type === 'prod' ? undefined : 'source-map',
     target: 'webworker',
     stats: 'verbose',
     plugins: [
-      function () {
-        return statsPlugin(this, statsOptions);
-      }
-    ]
-  };
-
-  if (type !== 'prod') {
-    config.devtool = 'source-map';
-    config.output.devtoolModuleFilenameTemplate = devtoolModuleFilenameTemplate;
-  } else {
-    config.optimization = {
+      statsPluginFactory(settings, false)
+    ],
+    optimization: type === 'prod' ? {
       minimizer: [
         uglifyPluginFactory()
-      ]
-    };
-  }
+      ]      
+    } : undefined
+  };
 
   return config;
 }
