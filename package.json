@@ -137,7 +137,7 @@
     "fluxible-addons-react": "0.2.16",
     "fluxible-plugin-fetchr": "0.3.11",
     "fluxible-router": "1.7.0",
-    "glob": "7.1.6",
+    "glob": "7.1.7",
     "inherits": "2.0.4",
     "lodash": "4.17.21",
     "morgan": "1.10.0",
