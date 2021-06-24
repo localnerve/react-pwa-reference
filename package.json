@@ -141,7 +141,7 @@
     "inherits": "2.0.4",
     "lodash": "4.17.21",
     "morgan": "1.10.0",
-    "nconf": "0.11.2",
+    "nconf": "0.11.3",
     "nodemailer": "^6.6.2",
     "parse-headers": "^2.0.3",
     "prop-types": "^15.7.2",
