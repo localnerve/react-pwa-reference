@@ -133,7 +133,7 @@
     "diff-match-patch": "1.0.5",
     "express": "4.17.1",
     "express-error-handler": "github:localnerve/express-error-handler",
-    "fluxible": "1.4.0",
+    "fluxible": "1.4.2",
     "fluxible-addons-react": "0.2.16",
     "fluxible-plugin-fetchr": "0.3.12",
     "fluxible-router": "1.7.0",
