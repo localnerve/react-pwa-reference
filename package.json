@@ -1,6 +1,6 @@
 {
   "name": "react-pwa-reference",
-  "version": "0.15.2",
+  "version": "0.15.3",
   "description": "A universal reactiflux progressive web application reference",
   "author": "Alex Grant <alex@localnerve.com> (@localnerve)",
   "license": "BSD-3-Clause",
@@ -74,7 +74,7 @@
     "@babel/preset-react": "^7.10.4",
     "@babel/register": "^7.10.5",
     "async-lock": "1.2.8",
-    "autoprefixer": "^10.2.5",
+    "autoprefixer": "^10.4.4",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
@@ -97,8 +97,8 @@
     "gulp-nodemon": "2.5.0",
     "gulp-postcss": "^9.0.0",
     "gulp-rev": "^9.0.0",
-    "gulp-sass": "^4.1.0",
-    "gulp-svgmin": "^3.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-svgmin": "^4.1.0",
     "gulp-webpagetest": "github:localnerve/gulp-webpagetest#1.1.2",
     "jsdom": "^16.5.1",
     "lodash-webpack-plugin": "0.11.6",
@@ -107,10 +107,10 @@
     "mockery": "2.1.0",
     "@localnerve/sass-asset-functions": "^0.1.0",
     "nyc": "^15.1.0",
-    "postcss": "^8.1.0",
+    "postcss": "^8.4.12",
     "precommit-hook": "3.0.0",
     "rimraf": "^3.0.2",
-    "sass": "^1.32.8",
+    "sass": "^1.49.9",
     "string-replace-loader": "^3.0.1",
     "sw-precache": "5.2.1",
     "terser-webpack-plugin": "^5.1.1",
@@ -163,6 +163,6 @@
     "web-push": "3.3.5"
   },
   "engines": {
-    "node": "12 - 14"
+    "node": ">=14"
   }
 }

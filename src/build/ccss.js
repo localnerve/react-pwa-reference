@@ -4,7 +4,7 @@
  */
 import gulp from 'gulp';
 import gulpSvgmin from 'gulp-svgmin';
-import gulpSass from 'gulp-sass';
+import gulpSassModule from 'gulp-sass';
 import gulpPostcss from 'gulp-postcss';
 import gulpIf from 'gulp-if';
 import gulpCssClean from 'gulp-clean-css';
@@ -38,7 +38,7 @@ function svgmin (settings) {
  * @param {Boolean} prod - True if production, false otherwise.
  */
 function sass (settings, prod) {
-  gulpSass.compiler = dartSass;
+  const gulpSass = gulpSassModule(dartSass);
 
   return gulp.src('*.scss', {
     cwd: settings.src.styles
