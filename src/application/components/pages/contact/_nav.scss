@@ -2,12 +2,13 @@
 // Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
 //
 // styles for the nav component
+@use "sass:math";
 @import "arrows";
 
 @mixin button-span() {
   display: block;
   float: left;
-  padding: $rem-base/2 !important;
+  padding: math.div($rem-base, 2) !important;
   min-width: 0;
 }
 

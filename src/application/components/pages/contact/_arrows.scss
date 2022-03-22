@@ -1,5 +1,6 @@
 // Copyright (c) 2016 - 2021 Alex Grant (@localnerve), LocalNerve LLC
 // Copyrights licensed under the BSD License. See the accompanying LICENSE file for terms.
+@use "sass:math";
 
 $arrow-fatten-size: 2;
 
@@ -77,9 +78,9 @@ $arrow-fatten-size: 2;
   position: relative;
   z-index: 1;
   @if $fatten {
-    padding: (($size/2) + $arrow-fatten-size) 0;
+    padding: (math.div($size, 2) + $arrow-fatten-size) 0;
   } @else {
-    padding: ($size/2) 0;
+    padding: math.div($size, 2) 0;
   }
   background: $bgcolor;
   color: $color;
@@ -89,9 +90,9 @@ $arrow-fatten-size: 2;
 
   @include breakpoint(medium) {
     @if $fatten {
-      padding: (($medium-size/2) + $arrow-fatten-size) 0;
+      padding: (math.div($medium-size, 2) + $arrow-fatten-size) 0;
     } @else {
-      padding: ($medium-size/2) 0;
+      padding: math.div($medium-size, 2) 0;
     }
   }
 }

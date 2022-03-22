@@ -19,9 +19,9 @@ jobs:
     - name: Get Branch Name
       id: get_branch
       run: echo ::set-output name=BRANCH_NAME::${GITHUB_REF/refs\/heads\//}
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup Node
-      uses: actions/setup-node@v2.1.4
+      uses: actions/setup-node@v3.0.0
       with:
         node-version: '12'
     - name: Echo Input
