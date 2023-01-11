@@ -129,7 +129,7 @@
     "cookie-parser": "1.4.6",
     "cross-env": "7.0.3",
     "csurf": "1.11.0",
-    "debug": "2.6.9",
+    "debug": "3.1.0",
     "diff-match-patch": "1.0.5",
     "express": "4.17.3",
     "express-error-handler": "https://git@github.com/localnerve/express-error-handler",
