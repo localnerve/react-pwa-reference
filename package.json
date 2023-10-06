@@ -107,7 +107,7 @@
     "mockery": "2.1.0",
     "@localnerve/sass-asset-functions": "^0.1.0",
     "nyc": "^15.1.0",
-    "postcss": "^8.4.12",
+    "postcss": "^8.4.31",
     "precommit-hook": "3.0.0",
     "rimraf": "^3.0.2",
     "sass": "^1.49.9",
